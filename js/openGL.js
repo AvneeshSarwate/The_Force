@@ -19,7 +19,7 @@ var oscM = [null, null, null, null, null, null, null, null, null, null];
 var gammaValues = [1.0, 1.0, 1.0, 1.0];
 
 var mHeader = null;
-var fsNew = defaultShader;//"void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
+var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
 
 var testingImage = false;
 var testTexture;

@@ -24,7 +24,10 @@ var mCompileTimer = null;
 var editor = null;
 mErrors = new Array();
 
-var useAVInput = false;
+var useAVInput = true;
+var isMobile = true;
+var useAudioInput = !isMobile;
+var useVideoInput = !isMobile;
 
 
 $( document ).ready(function()
@@ -945,7 +948,7 @@ $( document ).ready(function()
     // if (window.location.protocol != "https:") 
     //     alert("Browser may not support microphone on non-secure connection. Please copy your code before changing protocol in the URL from http to https.");
 
-    if (navigator.getUserMedia && useAVInput) 
+    if (navigator.getUserMedia && !isMobile) 
     {
         initAudio();
         navigator.getUserMedia(
@@ -990,7 +993,7 @@ $( document ).ready(function()
     });
     editor.$blockScrolling = Infinity;
     if (typeof(Storage) !== "undefined" && typeof(localStorage.lastValidCode) !== "undefined"){
-        editor.setValue(localStorage.lastValidCode,-1);
+        editor.setValue(defaultShader,-1);
     }else{
         editor.setValue(defaultShader, -1);
     }
@@ -1026,8 +1029,7 @@ $( document ).ready(function()
             $("#audioClock").html(min + ':' + sec);
         }
 
-        if(useAVInput) {
-
+        if(!isMobile) {
             mInputs[0] = wcTex;
             mInputs[1] = videoTextures[0]; 
 
@@ -1057,7 +1059,7 @@ $( document ).ready(function()
         paint();
     }
 
-    if(useAVInput) {
+    if(!isMobile) {
         webcam = setupWebcam();
         webcamTexture = initVideoTexture(gl, "blankurl");
         webcamSnapshotTexture = initVideoTexture(gl, "blankurl");
@@ -1080,6 +1082,7 @@ $( document ).ready(function()
     for(var i = 1; i < 20; i++) {    
         setTimeout(function() {
             if(!defaultShaderCompiled) {
+                console.log("defaultShader set");
                 editor.setValue(defaultShader);
                 setShaderFromEditor(defaultShader);
             }

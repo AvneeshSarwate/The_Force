@@ -126,15 +126,6 @@ float hexDiffAvg(vec2 p, float numHex){
     return diff / 18.;
 }
 
-// normalize a sine wave to [0, 1]
-float sinN(float t){
-   return (sin(t) + 1.) / 2.; 
-}
-
-// normalize a cosine wave to [0, 1]
-float cosN(float t){
-   return (cos(t) + 1.) / 2.; 
-}
 
 /* The function that generates the rotating grid texture. Given a point, it
 returns the color for that point. It can be parameterized by time to 
