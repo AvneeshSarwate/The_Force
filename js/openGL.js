@@ -205,11 +205,16 @@ function parseAndTriggerSequence(patternString){
     console.log("pattern", patternString);
     var patternCode = patternString.substring("pattern(".length, patternString.length-1);
     if(seq){
+      seq.stop();
       seq.dispose();
-    } else {
-
-    }
-
+    } 
+    seq = new Tone.Sequence(function(time, note){
+      mMousePosX = Math.random() * 500;
+      mMousePosY = Math.random() * 500;
+      console.log(mMousePosX, mMousePosY);
+    //straight quater notes
+    }, ["C4", ["E4", "G4"], "A4"], "4n");
+    seq.start();
 }
 
 function newShader(vs, shaderCode) {
