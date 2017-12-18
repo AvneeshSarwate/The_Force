@@ -1,7 +1,7 @@
 void main () {
     vec2 stN = uvN();
     
-    float mousex = mouse.x / resolution.x;
+    float mousex = mouse.x / resolution.x + mouse.y / resolution.y;
 
     stN = rotate(vec2(0.5+sin(mousex)*0.5, 0.5+cos(mousex)*0.5), stN, sin(mousex));
     

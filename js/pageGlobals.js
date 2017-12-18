@@ -1131,15 +1131,15 @@ $(document)
     })
     .on('touchmove', function(event){
         event.preventDefault()
-        //var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-        mMousePosX = Math.random() * 500; //touch.pageX;
-        mMousePosY = Math.random() * 500; //touch.pageY;
+        var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+        mMousePosX = touch.pageX;
+        mMousePosY = touch.pageY;
     })
     .on('ontouchmove', function(event){
         event.preventDefault()
-        //var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-        mMousePosX = Math.random() * 500; //touch.pageX;
-        mMousePosY = Math.random() * 500; //touch.pageY;
+        var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+        mMousePosX = touch.pageX;
+        mMousePosY = touch.pageY;
     })
     .mouseup( function( event ) 
     { })
