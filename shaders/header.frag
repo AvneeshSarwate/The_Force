@@ -40,8 +40,8 @@ float circle(float x,float y,float r,float f) {
 }
 
 vec2 rotate(vec2 space, vec2 center, float amount){
-    return vec2(cos(amount) * (space.x - center.x) + sin(amount) * (space.y - center.y),
-        cos(amount) * (space.y - center.y) - sin(amount) * (space.x - center.x));
+    return vec2(cos(amount) * (space.x - center.x) + sin(amount) * (space.y - center.y) + center.x,
+        cos(amount) * (space.y - center.y) - sin(amount) * (space.x - center.x) + center.y);
 }
 
 vec2 mod289(vec2 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
@@ -354,4 +354,34 @@ vec2 nyanFrame(vec2 p, float rr) {
     float fr = floor( mod( 20.0*time+rr, 6.0 ) );
     p.x += fr*v;
     return p;
+}
+
+// normalize a sine wave to [0, 1]
+float sinN(float t){
+   return (sin(t) + 1.) / 2.; 
+}
+
+// normalize a cosine wave to [0, 1]
+float cosN(float t){
+   return (cos(t) + 1.) / 2.; 
+}
+
+vec3 swirl(float time2, vec2 stN){
+    stN = rotate(vec2(0.5+sin(time2)*0.5, 0.5+cos(time2)*0.5), stN, sin(time2));
+    
+    vec2 segGrid = vec2(floor(stN.x*30.0 * sin(time2/7.)), floor(stN.y*30.0 * sin(time2/7.)));
+
+    vec2 xy;
+    float noiseVal = rand(stN)*sin(time2/7.) * 0.15;
+    if(mod(segGrid.x, 2.) == mod(segGrid.y, 2.)) xy = rotate(vec2(sinN(time2), cosN(time2)), stN.xy, time2 + noiseVal);
+    else xy = rotate(vec2(sinN(time2), cosN(time2)), stN.xy, - time2 - noiseVal);
+    
+    float section = floor(xy.x*30.0 * sin(time2/7.)); 
+    float tile = mod(section, 2.);
+
+    float section2 = floor(xy.y*30.0 * cos(time2/7.)); 
+    float tile2 = mod(section2, 2.);
+    float timeMod = time2 - (1. * floor(time2/1.)); 
+    
+    return vec3(tile, tile2, timeMod);
 }

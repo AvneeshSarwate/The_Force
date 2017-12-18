@@ -14,8 +14,9 @@ from twisted.web.static import File
 from autobahn.twisted.websocket import \
     WebSocketServerProtocol, WebSocketServerFactory, listenWS
 
-from autobahn.twisted.resource import \
-    WebSocketResource, HTTPChannelHixie76Aware
+import autobahn.twisted.resource
+
+from autobahn.twisted.resource import WebSocketResource
 
 
 class Bridge():
@@ -121,7 +122,7 @@ if __name__ == '__main__':
     # http setup
     webdir = os.path.abspath(SERVER_HTTP_RESOURCES)
     site = Site(File(webdir))
-    site.protocol = HTTPChannelHixie76Aware
+    site.protocol = autobahn.twisted.resource.HTTPChannelHixie76Aware
     reactor.listenTCP(SERVER_HTTP_PORT, site)
 
     usbclient = USBClient(bridge)

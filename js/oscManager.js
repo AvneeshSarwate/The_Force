@@ -11,6 +11,15 @@ function initOSC() {
         discardLateMessages: true
     });
 
+    osc.on("/takeSnapshot", function(cMessage) {
+        takeSnapshot = true;
+        console.log("took snapshot");
+    });
+
+    setInterval(function(){
+        takeSnapshot = true;
+    }, 80);
+
     // socket event listeners
     osc.on('open', function(cEvent) 
     {

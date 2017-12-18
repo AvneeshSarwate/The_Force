@@ -13,9 +13,9 @@ from twisted.web.static import File
 from autobahn.twisted.websocket import WebSocketServerProtocol, \
                                        WebSocketServerFactory, \
                                        listenWS
+import autobahn.twisted.resource
 
-from autobahn.twisted.resource import WebSocketResource, \
-                              HTTPChannelHixie76Aware
+from autobahn.twisted.resource import WebSocketResource
 
 # constants
 
@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
   webdir = os.path.abspath(SERVER_HTTP_RESOURCES)
   site = Site(File(webdir))
-  site.protocol = HTTPChannelHixie76Aware
+  site.protocol = autobahn.twisted.resource.HTTPChannelHixie76Aware
   reactor.listenTCP(SERVER_HTTP_PORT, site)
 
   # udp setup

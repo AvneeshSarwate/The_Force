@@ -2,13 +2,13 @@
 <html>
 
 <head>
-    <title>- - --== The Force ==-- - -</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="icon" href="img/favicon.png">
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="node_modules/tone/build/Tone.js"></script>
     <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
     <script type="text/javascript" src="lib/fpsmeter.js"></script>
@@ -19,6 +19,7 @@
     <script type="text/javascript" src="lib/canvas-toBlob.js"></script>
     <script type="text/javascript" src="lib/osc.js"></script>
     <script src="https://connect.soundcloud.com/sdk.js"></script>
+    <script type="text/javascript" src="js/defaultShader.js"></script>
     <script type="text/javascript" src="js/openGL.js"></script>
     <script type="text/javascript" src="js/oscManager.js"></script>
     <script type="text/javascript" src="js/myMIDI.js"></script>
@@ -27,7 +28,7 @@
 
 <body>
     <!-- editor =================================================================================== -->
-    <div id="editor"></div>
+    <div id="editor" class=""></div>
     <!-- audio =================================================================================== -->
     <div id="audioPanel" title="Audio Input">
         <div id="audioTabs" class="myTabs">
@@ -218,11 +219,11 @@
             <div id="networkTabs-1">
                 <p>OSC Websocket</p>
                 <input type="text" id="socket_address" value="localhost" class="hide" />
-                <input type="text" id="socket_port" value="8000" class="hide" />
+                <input type="text" id="socket_port" value="8085" class="hide" />
                 <input type="submit" id="socket_start" value="Start" />
                 <input type="submit" id="socket_stop" value="Stop" />
                 <span id="socket_status">offline</span>
-                <p>Listening to - localhost:8000</p>
+                <p>Listening to - localhost:8085</p>
                 <div id="myInputs">
                     <input type="submit" id="appendOSCInput" value="Add Input" />
                     <br />
@@ -377,7 +378,9 @@ box(vec2(x, y),
 circle(float x,
        float y, 
        float radius, 
-       float edge-feathering) 
+       float edge-feathering); 
+
+swirl(float time, vec2 p);    //agressive swirling texture
                 </pre>
             </div>
             <div id="tabsHelp-4">
@@ -415,7 +418,9 @@ mix(x, y, a)    // linear blend of x and y using a. (lerp)
 step(edge, x)   // 0.0 if x less than edge, else 1.0
 smoothstep(edge0, // clip and smooth
            edge1,
-           x)          
+           x)     
+sinN(float)     //sin normalized to [0, 1]
+cosN(float)     //cos normalized to [0, 1]     
                  </pre>
             </div>
             <div id="tabsHelp-5">
@@ -453,7 +458,7 @@ ft     = float
         </div>
     </div>
     <!-- footer UI =================================================================================== -->
-    <div id="footer">
+    <div id="footer" class="">
         <div id="myFrameRate"></div>
         <canvas id="fourBands" width="100" height="32"></canvas>
         <div id="audioClock"></div>

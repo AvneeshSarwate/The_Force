@@ -256,33 +256,7 @@ $( document ).ready(function()
         .click( function(event)
         {
             event.preventDefault();
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-            if (window.location.protocol != "https:") 
-                alert("Browser may not support microphone on non-secure connection. Please copy your code before changing protocol in the URL from http to https.");
-
-            if (navigator.getUserMedia) 
-            {
-                initAudio();
-                navigator.getUserMedia(
-                    {audio: true}, 
-                    function(stream)  //success
-                    {
-                        mSound.mStream = stream;
-                        mSound.mSource = mAudioContext.createMediaStreamSource(stream);
-                        mSound.mSource.disconnect();
-                        mSound.mSource.connect(mSound.mAnalyser);
-                    }, 
-                    function() //failure
-                    {
-                        alert("Error getting user media stream.");
-                    });
-
-                $("#micTogglePlaythrough").button("enable");
-                bandsOn = true;
-            }
-            else
-                alert("Browser doesn't support microphone or audio line in.");
+            
 
             $(this).blur();
         });
@@ -605,6 +579,10 @@ $( document ).ready(function()
                     break;
 
                 case "tex_webcam":
+                    texture.globject = webcamTexture;
+                    texture.type = "tex_2D";
+                    texture.image = {height: webcam.height, width: webcam.width};
+                    texture.loaded = webcamReady;
                     break;
 
                 case "tex_audio":
@@ -960,6 +938,34 @@ $( document ).ready(function()
     else
         alert("This browser doesn't support Audio Contexts. Audio input will not be available.");
 
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+    // if (window.location.protocol != "https:") 
+    //     alert("Browser may not support microphone on non-secure connection. Please copy your code before changing protocol in the URL from http to https.");
+
+    if (navigator.getUserMedia) 
+    {
+        initAudio();
+        navigator.getUserMedia(
+            {audio: true}, 
+            function(stream)  //success
+            {
+                mSound.mStream = stream;
+                mSound.mSource = mAudioContext.createMediaStreamSource(stream);
+                mSound.mSource.disconnect();
+                mSound.mSource.connect(mSound.mAnalyser);
+            }, 
+            function() //failure
+            {
+                alert("Error getting user media stream.");
+            });
+
+        $("#micTogglePlaythrough").button("enable");
+        bandsOn = true;
+    }
+    else
+        alert("Browser doesn't support microphone or audio line in.");
+
     // --- ace editor ---------------------
     var langTools = ace.require("ace/ext/language_tools");
     langTools.setCompleters([langTools.snippetCompleter, langTools.keyWordCompleter])
@@ -1006,25 +1012,72 @@ $( document ).ready(function()
 
         if($('#soundFile').length) {
         var secs = $('#soundFile').get(0).currentTime;
-      //       var hr  = Math.floor(secs / 3600);
-      var min = Math.floor(secs / 60.);
-      var sec = Math.floor(secs) % 60;
+          //       var hr  = Math.floor(secs / 3600);
+          var min = Math.floor(secs / 60.);
+          var sec = Math.floor(secs) % 60;
 
-        if (min < 10)
-            min = "0" + min; 
-        if (sec < 10)
-            sec  = "0" + sec;
+            if (min < 10)
+                min = "0" + min; 
+            if (sec < 10)
+                sec  = "0" + sec;
 
-        $("#audioClock").html(min + ':' + sec);
-    }
+            $("#audioClock").html(min + ':' + sec);
+        }
+
+        mInputs[0] = wcTex;
+        mInputs[1] = videoTextures[0]; 
+
+        if (webcamReady) {
+          updateVideoTexture(gl, webcamTexture, webcam);
+        }
+
+        if(webcamReady && takeSnapshot){
+            updateVideoTexture(gl, webcamSnapshotTexture, webcam);
+            var texture = {};
+            texture.globject = webcamSnapshotTexture;
+            texture.type = "tex_2D";
+            texture.image = {height: webcam.height, width: webcam.width};
+            texture.loaded = webcamReady;
+            mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
+            takeSnapshot = false;
+            createInputStr();
+        }
+
+        for(var i = 0; i < videosReady.length; i++) {
+            if(videosReady[i]){
+                updateVideoTexture(gl, videoTextures[i].globject, videos[i]);
+            }
+        }
 
         paint();
     }
+
+    webcam = setupWebcam();
+    webcamTexture = initVideoTexture(gl, "blankurl");
+    webcamSnapshotTexture = initVideoTexture(gl, "blankurl");
+    wcTex = {}
+    wcTex.globject = webcamTexture;
+    wcTex.type = "tex_2D";
+    wcTex.image = {height: webcam.height, width: webcam.width};
+    wcTex.loaded = true;
+    
+    createNewVideoTexture(gl, "./starfield.mov", 0);   
+
+    mInputs[0] = wcTex;
+    mInputs[1] = videoTextures[0]; 
 
     mTime = Date.now();
     renderLoop2();
     editor.focus();
 
+    for(var i = 1; i < 20; i++) {    
+        setTimeout(function() {
+            if(!defaultShaderCompiled) {
+                editor.setValue(defaultShader);
+                setShaderFromEditor(defaultShader);
+            }
+        }, i*1000);
+    }
     var player =  document.getElementById('player');
     var uiUpdater = new UiUpdater();
     
@@ -1171,6 +1224,17 @@ function setShader(result, fromScript)
             console.log(result.mInfo); 
             editor.session.setAnnotations(tAnnotations);
         }
+    }
+    var sequenceErrorLines = Object.keys(result.sequenceErrors);
+    if(sequenceErrorLines.length != 0){
+        var sAnnotations = [];
+        for(var i = 0; i < sequenceErrorLines.length; i++){
+            var annotation = {};
+            annotation.row = sequenceErrorLines[i];
+            annotation.text = result.sequenceErrors[sequenceErrorLines[i]];
+            annotation.type = "error";
+        }
+        if(debugging) editor.session.setAnnotations(sAnnotations);
     }
 }
 
