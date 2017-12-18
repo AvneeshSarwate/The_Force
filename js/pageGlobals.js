@@ -24,6 +24,8 @@ var mCompileTimer = null;
 var editor = null;
 mErrors = new Array();
 
+var useAVInput = false;
+
 
 $( document ).ready(function()
 {
@@ -943,7 +945,7 @@ $( document ).ready(function()
     // if (window.location.protocol != "https:") 
     //     alert("Browser may not support microphone on non-secure connection. Please copy your code before changing protocol in the URL from http to https.");
 
-    if (navigator.getUserMedia) 
+    if (navigator.getUserMedia && useAVInput) 
     {
         initAudio();
         navigator.getUserMedia(
@@ -963,8 +965,8 @@ $( document ).ready(function()
         $("#micTogglePlaythrough").button("enable");
         bandsOn = true;
     }
-    else
-        alert("Browser doesn't support microphone or audio line in.");
+    // else
+    //     alert("Browser doesn't support microphone or audio line in.");
 
     // --- ace editor ---------------------
     var langTools = ace.require("ace/ext/language_tools");
@@ -990,7 +992,7 @@ $( document ).ready(function()
     if (typeof(Storage) !== "undefined" && typeof(localStorage.lastValidCode) !== "undefined"){
         editor.setValue(localStorage.lastValidCode,-1);
     }else{
-        editor.setValue("void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}", -1);
+        editor.setValue(defaultShader, -1);
     }
    
     // mCodeMirror.on("drop", function( mCodeMirror, event )
@@ -1024,47 +1026,52 @@ $( document ).ready(function()
             $("#audioClock").html(min + ':' + sec);
         }
 
-        mInputs[0] = wcTex;
-        mInputs[1] = videoTextures[0]; 
+        if(useAVInput) {
 
-        if (webcamReady) {
-          updateVideoTexture(gl, webcamTexture, webcam);
-        }
+            mInputs[0] = wcTex;
+            mInputs[1] = videoTextures[0]; 
 
-        if(webcamReady && takeSnapshot){
-            updateVideoTexture(gl, webcamSnapshotTexture, webcam);
-            var texture = {};
-            texture.globject = webcamSnapshotTexture;
-            texture.type = "tex_2D";
-            texture.image = {height: webcam.height, width: webcam.width};
-            texture.loaded = webcamReady;
-            mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
-            takeSnapshot = false;
-            createInputStr();
-        }
+            if (webcamReady) {
+              updateVideoTexture(gl, webcamTexture, webcam);
+            }
 
-        for(var i = 0; i < videosReady.length; i++) {
-            if(videosReady[i]){
-                updateVideoTexture(gl, videoTextures[i].globject, videos[i]);
+            if(webcamReady && takeSnapshot){
+                updateVideoTexture(gl, webcamSnapshotTexture, webcam);
+                var texture = {};
+                texture.globject = webcamSnapshotTexture;
+                texture.type = "tex_2D";
+                texture.image = {height: webcam.height, width: webcam.width};
+                texture.loaded = webcamReady;
+                mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
+                takeSnapshot = false;
+                createInputStr();
+            }
+
+            for(var i = 0; i < videosReady.length; i++) {
+                if(videosReady[i]){
+                    updateVideoTexture(gl, videoTextures[i].globject, videos[i]);
+                }
             }
         }
 
         paint();
     }
 
-    webcam = setupWebcam();
-    webcamTexture = initVideoTexture(gl, "blankurl");
-    webcamSnapshotTexture = initVideoTexture(gl, "blankurl");
-    wcTex = {}
-    wcTex.globject = webcamTexture;
-    wcTex.type = "tex_2D";
-    wcTex.image = {height: webcam.height, width: webcam.width};
-    wcTex.loaded = true;
-    
-    createNewVideoTexture(gl, "./starfield.mov", 0);   
+    if(useAVInput) {
+        webcam = setupWebcam();
+        webcamTexture = initVideoTexture(gl, "blankurl");
+        webcamSnapshotTexture = initVideoTexture(gl, "blankurl");
+        wcTex = {}
+        wcTex.globject = webcamTexture;
+        wcTex.type = "tex_2D";
+        wcTex.image = {height: webcam.height, width: webcam.width};
+        wcTex.loaded = true;
+        
+        createNewVideoTexture(gl, "./starfield.mov", 0);   
 
-    mInputs[0] = wcTex;
-    mInputs[1] = videoTextures[0]; 
+        mInputs[0] = wcTex;
+        mInputs[1] = videoTextures[0]; 
+    }
 
     mTime = Date.now();
     renderLoop2();
@@ -1121,6 +1128,18 @@ $(document)
     {
         mMouseClickX = event.pageX;
         mMouseClickY = event.pageY;
+    })
+    .on('touchmove', function(event){
+        event.preventDefault()
+        //var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        mMousePosX = Math.random() * 500; //touch.pageX;
+        mMousePosY = Math.random() * 500; //touch.pageY;
+    })
+    .on('ontouchmove', function(event){
+        event.preventDefault()
+        //var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        mMousePosX = Math.random() * 500; //touch.pageX;
+        mMousePosY = Math.random() * 500; //touch.pageY;
     })
     .mouseup( function( event ) 
     { })
