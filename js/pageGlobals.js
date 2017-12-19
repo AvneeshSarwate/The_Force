@@ -29,9 +29,12 @@ var isMobile = true;
 var useAudioInput = !isMobile;
 var useVideoInput = !isMobile;
 
+//create an audio context
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext = new AudioContext();
 
-$( document ).ready(function()
-{
+
+$( document ).ready(function() {
     //--------------------- FOOTER UI ------------
     $('#footer')
         .mouseover( function(event)
@@ -1094,16 +1097,10 @@ $( document ).ready(function()
     player.crossorigin="anonymous";
     var loader = new SoundcloudLoader(player,uiUpdater);
 
-
-    //create an audio context
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    var audioContext = new AudioContext();
-    //set the context
-    StartAudioContext(audioContext).then(function(){
-        console.log('audio context started');
+    StartAudioContext(audioContext, $('#demogl')).then(function(){
+        console.log('audio context started from StartAudioContext');
         Tone.Transport.start();
     });
-
 
     var audioSource = null;
     var form = document.getElementById('form');
@@ -1120,9 +1117,9 @@ $( document ).ready(function()
             });
     };
 
-form.addEventListener('submit', function(e) {
-    initAudio();
-    audioSource = new SoundCloudAudioSource(player);
+    form.addEventListener('submit', function(e) {
+        initAudio();
+        audioSource = new SoundCloudAudioSource(player);
         e.preventDefault();
         var trackUrl = document.getElementById('input').value;
         loadAndUpdate(trackUrl);

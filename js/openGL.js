@@ -213,7 +213,8 @@ function parseAndTriggerSequence(patternString){
       mMousePosX = Math.random() * 500;
       mMousePosY = Math.random() * 500;
       //console.log(mMousePosX, mMousePosY);
-    //straight quater notes
+      //straight quater notes
+      $('#tonedebug').html(note);
     }, ["C4", ["E4", "G4"], "A4"], "4n");
     seq.start();
 }
