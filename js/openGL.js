@@ -184,10 +184,12 @@ function stripAndProcessSequencing(code){
   var codeLines = code.split("\n");
   var i = 0; 
   var sequenceErrors = {};
+  var patternLines = [];
   while(i < codeLines.length){
     var line  = codeLines[i];
     if(line.indexOf("pattern") > -1){
         codeLines.splice(i, 1);
+        patternLines.push(line);
         var seqError = parseAndTriggerSequence(line);
         if(seqError){
           sequenceErrors[i] = seqError;
@@ -196,10 +198,9 @@ function stripAndProcessSequencing(code){
         i++
     }
   }
-  return {shaderCode: codeLines.join("\n"), errors: sequenceErrors};
+  return {shaderCode: codeLines.join("\n"), errors: sequenceErrors, patternStrings: patternLines};
 }
 
-Tone.Transport.start()
 var seq = 0;
 function parseAndTriggerSequence(patternString){
     console.log("pattern", patternString);
@@ -211,7 +212,7 @@ function parseAndTriggerSequence(patternString){
     seq = new Tone.Sequence(function(time, note){
       mMousePosX = Math.random() * 500;
       mMousePosY = Math.random() * 500;
-      console.log(mMousePosX, mMousePosY);
+      //console.log(mMousePosX, mMousePosY);
     //straight quater notes
     }, ["C4", ["E4", "G4"], "A4"], "4n");
     seq.start();

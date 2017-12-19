@@ -22,7 +22,7 @@ void main () {
     float tile2 = mod(section2, 2.);
     
     float mousexMod = mousex - (1. * floor(mousex/1.));
-
+    pattern('r')
     gl_FragColor = vec4(tile, tile2, mousexMod, 1);
 }
 `;

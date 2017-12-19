@@ -1083,7 +1083,7 @@ $( document ).ready(function()
         setTimeout(function() {
             if(!defaultShaderCompiled) {
                 console.log("defaultShader set");
-                editor.setValue(defaultShader);
+                editor.setValue(defaultShader, -1);
                 setShaderFromEditor(defaultShader);
             }
         }, i*1000);
@@ -1093,6 +1093,17 @@ $( document ).ready(function()
     
     player.crossorigin="anonymous";
     var loader = new SoundcloudLoader(player,uiUpdater);
+
+
+    //create an audio context
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    var audioContext = new AudioContext();
+    //set the context
+    StartAudioContext(audioContext).then(function(){
+        console.log('audio context started');
+        Tone.Transport.start();
+    });
+
 
     var audioSource = null;
     var form = document.getElementById('form');
