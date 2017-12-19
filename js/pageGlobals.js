@@ -1097,7 +1097,7 @@ $( document ).ready(function() {
     player.crossorigin="anonymous";
     var loader = new SoundcloudLoader(player,uiUpdater);
 
-    StartAudioContext(audioContext, $('#demogl')).then(function(){
+    StartAudioContext(Tone.context, $('#demogl')).then(function(){
         console.log('audio context started from StartAudioContext');
         Tone.Transport.start();
     });
