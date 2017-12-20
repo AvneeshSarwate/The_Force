@@ -13,6 +13,7 @@ var vsDraw = null;
 var elapsedBandPeaks = [0.0, 0.0, 0.0, 0.0];
 //unifoms
 var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiU;
+var timeVec;
 var resos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 resos = resos.concat(resos);
 var oscM = [null, null, null, null, null, null, null, null, null, null];
@@ -201,6 +202,22 @@ function stripAndProcessSequencing(code){
   return {shaderCode: codeLines.join("\n"), errors: sequenceErrors, patternStrings: patternLines};
 }
 
+function shaderMinusSequencing(code){
+    var codeLines = code.split("\n");
+    var i = 0; 
+    var sequenceErrors = {};
+    var patternLines = [];
+    while(i < codeLines.length){
+      var line  = codeLines[i];
+      if(line.indexOf("pattern") > -1){
+          codeLines.splice(i, 1);
+      } else {
+          i++
+      }
+    }
+    return  codeLines.join("\n");
+}  
+
 var seq = 0;
 function parseAndTriggerSequence(patternString){
     console.log("pattern", patternString);
@@ -216,7 +233,7 @@ function parseAndTriggerSequence(patternString){
       //straight quater notes
       $('#tonedebug').html(note);
     }, ["C4", ["E4", "G4"], "A4"], "4n");
-    seq.start();
+    // seq.start();
 }
 
 function newShader(vs, shaderCode) {
@@ -226,7 +243,7 @@ function newShader(vs, shaderCode) {
         return res;
     }
 
-    defaultShaderCompiled = shaderCode === defaultShader || defaultShaderCompiled;
+    defaultShaderCompiled = shaderCode === shaderMinusSequencing(defaultShader) || defaultShaderCompiled;
     if(defaultShaderCompiled){
       console.log("SHADER LEN " + defaultShader.length);
     }
@@ -243,6 +260,7 @@ function newShader(vs, shaderCode) {
 
     // vertPosU =  gl.getUniformLocation(mProgram, "position");
     l2 = gl.getUniformLocation(mProgram, "time");
+    timeVec = gl.getUniformLocation(mProgram, "timeVec");
     l3 = gl.getUniformLocation(mProgram, "resolution");
     l4 = gl.getUniformLocation(mProgram, "mouse");
     l5 = gl.getUniformLocation(mProgram, "channelTime");
@@ -658,7 +676,14 @@ function updateKeyboardUp(event) {
 
 var d = null, dates = null;
 
-function paint() {
+var shaderTime = 0;
+var shaderTimeUpdates = 0;
+setInterval(function(){
+  shaderTime = (Date.now() - mTime) * 0.001;
+  shaderTimeUpdates += 1;
+}, 34);
+
+function paint(timeVal) {
     if (gl === null) return;
     if (mProgram === null) return;
 
@@ -676,8 +701,10 @@ function paint() {
     resos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
     resos = resos.concat(resos);
 
+    var toneTime = Tone.Transport.seconds;
     //add uniform stuff
     if (l2 !== null) gl.uniform1f(l2, (Date.now() - mTime) * 0.001);
+    if (timeVec !== null) gl.uniform2f(timeVec, toneTime, timeVal);
     if (l3 !== null) gl.uniform2f(l3, mCanvas.width, mCanvas.height);
     if (l4 !== null) gl.uniform4f(l4, mMousePosX, mMousePosY, mMouseClickX, mMouseClickY);
     if (l7 !== null) gl.uniform4f(l7, d.getFullYear(), d.getMonth(), d.getDate(),

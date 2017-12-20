@@ -25,15 +25,23 @@ var editor = null;
 mErrors = new Array();
 
 var useAVInput = true;
-var isMobile = true;
+var isMobile = mobileAndTabletcheck();
 var useAudioInput = !isMobile;
 var useVideoInput = !isMobile;
+
+var numFrames = 0;
 
 //create an audio context
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext = new AudioContext();
 
+var lastShaderTime = 0;
 
+var interShaderSum = 0;
+
+var lastDragTime = 0;
+var numDragEvents = 0;
+var interDragTimes = 0;
 $( document ).ready(function() {
     //--------------------- FOOTER UI ------------
     $('#footer')
@@ -1058,8 +1066,12 @@ $( document ).ready(function() {
                 }
             }
         }
-
-        paint();
+        var toneTime = Tone.Transport.seconds.toFixed(3);
+        var dateTime =  (Date.now() - mTime) * 0.001;
+        if(numFrames++ % 30 == 0) console.log("30 frames", dateTime, toneTime, dateTime - toneTime);
+        interShaderSum += shaderTime - lastShaderTime;
+        lastShaderTime = shaderTime;
+        paint(shaderTime);
     }
 
     if(!isMobile) {
@@ -1145,13 +1157,18 @@ $(document)
         var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
         mMousePosX = touch.pageX;
         mMousePosY = touch.pageY;
+        var dragTime = (Date.now() - mTime) * 0.001;
+        numDragEvents += 1;
+        interDragTimes += dragTime - lastDragTime;
+        lastDragTime = dragTime;
+
     })
-    .on('ontouchmove', function(event){
-        event.preventDefault()
-        var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
-        mMousePosX = touch.pageX;
-        mMousePosY = touch.pageY;
-    })
+    // .on('ontouchmove', function(event){
+    //     event.preventDefault()
+    //     var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+    //     mMousePosX = touch.pageX;
+    //     mMousePosY = touch.pageY;
+    // })
     .mouseup( function( event ) 
     { })
     .keydown( function( event )
