@@ -42,6 +42,11 @@ var interShaderSum = 0;
 var lastDragTime = 0;
 var numDragEvents = 0;
 var interDragTimes = 0;
+
+
+var swipeList = [];
+var swipePart;
+
 $( document ).ready(function() {
     //--------------------- FOOTER UI ------------
     $('#footer')
@@ -1068,7 +1073,8 @@ $( document ).ready(function() {
         }
         var toneTime = Tone.Transport.seconds.toFixed(3);
         var dateTime =  (Date.now() - mTime) * 0.001;
-        if(numFrames++ % 30 == 0) console.log("30 frames", dateTime, toneTime, dateTime - toneTime);
+        //if(numFrames % 30 == 0) console.log("30 frames", dateTime, toneTime, dateTime - toneTime);
+        numFrames += 1;
         interShaderSum += shaderTime - lastShaderTime;
         lastShaderTime = shaderTime;
         paint(shaderTime);
@@ -1139,6 +1145,24 @@ $( document ).ready(function() {
 
 });
 
+
+function cleanSwipeList(swipeList_){
+    var baseTime = Tone.Time(swipeList_[0][0]);
+    var cleanedSwipeList = [];
+    cleanedSwipeList.push([Tone.Time(0), swipeList_[0][1]]);
+
+    var isDuplicate = (ind) => Tone.Time(swipeList_[ind][0]).sub(Tone.Time(swipeList_[ind-1][0])).toTicks() == 0;
+
+    for (var i = 1; i < swipeList_.length; i++) {
+        if(!isDuplicate(i)){
+            cleanedSwipeList.push([Tone.Time(swipeList_[i][0]).sub(baseTime), swipeList_[i][1]]);
+            console.log(Tone.Time(swipeList_[i][0]).sub(baseTime).toTicks(), baseTime.toTicks());
+        }
+    }
+    console.log(cleanedSwipeList.map(t => t[0].toTicks()));
+    return cleanedSwipeList;
+}
+
 //document events
 $(document)
     // .tooltip()
@@ -1161,7 +1185,33 @@ $(document)
         numDragEvents += 1;
         interDragTimes += dragTime - lastDragTime;
         lastDragTime = dragTime;
+        swipeList.push([Tone.Transport.position, [mMousePosX, mMousePosY]]);
 
+    })
+    .on('touchstart', function(event){
+        event.preventDefault()
+        if(swipePart){
+            swipePart.stop();
+        }
+        swipeList = [];
+        var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+        console.log("touchstart", touch.pageX, touch.pageY, Tone.Transport.position)
+
+    })
+    .on('touchend', function(event){
+        event.preventDefault()
+        var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
+
+        if(swipePart) swipePart.dispose();
+        swipePart = new Tone.Part(function(time, note){
+            mMousePosX = note[0];
+            mMousePosY = note[1];
+            //console.log(time);
+        }, cleanSwipeList(swipeList));
+
+        console.log("touchend", touch.pageX, touch.pageY, Tone.now());
+
+        swipePart.start(Tone.now());
     })
     // .on('ontouchmove', function(event){
     //     event.preventDefault()
@@ -1170,7 +1220,8 @@ $(document)
     //     mMousePosY = touch.pageY;
     // })
     .mouseup( function( event ) 
-    { })
+    { 
+    })
     .keydown( function( event )
     {
         updateKeyboardDown(event.keyCode);
