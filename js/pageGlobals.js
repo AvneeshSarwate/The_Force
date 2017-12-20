@@ -1156,7 +1156,6 @@ function cleanSwipeList(swipeList_){
     for (var i = 1; i < swipeList_.length; i++) {
         if(!isDuplicate(i)){
             cleanedSwipeList.push([Tone.Time(swipeList_[i][0]).sub(baseTime), swipeList_[i][1]]);
-            console.log(Tone.Time(swipeList_[i][0]).sub(baseTime).toTicks(), baseTime.toTicks());
         }
     }
     console.log(cleanedSwipeList.map(t => t[0].toTicks()));
@@ -1201,17 +1200,18 @@ $(document)
     .on('touchend', function(event){
         event.preventDefault()
         var touch = event.originalEvent.touches[0] || event.originalEvent.changedTouches[0];
-
-        if(swipePart) swipePart.dispose();
-        swipePart = new Tone.Part(function(time, note){
-            mMousePosX = note[0];
-            mMousePosY = note[1];
-            //console.log(time);
-        }, cleanSwipeList(swipeList));
-
         console.log("touchend", touch.pageX, touch.pageY, Tone.now());
+        
+        if(swipeList.length > 0 ) { 
+            if(swipePart) swipePart.dispose();
+            swipePart = new Tone.Part(function(time, note){
+                mMousePosX = note[0];
+                mMousePosY = note[1];
+                //console.log(time);
+            }, cleanSwipeList(swipeList));
 
-        swipePart.start(Tone.now());
+            swipePart.start(Tone.now());
+        }
     })
     // .on('ontouchmove', function(event){
     //     event.preventDefault()
