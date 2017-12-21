@@ -1120,6 +1120,49 @@ $( document ).ready(function() {
         Tone.Transport.start();
     });
 
+
+    var touchMe = document.getElementById('demogl');
+
+    // Touchy.js creates a single global object called 'Touchy'
+var toucher = Touchy(touchMe, function (hand, finger) {
+    // this === toucher
+    // toucher.stop() : stop  watching element for touch events
+    // toucher.start(): start watching element for touch events
+
+    // This function will be called for every finger that touches the screen
+    // regardless of what other fingers are currently interacting.
+
+    // 'finger' is an object representing the entire path of a finger
+    // on the screen. So a touch-drag-release by a single finger would be
+    // encapsulated into this single object.
+
+    // 'hand' is an object holding all fingers currently interacting with the
+    // screen.
+    // 'hand.fingers' returns an Array of fingers currently on the screen
+    // including this one.
+    console.log('hand', hand);
+    // This callback is fired when the finger initially touches the screen.
+    finger.on('start', function (point) {
+        // 'point' is a coordinate of the following form:
+        // { id: <string>, x: <number>, y: <number>, time: <date> }
+        console.log('finger start', this);
+    });
+
+    // This callback is fired when finger moves.
+    finger.on('move', function (point) {
+        console.log('finger move', this, point, hand.fingers);
+    });
+
+    // This callback is fired when finger is released from the screen.
+    finger.on('end', function (point) {
+        console.log('finger stop', this);
+    });
+
+    // finger.lastPoint refers to the last touched point by the
+    // finger at any given time.
+});
+
+
     var audioSource = null;
     var form = document.getElementById('form');
     var loadAndUpdate = function(trackUrl) {
@@ -1149,6 +1192,7 @@ $( document ).ready(function() {
 function cleanSwipeList(swipeList_){
     var baseTime = Tone.Time(swipeList_[0][0]);
     var cleanedSwipeList = [];
+
     cleanedSwipeList.push([Tone.Time(0), swipeList_[0][1]]);
 
     var isDuplicate = (ind) => Tone.Time(swipeList_[ind][0]).sub(Tone.Time(swipeList_[ind-1][0])).toTicks() == 0;
