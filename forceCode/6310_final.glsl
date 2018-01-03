@@ -1,4 +1,5 @@
 
+
 // hexagon stuff from here - https://www.redblobgames.com/grids/hexagons/#hex-to-pixel
 /*
 This set of functions is used to help me implement "hexagonal pixelation".
@@ -126,7 +127,6 @@ float hexDiffAvg(vec2 p, float numHex){
     return diff / 18.;
 }
 
-
 /* The function that generates the rotating grid texture. Given a point, it
 returns the color for that point. It can be parameterized by time to 
 control its speed. The input point can also be transformed at the callsite to 
@@ -249,7 +249,7 @@ void main () {
     vec2 stN = uvN();
 
     //the current pixel in camera coordinate (this is sometimes transformed)
-    vec2 camPos = vec2(stN.x, stN.y);
+    vec2 camPos = vec2(1.- stN.x, stN.y);
 
     //the initial scaling of mouse values (replaced with audio instead)
     vec4 mN = mouse / resolution.xyxy /2.;
@@ -283,7 +283,7 @@ void main () {
     vec2 mouseMap = useVarying ? vec2(scale(indMap(mN.x, 3.), 0.5, 1.), scale(indMap(mN.y, 3.), 0.5, 1.)) : mN.xy; //TODO - allow this > 1?
 
     // the zoomed coordinates of the camera 
-    vec2 zcam = useVarying ? vec2(stN.x * mouseMap.x + (1. -  mouseMap.x)*(centCam.x), stN.y *  mouseMap.y + (1. -  mouseMap.y)*centCam.y) : camPos;
+    vec2 zcam = useVarying ? vec2((1.-stN.x) * mouseMap.x + (1. -  mouseMap.x)*(centCam.x), stN.y *  mouseMap.y + (1. -  mouseMap.y)*centCam.y) : camPos;
     
     // the color of the current (post zoom) pixel in the snapshot
     vec3 snap = texture2D(channel3, zcam).rgb;  
@@ -342,5 +342,6 @@ void main () {
         }
     }
     
-    gl_FragColor = vec4(vec3(c), feedback);
+    gl_FragColor = vec4(vec3(cam), feedback);
 }
+
