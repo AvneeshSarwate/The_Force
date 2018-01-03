@@ -13,11 +13,11 @@ vec2 coordWarp(vec2 stN){
     
     vec2 warp = stN;
     
-    float rad = 1.;
+    float rad = .3;
     
-    warp = length(p1 - stN) < rad ? mix(stN, p1, length(stN - p1))/rad  : warp;
+    warp = length(p1 - stN) <= rad ? mix(warp, p1, 1. - length(stN - p1)/rad)  : warp;
     
-    warp =length(p2 - stN) < rad ?  mix(warp, p2, 1. - length(stN - p2))/rad  : warp;
+    warp = length(p2 - stN) < rad ?  mix(warp, p2, length(stN - p2)/rad)  : warp;
     
     return warp;
 }
