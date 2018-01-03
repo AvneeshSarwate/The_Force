@@ -1124,43 +1124,82 @@ $( document ).ready(function() {
     var touchMe = document.getElementById('demogl');
 
     // Touchy.js creates a single global object called 'Touchy'
-var toucher = Touchy(touchMe, function (hand, finger) {
-    // this === toucher
-    // toucher.stop() : stop  watching element for touch events
-    // toucher.start(): start watching element for touch events
+    var toucher = Touchy(touchMe, function (hand, finger) {
+        // this === toucher
+        // toucher.stop() : stop  watching element for touch events
+        // toucher.start(): start watching element for touch events
 
-    // This function will be called for every finger that touches the screen
-    // regardless of what other fingers are currently interacting.
+        // This function will be called for every finger that touches the screen
+        // regardless of what other fingers are currently interacting.
 
-    // 'finger' is an object representing the entire path of a finger
-    // on the screen. So a touch-drag-release by a single finger would be
-    // encapsulated into this single object.
+        // 'finger' is an object representing the entire path of a finger
+        // on the screen. So a touch-drag-release by a single finger would be
+        // encapsulated into this single object.
 
-    // 'hand' is an object holding all fingers currently interacting with the
-    // screen.
-    // 'hand.fingers' returns an Array of fingers currently on the screen
-    // including this one.
-    console.log('hand', hand);
-    // This callback is fired when the finger initially touches the screen.
-    finger.on('start', function (point) {
-        // 'point' is a coordinate of the following form:
-        // { id: <string>, x: <number>, y: <number>, time: <date> }
-        console.log('finger start', this);
+        // 'hand' is an object holding all fingers currently interacting with the
+        // screen.
+        // 'hand.fingers' returns an Array of fingers currently on the screen
+        // including this one.
+        console.log('hand', hand);
+        // This callback is fired when the finger initially touches the screen.
+        finger.on('start', function (point) {
+            // 'point' is a coordinate of the following form:
+            // { id: <string>, x: <number>, y: <number>, time: <date> }
+            console.log('finger start', this);
+        });
+
+        // This callback is fired when finger moves.
+        finger.on('move', function (point) {
+            console.log('finger move', this, point, hand.fingers);
+        });
+
+        // This callback is fired when finger is released from the screen.
+        finger.on('end', function (point) {
+            console.log('finger stop', this);
+        });
+
+        // finger.lastPoint refers to the last touched point by the
+        // finger at any given time.
     });
 
-    // This callback is fired when finger moves.
-    finger.on('move', function (point) {
-        console.log('finger move', this, point, hand.fingers);
-    });
+    Touchy(touchMe, {
+        one: function (hand, finger) {
+            // Full touchy style event system, run only when exactly one finger
+            // on screen.
 
-    // This callback is fired when finger is released from the screen.
-    finger.on('end', function (point) {
-        console.log('finger stop', this);
-    });
+            // In these cases 'hand' is only alive for the duration of touches that
+            // have the exact number of simulataneous touches (unlike in the
+            // previous example).
 
-    // finger.lastPoint refers to the last touched point by the
-    // finger at any given time.
-});
+            // This callback is fired when the finger initially touches the screen.
+            finger.on('start', function (point) {
+                // 'point' is a coordinate of the following form:
+                // { id: <string>, x: <number>, y: <number>, time: <date> }
+                console.log('finger start', this);
+            });
+
+            // This callback is fired when finger moves.
+            finger.on('move', function (point) {
+                console.log('finger move', this, point, hand.fingers);
+            });
+
+            // This callback is fired when finger is released from the screen.
+            finger.on('end', function (point) {
+                console.log('finger stop', this);
+            });
+            
+        },
+
+        two: function (hand, finger1, finger2) {
+            // Only run when exactly two fingers on screen
+            hand.on('move', function (points) {
+                // 'points' is an Array of point objects (same as finger.on point object)
+            });
+        }
+
+        // 'three', 'four', 'five' are supported as well.
+        // 'any' is the same as the previous example.
+    });
 
 
     var audioSource = null;

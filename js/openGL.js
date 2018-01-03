@@ -13,7 +13,8 @@ var vsDraw = null;
 var elapsedBandPeaks = [0.0, 0.0, 0.0, 0.0];
 //unifoms
 var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiU;
-var timeVec;
+var timeVec, zoom;
+var zoomVal = 1;
 var resos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 resos = resos.concat(resos);
 var oscM = [null, null, null, null, null, null, null, null, null, null];
@@ -261,6 +262,7 @@ function newShader(vs, shaderCode) {
     // vertPosU =  gl.getUniformLocation(mProgram, "position");
     l2 = gl.getUniformLocation(mProgram, "time");
     timeVec = gl.getUniformLocation(mProgram, "timeVec");
+    zoom = gl.getUniformLocation(mProgram, "zoom");
     l3 = gl.getUniformLocation(mProgram, "resolution");
     l4 = gl.getUniformLocation(mProgram, "mouse");
     l5 = gl.getUniformLocation(mProgram, "channelTime");
@@ -705,6 +707,7 @@ function paint(timeVal) {
     //add uniform stuff
     if (l2 !== null) gl.uniform1f(l2, (Date.now() - mTime) * 0.001);
     if (timeVec !== null) gl.uniform2f(timeVec, toneTime, timeVal);
+    if (zoom !== null && zoomVal != 'undefined') gl.uniform1f(zoom, zoomVal);
     if (l3 !== null) gl.uniform2f(l3, mCanvas.width, mCanvas.height);
     if (l4 !== null) gl.uniform4f(l4, mMousePosX, mMousePosY, mMouseClickX, mMouseClickY);
     if (l7 !== null) gl.uniform4f(l7, d.getFullYear(), d.getMonth(), d.getDate(),

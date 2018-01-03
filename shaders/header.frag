@@ -2,6 +2,7 @@ precision lowp float;
 
 uniform vec2      resolution;
 uniform vec2      timeVec;
+uniform float     zoom;
 uniform float     time;
 uniform float     channelTime[4];
 uniform vec4      mouse;
