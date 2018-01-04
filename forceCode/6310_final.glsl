@@ -119,8 +119,8 @@ float hexDiffAvg(vec2 p, float numHex){
         vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
         for(float j = 0.; j < 3.; j++){
             vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
-            vec3 cam = texture2D(channel0, vec2(1.-samp.x, samp.y)).xyz;
-            vec3 snap = texture2D(channel3, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 cam = texture2D(channel0, samp).xyz;
+            vec3 snap = texture2D(channel3, samp).xyz;
             diff += colourDistance(cam, snap);
         }
     }
@@ -261,7 +261,7 @@ void main () {
     mN = vec4((bands.x+bands.y)/2., (bands.z+bands.w)/2., 0., 0.);
 
     // the decay factor of the trails
-    float decay = useVarying ? 0.795 + clamp(indMap(mN.x, 0.)*1.1, 0., 1.)*0.2 : 0.98;
+    float decay = useVarying ? 0.795 + clamp(indMap(mN.x, 0.)*.9, 0., 1.)*0.2 : 0.98;
 
     // the luminance values of the webcam "shadow" added to the foreground 
     float blockColor = useVarying ? block(20.+ indMap(mN.x, 1.) * 70., 2.+ indMap(mN.y, 0.) *15.) + 0.01 : block(50.+ sinN(time/2.) * 40., 7.+sinN(time/1.5)*10.) + 0.01;
@@ -283,7 +283,7 @@ void main () {
     vec2 mouseMap = useVarying ? vec2(scale(indMap(mN.x, 3.), 0.5, 1.), scale(indMap(mN.y, 3.), 0.5, 1.)) : mN.xy; //TODO - allow this > 1?
 
     // the zoomed coordinates of the camera 
-    vec2 zcam = useVarying ? vec2((1.-stN.x) * mouseMap.x + (1. -  mouseMap.x)*(centCam.x), stN.y *  mouseMap.y + (1. -  mouseMap.y)*centCam.y) : camPos;
+    vec2 zcam = useVarying ? vec2((1.- stN.x) * mouseMap.x + (1. -  mouseMap.x)*(centCam.x), stN.y *  mouseMap.y + (1. -  mouseMap.y)*centCam.y) : camPos;
     
     // the color of the current (post zoom) pixel in the snapshot
     vec3 snap = texture2D(channel3, zcam).rgb;  
@@ -323,7 +323,7 @@ void main () {
     vec3 t1 = vec3(avgLum);
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
-    if(hexDiff > 0.8){
+    if(hexDiff > 0.3){
         if(lastFeedback < 1.) {
             feedback = 1.;
             c = col * pow(blockColor, lumBlend);
@@ -342,6 +342,5 @@ void main () {
         }
     }
     
-    gl_FragColor = vec4(vec3(cam), feedback);
+    gl_FragColor = vec4(vec3(c), feedback);
 }
-

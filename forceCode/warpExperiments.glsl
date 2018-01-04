@@ -28,14 +28,16 @@ void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
-    vec2 warp = coordWarp(stN);
+    vec2 warp = stN; 
+    warp = coordWarp(warp);
 
     vec3 cam = texture2D(channel0, vec2(1.-warp.x, warp.y)).rgb;
-
-    //This is a new thing - explore it further (using cam.xy instead of stN)
     cam = swirl(time/10., cam.xy);
     
     
     
     gl_FragColor = vec4(vec3(cam), 1);
 }
+
+
+    
