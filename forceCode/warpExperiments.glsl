@@ -14,10 +14,10 @@ vec2 coordWarp(vec2 stN){
     
     vec2 warp = stN;
     
-    float rad = .5;
+    float rad = .2;
     
-    for (float i = 0.0; i < 10.; i++) {
-        vec2 p = vec2(sinN(time * 1.3 + i), cosN(sinN(time) * 1.1 + i));
+    for (float i = 0.0; i < 100.; i++) {
+        vec2 p = vec2(sinN(time/10. * rand(i) * 1.3 + i), cosN(time/10. * rand(i) * 1.1 + i));
         warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
     }
     
@@ -31,12 +31,11 @@ void main () {
     vec2 warp = coordWarp(stN);
 
     vec3 cam = texture2D(channel0, vec2(1.-warp.x, warp.y)).rgb;
-    // cam = swirl(time/3., warp);
+
+    //This is a new thing - explore it further (using cam.xy instead of stN)
+    cam = swirl(time/10., cam.xy);
     
     
     
     gl_FragColor = vec4(vec3(cam), 1);
 }
-
-
-    
