@@ -36,7 +36,8 @@ void main () {
     float decay = 0.99;
   
     // the color of the current (post zoom) pixel in the snapshot
-    vec3 snap = texture2D(channel3, camPos).rgb;  
+    vec3 snap = texture2D(channel3, camPos).rgb;
+    vec3 warpSnap = texture2D(channel3, coordWarp(camPos)).rgb;
 
     //the color of the current (post zoom) pixel in the live webcam input
     vec3 cam = texture2D(channel0, camPos).rgb;  
@@ -55,25 +56,31 @@ void main () {
     //the value for how much the current pixel will be "faded" into the background
     float feedback;
     // how high the difference is between camera and snapshot for the current pixel (not used)
-    float pointDiff = colourDistance(cam, snap);
+    float pointDiff = colourDistance(warpCam, warpSnap);
+    
+    vec3 warpSwirl = swirl(time/10., warpCam.xy);
+    
+    vec3 trail = warpCam;
+    vec3 foreGround = warpSwirl;
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
-    if(pointDiff > 0.3){
+    if(pointDiff > .3){
         if(lastFeedback < 1.) {
             feedback = 1.;
-            c = warpCam; 
-        } else {
-            feedback = lastFeedback * decay;
-            c = mix(snap, bb, lastFeedback);
-        }
+            c = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
     }
     else {
         feedback = lastFeedback * decay;
-        if(lastFeedback > 0.2) {
-            c = mix(cam, warpCam, lastFeedback); 
+        if(lastFeedback > 0.8) {
+            c = mix(foreGround, trail, lastFeedback); 
         } else {
             feedback = 0.;
-            c = cam;
+            c = foreGround;
         }
     }
     
