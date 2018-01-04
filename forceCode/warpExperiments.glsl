@@ -4,20 +4,22 @@ float logi(float x){
 
 
 vec2 coordWarp(vec2 stN){
-    vec2 p1 = vec2(sinN(time * 1.3), cosN(time));
-    // p1 = vec2(0.25);
-    
-    vec2 p2 = vec2(sinN(time * 1.3 + 1.), cosN(time * 1.1 + 1.));
-    // p2 = vec2(0.75);
+    // vec2 p1 = vec2(sinN(time * 1.3), cosN(time));
+    // // p1 = vec2(0.25);
+    // vec2 p2 = vec2(sinN(time * 1.3 + 1.), cosN(time * 1.1 + 1.));
+    // // p2 = vec2(0.75);
+    // warp = length(p1 - stN) <= rad ? mix(warp, p1, 1. - length(stN - p1)/rad)  : warp;
+    // warp = length(p2 - stN) < rad ?  mix(warp, p2, length(stN - p2)/rad)  : warp;
     
     
     vec2 warp = stN;
     
-    float rad = .3;
+    float rad = .5;
     
-    warp = length(p1 - stN) <= rad ? mix(warp, p1, 1. - length(stN - p1)/rad)  : warp;
-    
-    warp = length(p2 - stN) < rad ?  mix(warp, p2, length(stN - p2)/rad)  : warp;
+    for (float i = 0.0; i < 10.; i++) {
+        vec2 p = vec2(sinN(time * 1.3 + i), cosN(sinN(time) * 1.1 + i));
+        warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
+    }
     
     return warp;
 }
