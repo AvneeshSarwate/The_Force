@@ -14,6 +14,8 @@ var elapsedBandPeaks = [0.0, 0.0, 0.0, 0.0];
 //unifoms
 var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiU;
 var timeVec, zoom;
+var randValueU, randValueVal = 0, randWalkU, randWalkVal = 0;
+var markovState = 0, markovP = 0.8;
 var zoomVal = 1;
 var resos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 resos = resos.concat(resos);
@@ -38,6 +40,12 @@ var webcamSnapshotTexture;
 var takeSnapshot = true;
 
 var defaultShaderCompiled = false;
+
+//simple 2 state (0,1) markov model with single probability pChange
+//that determines whether you stay on the same state or swap to the other
+function markovWalk(pChange, state){
+    return Math.random() < pChange ? !state + 0 : state;
+}
 
 function createGlContext() {
     var gGLContext = null;
@@ -263,6 +271,8 @@ function newShader(vs, shaderCode) {
     l2 = gl.getUniformLocation(mProgram, "time");
     timeVec = gl.getUniformLocation(mProgram, "timeVec");
     zoom = gl.getUniformLocation(mProgram, "zoom");
+    randValueU = gl.getUniformLocation(mProgram, "randValue");
+    randWalkU = gl.getUniformLocation(mProgram, "randWalk");
     l3 = gl.getUniformLocation(mProgram, "resolution");
     l4 = gl.getUniformLocation(mProgram, "mouse");
     l5 = gl.getUniformLocation(mProgram, "channelTime");
@@ -708,6 +718,10 @@ function paint(timeVal) {
     if (l2 !== null) gl.uniform1f(l2, (Date.now() - mTime) * 0.001);
     if (timeVec !== null) gl.uniform2f(timeVec, toneTime, timeVal);
     if (zoom !== null && zoomVal != 'undefined') gl.uniform1f(zoom, zoomVal);
+    markovState = markovWalk(markovP, markovState)
+    if (randWalkU !== null) gl.uniform1f(randWalkU, randWalkVal += markovState ? 1 : -1);
+    // console.log(markovState);
+    if (randValueU !== null) gl.uniform1f(randValueU, Math.random());
     if (l3 !== null) gl.uniform2f(l3, mCanvas.width, mCanvas.height);
     if (l4 !== null) gl.uniform4f(l4, mMousePosX, mMousePosY, mMouseClickX, mMouseClickY);
     if (l7 !== null) gl.uniform4f(l7, d.getFullYear(), d.getMonth(), d.getDate(),
