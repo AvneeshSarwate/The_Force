@@ -15,7 +15,7 @@ var elapsedBandPeaks = [0.0, 0.0, 0.0, 0.0];
 var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiU;
 var timeVec, zoom;
 var randValueU, randValueVal = 0, randWalkU, randWalkVal = 0;
-var markovState = 0, markovP = 0.8;
+var markovState = 0, markovP = 0.05;
 var zoomVal = 1;
 var resos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 resos = resos.concat(resos);
