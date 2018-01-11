@@ -44,3 +44,6 @@ If you're looking for which functions are built-in, then give the wiki [API](htt
 * https://github.com/eligrey/FileSaver.js
 * https://github.com/eligrey/canvas-toBlob.js
 * https://github.com/marmorkuchen-net/osc-js
+
+## Sources (for fork)
+* https://tonejs.github.io/
