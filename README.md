@@ -1,7 +1,7 @@
 # The Force
 
 (ORIGINAL REPO HOSTED HERE - https://shawnlawson.github.io/The_Force/)
-(ALSO, requires node version 4 to run)
+(ALSO, requires node version 4 to run locally with OSC communication)
 
 Life creates it, makes it grow. Its energy surrounds us and binds us. Luminous beings are we, not this crude matter. You must feel the Force around you; here, between you, me, the tree, the rock, everywhere, yes.
 
