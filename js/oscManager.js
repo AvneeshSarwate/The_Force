@@ -4,8 +4,44 @@ var messageIndex = 0;
 var sendIndex = 0;
 var messageVals = [false, false, false, false, false, false, false, false, false, false];
 var oscOnScreen = false;
+var pubnub;
+var subKey = 'sub-c-81d9f970-fd67-11e7-991b-ee282aa22bde';
+var pubKey = '';
 
 function initOSC() {
+    
+    pubnub = new PubNub({
+        subscribeKey: subKey, // always required
+        publishKey: pubKey
+    });
+
+    if(!pubKey){
+        pubnub.subscribe({ 
+            channels: ['force-remote-control'] 
+        });
+        pubnub.addListener({
+            status: function(statusEvent) {
+                if (statusEvent.category === "PNConnectedCategory") {
+                    console.log("connected");
+                } else if (statusEvent.category === "PNUnknownCategory") {
+                    var newState = {
+                        new: 'error'
+                    };
+                    pubnub.setState(
+                        {
+                            state: newState 
+                        },
+                        function (status) {
+                            console.log(statusEvent.errorData.message);
+                        }
+                    );
+                } 
+            },
+            message: function(message) {
+                oscM[message.oscName] = message.oscValues;   
+            }
+        });
+    }
 
     osc = new OSC({
         discardLateMessages: true
@@ -149,7 +185,7 @@ function sendOSCMessages()
     }
 }
 
-function enableOSCMessage(whom) 
+function enableOSCMessage(whom, presetMsgs) 
 {
     $("#inOSCtext" + whom).prop('disabled', true);
     // $('#inOSCtext' + whom).css("background-color", "rgba(128,128,128,0.5)");
@@ -159,6 +195,7 @@ function enableOSCMessage(whom)
     $("#inOSCdisable" + whom).button('enable');
 
     var m = $("#inOSCtext" + whom).val();
+    var uniformName = presetMsgs ? presetMsgs : $('#inOSCUniform' + whom).val();
 
     var listener = osc.on(m, function(cMessage) 
 	{
@@ -172,8 +209,25 @@ function enableOSCMessage(whom)
 	            $("#w" + whom).html(cMessage.args[3].toFixed(3));
                 $("#rawMessages" + whom).html(" ");
             }
-            oscM[whom].args = [cMessage.args[0].toFixed(3), cMessage.args[1].toFixed(3),
-            			  cMessage.args[2].toFixed(3), cMessage.args[3].toFixed(3)];
+
+            var oscValues = [cMessage.args[0].toFixed(3), cMessage.args[1].toFixed(3),
+                          cMessage.args[2].toFixed(3), cMessage.args[3].toFixed(3)];
+
+            oscM[whom].args = oscValues;
+
+            if(pubKey){
+                var messageObj = {message:{oscName: whom, vals: oscValues}, channel: 'force-remote-control'};
+                pubnub.publish(
+                    messageObj,
+                    function (status, response) {
+                        if (status.error) {
+                            console.log(status);
+                        } else {
+                            console.log("message Published w/ timetoken", response.timetoken);
+                        }
+                    }
+                );
+            }
         }
         else
         {
@@ -188,7 +242,7 @@ function enableOSCMessage(whom)
 	oscM[whom] = {};
 	oscM[whom].listener = listener;
 	oscM[whom].args = [0.0,0.0,0.0,0.0];
-	oscM[whom].uniName = $('#inOSCUniform' + whom).val();
+	oscM[whom].uniName = uniformName;
     createOSCUniforms();
     setShaderFromEditor();
 }
