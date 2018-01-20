@@ -1006,6 +1006,20 @@ $( document ).ready(function() {
     editor.getSession().on('change', function(e) {
                             clearTimeout(mCompileTimer);
                             mCompileTimer = setTimeout(setShaderFromEditor, 200);
+                            if(pubKey){
+                                var editorCode = editor.getValue();
+                                var messageObj = {message:{shaderCode: editorCode, type: 'shader'}, channel: 'force-remote-control'};
+                                pubnub.publish(
+                                    messageObj,
+                                    function (status, response) {
+                                        if (status.error) {
+                                            console.log(status);
+                                        } else {
+                                            console.log("shader message Published w/ timetoken", editorCode, response.timetoken);
+                                        }
+                                    }
+                                );
+                            }
     });
     editor.$blockScrolling = Infinity;
     if (typeof(Storage) !== "undefined" && typeof(localStorage.lastValidCode) !== "undefined"){

@@ -38,7 +38,14 @@ function initOSC() {
                 } 
             },
             message: function(message) {
-                oscM[message.message.oscName].args = message.message.vals.map(parseFloat);   
+                if(message.message.type === 'oscUniform') {
+                    oscM[message.message.oscName].args = message.message.vals.map(parseFloat);  
+                }
+                if(message.message.type === 'shader') {
+                    var code = message.message.shaderCode;
+                    setShaderFromEditor(code);
+                    //Todo: - set actual editor value too? editor.setValue(code, -1);
+                }
             }
         });
     }
@@ -220,14 +227,14 @@ function enableOSCMessage(whom, presetMsgs)
             oscM[whom].args = oscValues;
 
             if(pubKey){
-                var messageObj = {message:{oscName: whom, vals: oscValues}, channel: 'force-remote-control'};
+                var messageObj = {message:{oscName: whom, vals: oscValues, type: 'oscUniform'}, channel: 'force-remote-control'};
                 pubnub.publish(
                     messageObj,
                     function (status, response) {
                         if (status.error) {
                             console.log(status);
                         } else {
-                            console.log("message Published w/ timetoken", response.timetoken);
+                            console.log("osc message Published w/ timetoken", presetMsgs, response.timetoken);
                         }
                     }
                 );
