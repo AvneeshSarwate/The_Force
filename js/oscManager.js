@@ -38,7 +38,7 @@ function initOSC() {
                 } 
             },
             message: function(message) {
-                oscM[message.oscName] = message.oscValues;   
+                oscM[message.message.oscName].args = message.message.vals.map(parseFloat);   
             }
         });
     }
