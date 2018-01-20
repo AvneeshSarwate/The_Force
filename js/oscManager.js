@@ -56,6 +56,10 @@ function initOSC() {
         takeSnapshot = true;
     }, 80);
 
+    for (var i = 0; i < 10; i++) {
+        enableOSCMessage(i, "in"+i);
+    }
+
     // socket event listeners
     osc.on('open', function(cEvent) 
     {
@@ -67,33 +71,33 @@ function initOSC() {
         $('#socket_status').html('offline');
         $("#socket_start").button("enable");
         // $('#socket_address').prop('disabled', false);
-		// $('#socket_port').prop('disabled', false);
+        // $('#socket_port').prop('disabled', false);
 
         //TODO: disable OSC listen and send message buttons and the individual messages
-		$("#socket_stop").button("disable");
+        $("#socket_stop").button("disable");
     });
 
     osc.on('error', function(cEvent) 
     {
         $('#socket_status').html('error');
         $("#socket_start").button("enable");
-		$("#socket_stop").button("disable");
+        $("#socket_stop").button("disable");
     });
 
     $('#socket_start')
         .button()
         .click( function(event)
         {
-    		var address = $('#socket_address').val();
-    		var port = $('#socket_port').val();
-    		$('#socket_status').html('waiting');
+            var address = $('#socket_address').val();
+            var port = $('#socket_port').val();
+            $('#socket_status').html('waiting');
             // $('#socket_address').prop('disabled', true);
             // $('#socket_port').prop('disabled', true);
-    		$(this).button("disable");
+            $(this).button("disable");
             $("#socket_stop").button("enable");
 
             //TODO: enable OSC listen and send message buttons
-    		osc.connect(address, port);
+            osc.connect(address, port);
         });
     
     $('#socket_stop')
@@ -102,7 +106,7 @@ function initOSC() {
         )
         .click( function(event)
         {
-        	osc.disconnect();
+            osc.disconnect();
             $(this).button("disable");
             $("#socket_start").button("enable");
         });
@@ -111,8 +115,8 @@ function initOSC() {
         .button()
         .click( function(event)
         {
-    		if (messageIndex < 9) {
-    	        $("#myInputs").append(
+            if (messageIndex < 9) {
+                $("#myInputs").append(
                     '<div class="oscRow">\
                     <input type="text" id="inOSCtext' + messageIndex + '" value="/analogInput"/>\
                     <input type="text" id="inOSCUniform' + messageIndex + '" value="analogInput"/>\
@@ -126,9 +130,9 @@ function initOSC() {
                     <div id="rawMessages' + messageIndex + '"> </div>');
 
                 $("#inOSCenable" + messageIndex).button();
-    	        $("#inOSCdisable" + messageIndex).button({disabled: true});
-    	        messageIndex += 1;
-    	    }
+                $("#inOSCdisable" + messageIndex).button({disabled: true});
+                messageIndex += 1;
+            }
         });
 
     $('#appendOSCOutput')
@@ -194,19 +198,19 @@ function enableOSCMessage(whom, presetMsgs)
     $("#inOSCenable" + whom).button('disable');
     $("#inOSCdisable" + whom).button('enable');
 
-    var m = $("#inOSCtext" + whom).val();
+    var m = presetMsgs ? presetMsgs : $("#inOSCtext" + whom).val();
     var uniformName = presetMsgs ? presetMsgs : $('#inOSCUniform' + whom).val();
 
     var listener = osc.on(m, function(cMessage) 
-	{
+    {
         if (cMessage.typesString == "ffff") {
             //check if popup is visible
             if ($('#oscPanel').length)//onscreen
             {
-	            $("#x" + whom).html(cMessage.args[0].toFixed(3));
-	            $("#y" + whom).html(cMessage.args[1].toFixed(3));
-	            $("#z" + whom).html(cMessage.args[2].toFixed(3));
-	            $("#w" + whom).html(cMessage.args[3].toFixed(3));
+                $("#x" + whom).html(cMessage.args[0].toFixed(3));
+                $("#y" + whom).html(cMessage.args[1].toFixed(3));
+                $("#z" + whom).html(cMessage.args[2].toFixed(3));
+                $("#w" + whom).html(cMessage.args[3].toFixed(3));
                 $("#rawMessages" + whom).html(" ");
             }
 
@@ -239,12 +243,12 @@ function enableOSCMessage(whom, presetMsgs)
     });
 
     
-	oscM[whom] = {};
-	oscM[whom].listener = listener;
-	oscM[whom].args = [0.0,0.0,0.0,0.0];
-	oscM[whom].uniName = uniformName;
+    oscM[whom] = {};
+    oscM[whom].listener = listener;
+    oscM[whom].args = [0.0,0.0,0.0,0.0];
+    oscM[whom].uniName = uniformName;
     createOSCUniforms();
-    setShaderFromEditor();
+    if(!presetMsgs) setShaderFromEditor();
 }
 
 function disableOSCMessage(whom) 
