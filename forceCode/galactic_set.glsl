@@ -317,7 +317,7 @@ void main () {
     vec3 camWarp = texture2D(channel0, coordWarp(stN)).xyz;
     vec3 camWave = texture2D(channel0, rowWaves(stN, 0.)).xyz;
     
-    vec3 waveWarp = texture2D(channel0, columnWaves(rowWaves(stN, 10.), 10.)).xyz;
+    vec3 waveWarp = texture2D(channel0, rowWaves(columnWaves(rowWaves(columnWaves(vec2(1.-stN.x, stN.y), 2.), 2.), 2.), 2.)).xyz;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
     vec3 trail = camWave; swirl(time/5., stN) ; cam;
