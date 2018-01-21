@@ -182,6 +182,12 @@ vec3 quant(vec3 num, float quantLevels){
     return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 /* bound a number to [low, high] and "wrap" the number back into the range
 if it exceeds the range on either side - 
 for example wrap(10, 1, 9) -> 8

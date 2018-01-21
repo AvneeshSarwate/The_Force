@@ -22,9 +22,9 @@ void main () {
     vec3 cam = texture2D(channel0, stN).xyz;
     vec3 camWarp = texture2D(channel0, coordWarp(stN)).xyz;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
-    bool condition = distance(touch1.xy, stN) < .1;
-    vec3 trail = length(touch2) > 0. ? cam * touch2.xyz : white;
-    vec3 foreGround = length(touch3) > 0. ? camWarp * touch3.xzy : black;
+    bool condition = distance(in1.xy, stN) < .1;
+    vec3 trail = length(in2) > 0. ? cam * in2.xyz : white;
+    vec3 foreGround = length(in3) > 0. ? camWarp * in3.xzy : black;
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
