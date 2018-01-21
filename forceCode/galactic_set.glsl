@@ -230,6 +230,28 @@ float block(float numBlocks, float quantLevel) {
     return quant(blockAvgLuma, quantLevel);
 }
 
+vec3 blockrgb(float numBlocks, float quantLevel) {
+    vec2 stN = uvN();
+    vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).xyz; 
+    vec3 lumC = lum(cam);
+    vec2 res = gl_FragCoord.xy / stN;
+    vec2 blockSize = res.xy / numBlocks;
+    vec2 blockStart = floor(gl_FragCoord.xy / blockSize) * blockSize / res.xy;
+    vec3 colAvg = vec3(0.);
+    vec2 counter = blockStart;
+    
+    vec2 inc = vec2(1. / (numBlocks *100.));
+    for(float i = 0.; i < 10.; i += 1.){
+        for(float j = 0.; j < 10.; j += 1.){
+            colAvg += texture2D(channel0, vec2(1.-counter.x, counter.y)).xyz;
+            counter += inc;
+        }
+    }
+    colAvg /= 100.;
+    
+    return quant(colAvg, quantLevel);
+}
+
 //val assumed between 0 - 1
 float scale(float val, float minv, float maxv){
     float range = maxv - minv;
@@ -264,7 +286,7 @@ vec2 coordWarp(vec2 stN){
 
 bool multiBallCondition(vec2 stN){
     
-    float rad = .05;
+    float rad = 0.1 + sinN(time/4.)/ 10.;
     bool cond = false;
     
     for (float i = 0.0; i < 10.; i++) {
@@ -275,20 +297,32 @@ bool multiBallCondition(vec2 stN){
     return cond;
 }
 
+vec2 columnWaves(vec2 stN, float numColumns){
+    return vec2(wrap(stN.x + sin(quant(stN.x, numColumns)*time*8.)*0.05, 0., 1.), wrap(stN.y + cos(quant(stN.x, numColumns)*5.+time*2.)*0.22, 0., 1.));
+}
+
+vec2 rowWaves(vec2 stN, float numColumns){
+    return vec2(wrap(stN.x + sin(quant(stN.y, numColumns)*5.+time*2.)*0.22, 0., 1.), wrap(stN.y + cos(quant(stN.y, numColumns)*time*8.)*0.05, 0., 1.));
+}
+
 void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
     
     vec3 c;
-    float decay = 0.99;
+    float decay = 0.96;
     float feedback;
     vec3 cam = texture2D(channel0, stN).xyz; 
     vec3 camWarp = texture2D(channel0, coordWarp(stN)).xyz;
+    vec3 camWave = texture2D(channel0, rowWaves(stN, 0.)).xyz;
+    
+    vec3 waveWarp = texture2D(channel0, columnWaves(rowWaves(stN, 10.), 10.)).xyz;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
-    vec3 trail = cam;
-    vec3 foreGround = camWarp;
+    vec3 trail = camWave; swirl(time/5., stN) ; cam;
+    vec3 foreGround = cam; mod(camWarp*(0.8 + sinN(time))*3., 1.);
+    vec3 swirlW = swirl(time/5., coordWarp(columnWaves(stN, 10.)));
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -311,5 +345,6 @@ void main () {
         }
     }
     
-    gl_FragColor = vec4(vec3(c), feedback);
+    gl_FragColor = vec4(vec3(waveWarp), feedback);
 }
+
