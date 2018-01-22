@@ -127,6 +127,25 @@ float hexDiffAvg(vec2 p, float numHex){
     return diff / 18.;
 }
 
+/* calculate the average difference between camera and snapshot for the 
+hexagon tile enclosing point p */
+vec3 hexColorAvg(vec2 p, float numHex){
+    vec2 p2 = p * numHex;
+    vec2 center = hexCenter2(p2, 1.);
+    bool contained = false;
+    vec3 col = vec3(0.);
+    for(float i = 0.; i < 6.; i++){
+        float rad = i * PI / 3.;
+        vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
+        for(float j = 0.; j < 3.; j++){
+            vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
+            vec3 cam = texture2D(channel0, samp).xyz;
+            col += cam;
+        }
+    }
+    return col / 18.;
+}
+
 /* The function that generates the rotating grid texture. Given a point, it
 returns the color for that point. It can be parameterized by time to 
 control its speed. The input point can also be transformed at the callsite to 
@@ -197,6 +216,38 @@ float wrap(float val, float low, float high){
     if(val < low) return low + (low-val);
     if(val > high) return high - (val - high);
     return val;
+}
+
+float wrap2(float val, float low, float high){
+    return mod(val - low, high - low) + low;
+}
+
+float wrap3(float val, float low, float high){
+    float range  = high - low;
+    if(val > high){
+        float dif = val-high;
+        float difMod = mod(dif, range);
+        float numWrap = dif/range - difMod;
+        if(mod(numWrap, 2.) == 0.){
+            return high - difMod;
+        } else {
+            return low + difMod;
+        }
+    }
+    if(val < low){
+        float dif = low-val;
+        float difMod = mod(dif, range);
+        float numWrap = dif/range - difMod;
+        if(mod(numWrap, 2.) == 0.){
+            return low + difMod;
+        } else {
+            return high - difMod;
+        }
+    }
+    return val;
+}
+vec2 wrap(vec2 val, float low, float high){
+    return vec2(wrap3(val.x, low, high), wrap3(val.y, low, high));
 }
 
 // bound a number between the limits
@@ -313,10 +364,26 @@ vec2 rowWaves2(vec2 stN, float numColumns){
     return vec2(wrap(stN.x + sin(quant(stN.y, numColumns)*5.+time*2.)*0.22, 0., 1.), wrap(stN.y + cos(time*8.)*0.05, 0., 1.));
 }
 
+vec2 columnWaves3(vec2 stN, float numColumns, float time2, float power){
+    return vec2(wrap(stN.x + sin(time2*8.)*0.05 * power, 0., 1.), wrap(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.));
+}
+vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
+    return vec2(wrap(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.), wrap(stN.y + cos(time2*8.)*0.05 * power, 0., 1.));
+}
+
+vec2 rowColWave(vec2 stN, float div, float time2, float power){
+    for (int i = 0; i < 1; i++) {
+        stN = rowWaves3(stN, div, time2, power);
+        stN = columnWaves3(stN, div, time2, power);
+    }
+    return stN;
+}
+
 void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
+    vec2 camN = vec2(1.- stN.x, stN.y);
     
     vec3 c;
     float decay = 0.96;
@@ -325,17 +392,20 @@ void main () {
     vec3 camWarp = texture2D(channel0, coordWarp(stN)).xyz;
     vec3 camWave = texture2D(channel0, rowWaves(stN, 0.)).xyz;
     
-    vec3 waveWarp = texture2D(channel0, rowWaves(columnWaves(rowWaves(columnWaves(vec2(1.-stN.x, stN.y), 2.), 2.), 2.), 2.)).xyz;
+    vec3 waveWarp = texture2D(channel0, rowWaves(columnWaves(rowWaves(columnWaves(camN, 2.), 2.), 2.), 2.)).xyz;
     float div = 1.+sinN(time/5.)*50.;
-    waveWarp = texture2D(channel0, rowWaves2(columnWaves2(rowWaves2(columnWaves2(vec2(1.-stN.x, stN.y), div), div), div), div)).xyz;
-
+    waveWarp = texture2D(channel0, rowWaves2(columnWaves2(rowWaves2(columnWaves2(camN, div), div), div), div)).xyz;
 
 
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
     vec3 trail = camWave; swirl(time/5., stN) ; cam;
     vec3 foreGround = cam; mod(camWarp*(0.8 + sinN(time))*3., 1.);
-    vec3 swirlW = swirl(time/5., coordWarp(columnWaves(stN, 10.)));
+    
+    vec2 deepTileWave = rowColWave(camN * (.2 + sinN(time/4.)*3.), 1. + sinN(time/2.) * 20., time, 0.1 + sinN(time));
+    vec2 wrapTileCoord = wrap(rotate(deepTileWave, vec2(sinN(time/3.), cosN(time/3.)), time)*(1. + sinN(time/5.)*10.), 0., 1.);
+    vec3 wrapTile = texture2D(channel0, wrap(rotate(deepTileWave, vec2(0.5), randWalk/90.)*5., 0., 1.)).rgb;
+    
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -358,6 +428,6 @@ void main () {
         }
     }
     
-    gl_FragColor = vec4(vec3(waveWarp), feedback);
+    gl_FragColor = vec4(wrapTile, feedback);
 }
 
