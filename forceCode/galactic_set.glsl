@@ -297,12 +297,20 @@ bool multiBallCondition(vec2 stN){
     return cond;
 }
 
+
 vec2 columnWaves(vec2 stN, float numColumns){
     return vec2(wrap(stN.x + sin(quant(stN.x, numColumns)*time*8.)*0.05, 0., 1.), wrap(stN.y + cos(quant(stN.x, numColumns)*5.+time*2.)*0.22, 0., 1.));
 }
-
 vec2 rowWaves(vec2 stN, float numColumns){
     return vec2(wrap(stN.x + sin(quant(stN.y, numColumns)*5.+time*2.)*0.22, 0., 1.), wrap(stN.y + cos(quant(stN.y, numColumns)*time*8.)*0.05, 0., 1.));
+}
+
+//removed position dependent speed for more order
+vec2 columnWaves2(vec2 stN, float numColumns){
+    return vec2(wrap(stN.x + sin(time*8.)*0.05, 0., 1.), wrap(stN.y + cos(quant(stN.x, numColumns)*5.+time*2.)*0.22, 0., 1.));
+}
+vec2 rowWaves2(vec2 stN, float numColumns){
+    return vec2(wrap(stN.x + sin(quant(stN.y, numColumns)*5.+time*2.)*0.22, 0., 1.), wrap(stN.y + cos(time*8.)*0.05, 0., 1.));
 }
 
 void main () {
@@ -318,6 +326,11 @@ void main () {
     vec3 camWave = texture2D(channel0, rowWaves(stN, 0.)).xyz;
     
     vec3 waveWarp = texture2D(channel0, rowWaves(columnWaves(rowWaves(columnWaves(vec2(1.-stN.x, stN.y), 2.), 2.), 2.), 2.)).xyz;
+    float div = 1.+sinN(time/5.)*50.;
+    waveWarp = texture2D(channel0, rowWaves2(columnWaves2(rowWaves2(columnWaves2(vec2(1.-stN.x, stN.y), div), div), div), div)).xyz;
+
+
+
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
     vec3 trail = camWave; swirl(time/5., stN) ; cam;
