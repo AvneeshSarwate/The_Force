@@ -402,9 +402,18 @@ void main () {
     vec3 trail = camWave; swirl(time/5., stN) ; cam;
     vec3 foreGround = cam; mod(camWarp*(0.8 + sinN(time))*3., 1.);
     
-    vec2 deepTileWave = rowColWave(camN * (.2 + sinN(time/4.)*3.), 1. + sinN(time/2.) * 20., time, 0.1 + sinN(time)/2.);
+    float t0, t1, t2, t3, t4, rw;
+    t0 = time/4.;
+    t1 = time/2.;
+    t2 = time;
+    t3 = time;
+    rw =  randWalk/90.;
+    t4 = time;
+    
+    vec2 deepTileWave = rowColWave(camN * (.2 + sinN(t0)*3.), 1. + sinN(t1) * 20., t2, 0.1 + sinN(t3)/2.);
     vec2 wrapTileCoord = wrap(rotate(deepTileWave, vec2(sinN(time/3.), cosN(time/3.)), time)*(1. + sinN(time/5.)*10.), 0., 1.);
-    vec3 wrapTile = texture2D(channel0, wrap(rotate(deepTileWave, vec2(0.5), randWalk/90.)*5., 0., 1.)).rgb;
+    vec2 warpTileCoord2 = wrap(rotate(deepTileWave, vec2(0.5), rw)*5., 0., 1.);
+    vec3 wrapTile = texture2D(channel0, warpTileCoord2).rgb;
     
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
