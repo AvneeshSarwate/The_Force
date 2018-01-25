@@ -52,7 +52,7 @@ $( document ).ready(function() {
 
     var shaderToGet = window.location.href.split("?")[1];
     if(shaderToGet){
-        $.get("/forceCode/"+shaderToGet+".glsl", function(shaderCode){
+        $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             console.log(shaderCode);
             defaultShader = shaderCode;
             editor.setValue(shaderCode, -1);
