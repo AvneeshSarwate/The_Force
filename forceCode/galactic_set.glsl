@@ -372,7 +372,7 @@ vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
 }
 
 vec2 rowColWave(vec2 stN, float div, float time2, float power){
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 5; i++) {
         stN = rowWaves3(stN, div, time2, power);
         stN = columnWaves3(stN, div, time2, power);
     }
@@ -402,7 +402,7 @@ void main () {
     vec3 trail = camWave; swirl(time/5., stN) ; cam;
     vec3 foreGround = cam; mod(camWarp*(0.8 + sinN(time))*3., 1.);
     
-    vec2 deepTileWave = rowColWave(camN * (.2 + sinN(time/4.)*3.), 1. + sinN(time/2.) * 20., time, 0.1 + sinN(time));
+    vec2 deepTileWave = rowColWave(camN * (.2 + sinN(time/4.)*3.), 1. + sinN(time/2.) * 20., time, 0.1 + sinN(time)/2.);
     vec2 wrapTileCoord = wrap(rotate(deepTileWave, vec2(sinN(time/3.), cosN(time/3.)), time)*(1. + sinN(time/5.)*10.), 0., 1.);
     vec3 wrapTile = texture2D(channel0, wrap(rotate(deepTileWave, vec2(0.5), randWalk/90.)*5., 0., 1.)).rgb;
     
