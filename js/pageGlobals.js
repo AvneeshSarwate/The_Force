@@ -48,6 +48,19 @@ var swipeList = [];
 var swipePart;
 
 $( document ).ready(function() {
+
+
+    var shaderToGet = window.location.href.split("?")[1];
+    if(shaderToGet){
+        $.get("/forceCode/"+shaderToGet+".glsl", function(shaderCode){
+            console.log(shaderCode);
+            defaultShader = shaderCode;
+            editor.setValue(shaderCode, -1);
+            setShaderFromEditor(shaderCode);
+        });
+    }
+
+
     //--------------------- FOOTER UI ------------
     $('#footer')
         .mouseover( function(event)
