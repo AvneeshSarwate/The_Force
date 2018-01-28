@@ -282,7 +282,8 @@ float noteColorBalls(vec2 stN){
     float ballInd = -1.;
     
     for (float i = 0.0; i < 10.; i++) {
-        vec2 p = vec2(sinN(time * rand(i) * 1.3 + i), cosN(time * rand(i) * 1.1 + i));
+        if(i == numNotesOn) break;
+        vec2 p = vec2(sinN(time * rand(i+1.) * 1.3 + i), cosN(time * rand(i+1.) * 1.1 + i));
         if(distance(stN, p) < rad) ballInd = i;
     }
     

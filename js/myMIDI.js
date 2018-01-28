@@ -146,9 +146,9 @@ function getNoteColors(){
 }
 
 (function(){
-    var r = [0, 0.5, 1];
-    var g = [0, 1];
-    var b = [0, 1];
+    var r = [0.1, 0.5, 1];
+    var g = [0.1, 1];
+    var b = [0.1, 1];
     var ind = 0;
     for(var i = 0; i < r.length; i++){
         for(var j = 0; j < g.length; j++){
