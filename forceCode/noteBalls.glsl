@@ -268,7 +268,8 @@ bool multiBallCondition(vec2 stN){
     bool cond = false;
     
     for (float i = 0.0; i < 10.; i++) {
-        vec2 p = vec2(sinN(time * rand(i) * 1.3 + i), cosN(time * rand(i) * 1.1 + i));
+        if(i == numNotesOn) break;
+        vec2 p = vec2(sinN(time * rand(i+1.) * 1.3 + i), cosN(time * rand(i+1.) * 1.1 + i));
         cond = cond || distance(stN, p) < rad;
     }
     
@@ -309,16 +310,26 @@ void main () {
     vec2 stN = uvN();
     
     vec3 c;
-    float decay = 0.99;
+    float decay = 0.997;
     float feedback;
+    
     vec3 cam = texture2D(channel0, stN).xyz; 
     vec3 camWarp = texture2D(channel0, coordWarp(stN)).xyz;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
-    bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
-    vec3 trail = cam;
-    vec3 foreGround = camWarp;
     
 
+    float ballInd = noteColorBalls(stN);
+    vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
+    vec3 ballColor;
+    if(ballInd == -1.){ 
+        ballColor = bb.rgb;
+    }else {
+        ballColor = getNoteColor(int(ballInd));
+    }
+
+    bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
+    vec3 trail = ballColor;
+    vec3 foreGround = black;
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -341,13 +352,6 @@ void main () {
         }
     }
     
-    float ballInd = noteColorBalls(stN);
-    vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
-    if(ballInd == -1.){ 
-        c = bb.rgb;
-    }else {
-        c = getNoteColor(int(ballInd));
-    }
     
     gl_FragColor = vec4(vec3(c), feedback);
 }
