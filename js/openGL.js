@@ -21,6 +21,7 @@ var resos = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 resos = resos.concat(resos);
 var oscM = [null, null, null, null, null, null, null, null, null, null];
 var gammaValues = [1.0, 1.0, 1.0, 1.0];
+var chordChromaColorU = null, noteColorsU = null;
 
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
@@ -292,6 +293,9 @@ function newShader(vs, shaderCode) {
 
     bs = gl.getUniformLocation(mProgram, "bands");
     bandsTimeU = gl.getUniformLocation(mProgram, "bandsTime");
+
+    chordChromaColorU = gl.getUniformLocation(mProgram, "chordChromaColor");
+    noteColorsU = gl.getUniformLocation(mProgram, "noteColors");
 
     //OSC uniforms
     for (var i = 0; i < oscM.length; i++) {
@@ -737,6 +741,14 @@ function paint(timeVal) {
     if (ch7 !== null) gl.uniform1i(ch7, 7);
     if (ch8 !== null) gl.uniform1i(ch8, 8);
     //TODO cam-background - add something here (why?) (setting gl.TEXTURE[i] value?)
+
+    var col = chromaToColor(chroma);
+    if(chordChromaColorU !== null) gl.uniform3f(chordChromaColorU, col[0], col[1], col[2]);
+
+    //the uniform assumes 10 note colors - we pad with 0s if there are not enough notes
+    var noteColorData = [].concat.apply([], getNoteColors()); //flatten the color values to a single array
+    var noteColorBuffer = noteColorData.concat(Array.from(new Array(30-noteColorData.length), () => 0)); //add padding
+    if(noteColorsU !== null) gl.uniform3fv(noteColorsU, noteColorBuffer);
 
     // gl.bindBuffer( gl.ARRAY_BUFFER, mQuadVBO);
     // gl.vertexAttribPointer(vertPosU, 2,  gl.FLOAT, false, 0, 0);

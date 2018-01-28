@@ -7,6 +7,8 @@ uniform float     time;
 uniform float     randValue;
 uniform float     randWalk;
 uniform float     channelTime[4];
+uniform vec3      chordChromaColor;
+uniform vec3      noteColors[10];
 uniform vec4      mouse;
 uniform vec4      date;
 uniform vec3      channelResolution[4];
