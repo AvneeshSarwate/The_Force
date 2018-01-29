@@ -6,6 +6,7 @@ var midiData = Array.apply(null, Array(128)).map(function() {
 var chroma = Array.from(new Array(12), () => 0);
 var onNoteSet = new Set();
 var pitchClassToColor = {};
+var noteInfo = {velocity: {}};
 
 function onMIDISuccess(midiAccess) {
     console.log("MIDI ready!");
@@ -74,6 +75,7 @@ function onMIDIMessage(event) {
                 midiData[midiNote] = 1;
                 chroma[midiNote%12] = 1; 
                 onNoteSet.add(midiNote);
+                noteInfo.velocity[midiNote] = event.data[2];
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -82,6 +84,7 @@ function onMIDIMessage(event) {
             // noteOff(event.data[1]);
             midiData[midiNote] = 0;
             chroma[midiNote%12] = 0; 
+            noteInfo.velocity[midiNote] = 0;
             onNoteSet.delete(midiNote);
             break;
 
@@ -143,6 +146,10 @@ function chromaToColor(chromaArray){
 */
 function getNoteColors(){
     return noteArray = Array.from(onNoteSet).sort().map(n => pitchClassToColor[n%12]);
+}
+
+function getNoteVelocities(){
+    return Array.from(onNoteSet).sort().map(n => noteInfo.velocity[n]);
 }
 
 (function(){

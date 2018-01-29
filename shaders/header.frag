@@ -9,6 +9,7 @@ uniform float     randWalk;
 uniform float     channelTime[4];
 uniform vec3      chordChromaColor;
 uniform vec3      noteColors[10];
+uniform float     noteVel[10];
 uniform float     numNotesOn;
 uniform vec4      mouse;
 uniform vec4      date;

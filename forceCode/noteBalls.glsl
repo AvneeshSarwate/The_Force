@@ -262,6 +262,19 @@ vec2 coordWarp(vec2 stN){
     return warp;
 }
 
+float getNoteVel(int ind){
+    if(ind == 0) return noteVel[0];
+    if(ind == 1) return noteVel[1];
+    if(ind == 2) return noteVel[2];
+    if(ind == 3) return noteVel[3];
+    if(ind == 4) return noteVel[4];
+    if(ind == 5) return noteVel[5];
+    if(ind == 6) return noteVel[6];
+    if(ind == 7) return noteVel[7];
+    if(ind == 8) return noteVel[8];
+    if(ind == 9) return noteVel[9];
+}
+
 bool multiBallCondition(vec2 stN){
     
     float rad = .05;
@@ -270,7 +283,7 @@ bool multiBallCondition(vec2 stN){
     for (float i = 0.0; i < 10.; i++) {
         if(i == numNotesOn) break;
         vec2 p = vec2(sinN(time * rand(i+1.) * 1.3 + i), cosN(time * rand(i+1.) * 1.1 + i));
-        cond = cond || distance(stN, p) < rad;
+        cond = cond || distance(stN, p) < 0.01 + getNoteVel(int(i))/(128. * 4.);
     }
     
     return cond;
@@ -285,11 +298,13 @@ float noteColorBalls(vec2 stN){
     for (float i = 0.0; i < 10.; i++) {
         if(i == numNotesOn) break;
         vec2 p = vec2(sinN(time * rand(i+1.) * 1.3 + i), cosN(time * rand(i+1.) * 1.1 + i));
-        if(distance(stN, p) < rad) ballInd = i;
+        if(distance(stN, p) < 0.01 + getNoteVel(int(i))/(128. * 4.)) ballInd = i;
     }
     
     return ballInd;
 }
+
+
 
 vec3 getNoteColor(int ind){
     if(ind == 0) return noteColors[0];
@@ -352,8 +367,5 @@ void main () {
         }
     }
     
-    
     gl_FragColor = vec4(vec3(c), feedback);
 }
-
-    
