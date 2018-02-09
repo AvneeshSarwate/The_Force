@@ -1,7 +1,3 @@
-float sinN(float t){
-   return (sin(t) + 1.) / 1.; 
-}
-
 float colourDistance(vec3 e1, vec3 e2) {
   float rmean = (e1.r + e2.r ) / 2.;
   float r = e1.r - e2.r;

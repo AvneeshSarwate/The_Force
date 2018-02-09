@@ -6,14 +6,6 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
-float sinN(float t){
-   return (sin(t) + 1.) / 1.; 
-}
-
-float cosN(float t){
-   return (cos(t) + 1.) / 1.; 
-}
-
 vec3 diffColor(){
     vec2 stN = uvN();
     stN = rotate(vec2(0.5+sin(time)*0.5, 0.5+cos(time)*0.5), stN, sin(time));
