@@ -136,13 +136,6 @@ float hexDiffAvg(vec2 p, float numHex){
     return diff / 18.;
 }
 
-float sinN(float t){
-   return (sin(t) + 1.) / 1.; 
-}
-
-float cosN(float t){
-   return (cos(t) + 1.) / 1.; 
-}
 
 vec3 diffColor(float time2){
     vec2 stN = uvN();
@@ -224,9 +217,9 @@ void main () {
     vec3 c;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     float feedback; 
-    float decay = 0.98;
+    float decay = 0.97;
     float blockColor = block(50.+ sinN(time/2.) * 40., 7.+sinN(time/1.5)*10.) + 0.01;
-    float lumBlend = 0.25;
+    float lumBlend = 2.;
     
     float hexDiff = hexDiffAvg(stN, 90.);
     float pointDiff = colourDistance(cam, snap);
@@ -242,7 +235,7 @@ void main () {
     }
     else {
         feedback = lastFeedback * decay;
-        if(lastFeedback > 0.1) { //if you put this below 1 you might have never-fading shadows 
+        if(lastFeedback > 0.4) { //if you put this below 1 you might have never-fading shadows 
             c = mix(t1, col * pow(blockColor, lumBlend), lastFeedback); //swap col for bb for glitchier effect
         } else {
             feedback = 0.;
