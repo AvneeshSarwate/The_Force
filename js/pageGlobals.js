@@ -982,7 +982,7 @@ $( document ).ready(function() {
     // if (window.location.protocol != "https:") 
     //     alert("Browser may not support microphone on non-secure connection. Please copy your code before changing protocol in the URL from http to https.");
 
-    if (navigator.getUserMedia && !isMobile) 
+    if (navigator.getUserMedia && !isMobile && useAudioInput) 
     {
         initAudio();
         navigator.getUserMedia(
@@ -1077,7 +1077,7 @@ $( document ).ready(function() {
             $("#audioClock").html(min + ':' + sec);
         }
 
-        if(!isMobile) {
+        if(!isMobile && useVideoInput) {
             mInputs[0] = wcTex;
             mInputs[1] = videoTextures[0]; 
 
@@ -1112,7 +1112,7 @@ $( document ).ready(function() {
         paint(shaderTime);
     }
 
-    if(!isMobile) {
+    if(!isMobile && useVideoInput) {
         webcam = setupWebcam();
         webcamTexture = initVideoTexture(gl, "blankurl");
         webcamSnapshotTexture = initVideoTexture(gl, "blankurl");

@@ -107,26 +107,6 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
-/* calculate the average difference between camera and snapshot for the 
-hexagon tile enclosing point p */
-float hexDiffAvg(vec2 p, float numHex){
-    vec2 p2 = p * numHex;
-    vec2 center = hexCenter2(p2, 1.);
-    bool contained = false;
-    float diff = 0.;
-    for(float i = 0.; i < 6.; i++){
-        float rad = i * PI / 3.;
-        vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
-        for(float j = 0.; j < 3.; j++){
-            vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
-            vec3 cam = texture2D(channel0, samp).xyz;
-            vec3 snap = texture2D(channel3, samp).xyz;
-            diff += colourDistance(cam, snap);
-        }
-    }
-    return diff / 18.;
-}
-
 /* The function that generates the rotating grid texture. Given a point, it
 returns the color for that point. It can be parameterized by time to 
 control its speed. The input point can also be transformed at the callsite to 
@@ -208,27 +188,7 @@ float bound(float val, float lower, float upper){
 The size of the rectangular tiling and the quantization of the luminance
 are both parameters. 
 */
-float block(float numBlocks, float quantLevel) {
-    vec2 stN = uvN();
-    vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).xyz; 
-    vec3 lumC = lum(cam);
-    vec2 res = gl_FragCoord.xy / stN;
-    vec2 blockSize = res.xy / numBlocks;
-    vec2 blockStart = floor(gl_FragCoord.xy / blockSize) * blockSize / res.xy;
-    float blockAvgLuma = 0.;
-    vec2 counter = blockStart;
-    
-    vec2 inc = vec2(1. / (numBlocks *100.));
-    for(float i = 0.; i < 10.; i += 1.){
-        for(float j = 0.; j < 10.; j += 1.){
-            blockAvgLuma += lum(texture2D(channel0, vec2(1.-counter.x, counter.y)).xyz).r;
-            counter += inc;
-        }
-    }
-    blockAvgLuma /= 100.;
-    
-    return quant(blockAvgLuma, quantLevel);
-}
+
 
 //val assumed between 0 - 1
 float scale(float val, float minv, float maxv){
@@ -328,8 +288,6 @@ void main () {
     float decay = 0.997;
     float feedback;
     
-    vec3 cam = texture2D(channel0, stN).xyz; 
-    vec3 camWarp = texture2D(channel0, coordWarp(stN)).xyz;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     
 
