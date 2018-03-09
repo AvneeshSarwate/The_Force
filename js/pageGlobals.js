@@ -50,7 +50,12 @@ var swipePart;
 $( document ).ready(function() {
 
 
-    var shaderToGet = window.location.href.split("?")[1];
+    var shaderString = window.location.href.split("?")[1];
+    var shaderToGet = shaderString.split("_")[0];
+    if(shaderString.split("_")[1] == "old") {
+        useAudioInput = false;
+        useVideoInput = false;
+    }
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             console.log(shaderCode);
