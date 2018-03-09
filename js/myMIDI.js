@@ -13,6 +13,7 @@ function onMIDISuccess(midiAccess) {
     midi = midiAccess; // store in the global (in real usage, would probably keep in an object instance)
     // midi.onstatechange = do something here like assign a function
     listInputsAndOutputs(midi);
+    startLoggingMIDIInput(null, true);
 
 }
 
@@ -107,11 +108,11 @@ function onMIDIMessage(event) {
 
 // }
 
-function startLoggingMIDIInput(indexOfPort) {
+function startLoggingMIDIInput(indexOfPort, listenForAll=false) {
     if (midi) {
         for (var entry of midi.inputs) {
             var input = entry[1];
-            if (input.name == indexOfPort) {
+            if (input.name == indexOfPort || listenForAll) {
                 input.onmidimessage = onMIDIMessage;
                 console.log("Connected to: " + input.name);
                 midiIn = input.name;

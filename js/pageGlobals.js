@@ -43,6 +43,7 @@ var lastDragTime = 0;
 var numDragEvents = 0;
 var interDragTimes = 0;
 
+var initialLoaderFunction;
 
 var swipeList = [];
 var swipePart;
@@ -55,6 +56,9 @@ $( document ).ready(function() {
     if(shaderString.split("_")[1] == "old") {
         useAudioInput = false;
         useVideoInput = false;
+    }
+    if(shaderToGet == "empressWarp"){
+        initialLoaderFunction = empressAlbumArtLoader;
     }
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
@@ -704,7 +708,7 @@ $( document ).ready(function() {
                         createGLTextureNearest(gl, texture.image, texture.globject);
                         texture.loaded = true;
                     }
-                    texture.image.src = 'presets/nyan.png';
+                    texture.image.src = 'presets/empress.png';
             }
 
             mInputs[slotID] = texture;
@@ -968,6 +972,7 @@ $( document ).ready(function() {
     mCanvas = document.getElementById("demogl");
 
     createGlContext();
+    if(initialLoaderFunction) initialLoaderFunction();
 
     // --- audio context ---------------------
     var contextAvailable = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;

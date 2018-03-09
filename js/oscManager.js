@@ -10,12 +10,12 @@ var pubKey = '';
 
 function initOSC() {
     
-    pubnub = new PubNub({
-        subscribeKey: subKey, // always required
-        publishKey: pubKey
-    });
+    // pubnub = new PubNub({
+    //     subscribeKey: subKey, // always required
+    //     publishKey: pubKey
+    // });
 
-    if(!pubKey){
+    if(!pubKey && pubnub){
         pubnub.subscribe({ 
             channels: ['force-remote-control'] 
         });
@@ -226,7 +226,7 @@ function enableOSCMessage(whom, presetMsgs)
 
             oscM[whom].args = oscValues;
 
-            if(pubKey){
+            if(pubKey && pubnub){
                 var messageObj = {message:{oscName: whom, vals: oscValues, type: 'oscUniform'}, channel: 'force-remote-control'};
                 pubnub.publish(
                     messageObj,
