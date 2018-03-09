@@ -136,7 +136,7 @@ function sendMiddleC(midiAccess, portID) {
 function chromaToColor(chromaArray){
     var color = [0, 0, 0];
     for(var i = 0; i < 12; i++){
-        color[Math.floor(i/4)] += (chromaArray[i] === 1 ? 2**(i%4) : 0) / 16;
+        color[Math.floor(i/4)] += (chromaArray[i] === 1 ? Math.pow(2,(i%4)) : 0) / 16;
     }
     return color;
 }
