@@ -52,8 +52,8 @@ $( document ).ready(function() {
 
 
     var shaderString = window.location.href.split("?")[1];
-    var shaderToGet = shaderString.split("_")[0];
-    if(shaderString.split("_")[1] == "old") {
+    var shaderToGet = shaderString.split("_old")[0];
+    if(shaderString.indexOf("_old") > -1) {
         useAudioInput = false;
         useVideoInput = false;
     }
