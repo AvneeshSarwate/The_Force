@@ -8,6 +8,7 @@ uniform float     randValue;
 uniform float     randWalk;
 uniform float     channelTime[4];
 uniform vec3      chordChromaColor;
+uniform float     notes[10];
 uniform vec3      noteColors[10];
 uniform float     noteVel[10];
 uniform float     numNotesOn;

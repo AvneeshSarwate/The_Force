@@ -57,7 +57,7 @@ $( document ).ready(function() {
         useAudioInput = false;
         useVideoInput = false;
     }
-    if(shaderToGet == "empressWarp"){
+    if(shaderToGet.indexOf("empress") > -1){
         initialLoaderFunction = empressAlbumArtLoader;
     }
     if(shaderToGet){
