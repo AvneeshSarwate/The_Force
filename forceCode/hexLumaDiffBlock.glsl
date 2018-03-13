@@ -140,10 +140,6 @@ vec2 trans(vec2 u, float scaleval){
     return u*scaleval;
 }
 
-float sinN(float t){
-   return (sin(t) + 1.) / 1.; 
-}
-
 float quant(float num, float quantLevels){
     float roundPart = floor(fract(num*quantLevels)*2.);
     return (floor(num*quantLevels)+roundPart)/quantLevels;

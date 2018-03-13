@@ -1,3 +1,107 @@
+vec2 cube_to_axial(vec3 cube){
+    float q = cube.x;
+    float r = cube.z;
+    return vec2(q, r);
+}
+
+vec3 axial_to_cube(vec2 hex){
+    float x = hex.x;
+    float z = hex.y;
+    float y = -x-z;
+    return vec3(x, y, z);
+}
+
+float round(float v){
+    return floor(v+0.5);
+}
+
+vec3 cube_round(vec3 cube){
+    float rx = round(cube.x);
+    float ry = round(cube.y);
+    float rz = round(cube.z);
+
+    float x_diff = abs(rx - cube.x);
+    float y_diff = abs(ry - cube.y);
+    float z_diff = abs(rz - cube.z);
+
+    if (x_diff > y_diff && x_diff > z_diff){
+        rx = -ry-rz;
+    }
+    else if (y_diff > z_diff) {
+        ry = -rx-rz;
+    } else{
+        rz = -rx-ry;
+    }
+
+    return vec3(rx, ry, rz);
+}
+
+vec2 hex_round(vec2 hex){
+    return cube_to_axial(cube_round(axial_to_cube(hex))); 
+}
+
+vec2 cube_to_oddr(vec3 cube){
+      float col = cube.x + (cube.z - mod(cube.z,2.)) / 2.;
+      float row = cube.z;
+      return vec2(col, row);
+}
+
+vec3 oddr_to_cube(vec2 hex){
+      float x = hex.x - (hex.x - mod(hex.x,2.)) / 2.;
+      float z = hex.y;
+      float y = -x-z;
+      return vec3(x, y, z);
+}
+
+vec2 hex_to_pixel(vec2 hex, float size){
+    float x = size * sqrt(3.) * (hex.x + hex.y/2.);
+    float y = size * 3./2. * hex.y;
+    return vec2(x, y);
+}
+
+vec2 pixel_to_hex(vec2 p, float size){
+    float x = p.x;
+    float y = p.y;
+    float q = (x * sqrt(3.)/3. - y / 3.) / size;
+    float r = y * 2./3. / size;
+    return vec2(q, r);
+}
+
+vec2 hexCenter2(vec2 p, float size){
+    return hex_to_pixel(hex_round(pixel_to_hex(p, size)), size);
+}
+
+vec3 hexAvg(vec2 p, float numHex, sampler2D tex){
+    vec2 p2 = p * numHex;
+    vec2 center = hexCenter2(p2, 1.);
+    bool contained = false;
+    vec3 diff = vec3(0.);
+    for(float i = 0.; i < 6.; i++){
+        float rad = i * PI / 3.;
+        vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
+        for(float j = 0.; j < 3.; j++){
+            vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
+            vec3 cam = texture2D(tex, vec2(1.-samp.x, samp.y)).xyz;
+            diff += cam;
+        }
+    }
+    return diff / 18.;
+}
+
+bool inSampleSet(vec2 p, vec2 center){
+    float size = 1.;
+    bool contained = false;
+    for(float i = 0.; i < 6.; i++){
+        float rad = i * PI / 3.;
+        vec2 corner = rotate(vec2(center.x+size, center.y), center, rad);
+        for(float j = 0.; j < 3.; j++){
+            vec2 samp = mix(center, corner, (0.2*(j+1.)));
+            contained = contained || distance(p, samp) < 0.05;
+        }
+    }
+    return contained;
+}
+
 vec2 coordWarp(vec2 stN){
     vec2 warp = stN;
     
@@ -54,6 +158,16 @@ vec3 getArrayElem(vec3[10] arr, int ind){
     return vec3(0.);
 }
 
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 void main () {
 
     //the current pixel coordinate 
@@ -68,7 +182,7 @@ void main () {
 
     vec3 foreGround = texture2D(channel5, vec2(stN.x, stN.y)).xyz;
     
-    vec2 warpStn = coordWarp(stN);
+    vec2 warpStn = quant(coordWarp(stN), 10.);
 
     int ballInd = noteColorBalls(warpStn, time*2.);
     vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
@@ -78,6 +192,7 @@ void main () {
     }else {
         ballColor = getArrayElem(noteColors, ballInd);
         ballColor = colorWarp(foreGround, (ballInd+1)*2);
+        ballColor = vec3(1.) - quant(hexAvg(stN, 150., channel5), 10.);
     }
 
     bool condition = multiBallCondition(warpStn, time*2.); distance(in1.xy, stN) < .1;
