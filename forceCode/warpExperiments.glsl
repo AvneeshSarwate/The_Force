@@ -9,9 +9,9 @@ float logi(float x){
 vec2 coordWarp(vec2 stN){ 
     vec2 warp = stN;
     
-    float rad = .3;
+    float rad = .5;
     
-    for (float i = 0.0; i < 10.; i++) {
+    for (float i = 0.0; i < 20.; i++) {
         vec2 p = vec2(sinN(time* rand(i+1.) * 1.3 + i), cosN(time * rand(i+1.) * 1.1 + i));
         warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
     }
