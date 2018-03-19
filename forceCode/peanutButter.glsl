@@ -87,24 +87,42 @@ void main() {
     vec2 mouseN = mouse.zw / resolution.xy / 2.;
     mouseN = vec2(mouseN.x, 1. - mouseN.y);
     
-    vec2 waveCoord = rowColWave(stN, 100., time, 0.1);
+    float waveIntensity, colorDiff;
+    
+    int cue = 2;
+    if(cue == 1) {
+        waveIntensity = 0.05;
+        colorDiff = 0.15;
+    }
+    if(cue == 2) {
+        waveIntensity = 0.1;
+        colorDiff = 0.45;
+    }
+    
+    
+    
+    
+    vec2 waveCoord = rowColWave(stN, 100., time, waveIntensity);
     
     vec3 camFrame = texture2D(channel0, vec2(1.-stN.x, stN.y)).xyz;
     vec3 quantCam = quant(texture2D(channel0, quant(vec2(1.-stN.x, stN.y), 100.)).xyz, 3.);
     vec3 camPoint = texture2D(channel0, vec2(1. - mouseN.x, mouseN.y)).xyz;
     vec3 vid = texture2D(channel1, stN).xyz;
     vec3 camTex = texture2D(channel1, quant(camFrame.zx, 100.)).xyz;
-    // camTex = swirl(time/5., stN);
+    camTex = swirl(time/5., stN);
     // camTex = mod(camFrame * (2.+ sinN(time/5.)*20.), 1.);
-    camTex = texture2D(channel0, vec2(1.-waveCoord.x, waveCoord.y)).xyz;
+    // camTex = mod(camTex * (1.+ sinN(time/5.)*1.), 1.);
+    if((cue == 1) || (cue ==2)){
+        camTex = texture2D(channel0, vec2(1.-waveCoord.x, waveCoord.y)).xyz;
+    }
     
     vec3 c;
     
-    if(colourDistance(camFrame, camPoint) < 0.45 ){
+    if(colourDistance(camFrame, camPoint) < colorDiff ){
         c = camTex;
     }
     else {
-        c = quantCam;
+        c = camFrame;
     }
     
     gl_FragColor = vec4(c, 1.0);

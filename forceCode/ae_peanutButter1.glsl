@@ -75,7 +75,7 @@ vec2 coordWarp(vec2 stN){
 //iteratively apply the rowWave and columnWave functions repeatedly to 
 //granularly warp the grid
 vec2 rowColWave(vec2 stN, float div, float time2, float power){
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 3; i++) {
         stN = rowWaves3(stN, div, time2, power);
         stN = columnWaves3(stN, div, time2, power);
     }
