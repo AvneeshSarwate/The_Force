@@ -145,6 +145,18 @@ float quant(float num, float quantLevels){
     return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
+// same as above but for vectors, applying the quantization to each element
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 void main(){
     vec2 stN = uvN();
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
@@ -178,9 +190,11 @@ void main(){
     vec3 trail = swirl(time/5., stN) * lum(cam);
     vec3 foreGround = black;
     
-    int cue = 1;
+    int cue = 2;
     if(cue == 2) {
-        foreGround = swirl(time/2., stN);
+        vec3 quantCam = texture2D(channel0, quant(vec2(1. - stN.x, stN.y), 100.)).xyz;
+        trail = white * lum(quantCam);
+        foreGround = texture2D(channel1, stN).rgb; swirl(time/2., stN);
     }
     
     // implement the trailing effectm using the alpha channel to track the state of decay 

@@ -76,11 +76,19 @@ vec2 quant(vec2 num, float quantLevels){
 
 void main () {
 
+    int cue = 3;
+
     //the current pixel coordinate 
     vec2 stN = uvN();
-
+    
+    //mirror screen, taking the "left" side from the behind-cam perspective
+    if(cue == 3){
+        stN = stN.x > 0.5 ? stN : vec2(1.- stN.x, stN.y);
+    }
+    
     //the current pixel in camera coordinate (this is sometimes transformed)
     vec2 camPos = vec2(1.- stN.x, stN.y);
+
 
     // the decay factor of the trails
     float decay = 0.97;
@@ -124,7 +132,6 @@ void main () {
     
     float diffStyle = pointDiff;
     
-    int cue = 2;
     if(cue == 1 ){
         diffThresh = 0.9;
         diffStyle = pointDiff;
@@ -138,7 +145,13 @@ void main () {
         decay = 0.98;
         foreGround = coll;
         trail = warpCam;
-        
+    }
+    if(cue == 3 ){
+        diffThresh = 0.3;
+        diffStyle = warpDiff;
+        decay = 0.98;
+        foreGround = coll;
+        trail = warpCam;
     }
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
