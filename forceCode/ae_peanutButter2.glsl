@@ -178,6 +178,11 @@ void main(){
     vec3 trail = swirl(time/5., stN) * lum(cam);
     vec3 foreGround = black;
     
+    int cue = 1;
+    if(cue == 2) {
+        foreGround = swirl(time/2., stN);
+    }
+    
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
         if(lastFeedback < 1.1) {
