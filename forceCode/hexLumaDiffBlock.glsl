@@ -149,7 +149,7 @@ void main(){
     vec2 stN = uvN();
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
-    float scaleval = 30. + sinN(time*3.) * 80.;
+    float scaleval = 50. + sinN(time*3.) * 60.;
     vec2 u = trans(uvN() , scaleval);
     
     float size = 1.;
