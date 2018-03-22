@@ -1,4 +1,32 @@
+// normalize a sine wave to [0, 1]
+float sinN(float t){
+   return (sin(t) + 1.) / 2.; 
+}
 
+// normalize a cosine wave to [0, 1]
+float cosN(float t){
+   return (cos(t) + 1.) / 2.; 
+}
+
+vec3 swirl(float time2, vec2 stN){
+    stN = rotate(vec2(0.5+sin(time2)*0.5, 0.5+cos(time2)*0.5), stN, sin(time2));
+    
+    vec2 segGrid = vec2(floor(stN.x*30.0 * sin(time2/7.)), floor(stN.y*30.0 * sin(time2/7.)));
+
+    vec2 xy;
+    float noiseVal = rand(stN)*sin(time2/7.) * 0.15;
+    if(mod(segGrid.x, 2.) == mod(segGrid.y, 2.)) xy = rotate(vec2(sinN(time2), cosN(time2)), stN.xy, time2 + noiseVal);
+    else xy = rotate(vec2(sinN(time2), cosN(time2)), stN.xy, - time2 - noiseVal);
+    
+    float section = floor(xy.x*30.0 * sin(time2/7.)); 
+    float tile = mod(section, 2.);
+
+    float section2 = floor(xy.y*30.0 * cos(time2/7.)); 
+    float tile2 = mod(section2, 2.);
+    float timeMod = time2 - (1. * floor(time2/1.)); 
+    
+    return vec3(tile, tile2, timeMod);
+}
 
 
 //calculate the distance beterrn two colors
@@ -76,7 +104,7 @@ vec2 quant(vec2 num, float quantLevels){
 
 void main () {
 
-    int cue = 4;
+    int cue = 3;
 
     //the current pixel coordinate 
     vec2 stN = uvN();
@@ -152,13 +180,6 @@ void main () {
         decay = 0.98;
         foreGround = coll;
         trail = warpCam;
-    }
-    if(cue == 4){
-        diffThresh = 0.3;
-        diffStyle = warpDiff;
-        decay = 0.99;
-        trail = cam * (1. - lastFeedback);
-        foreGround = vec3(lastFeedback);
     }
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
