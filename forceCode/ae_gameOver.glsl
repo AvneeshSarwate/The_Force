@@ -87,21 +87,22 @@ void main() {
     vec2 mouseN = mouse.zw / resolution.xy / 2.;
     mouseN = vec2(mouseN.x, 1. - mouseN.y);
     
-    vec2 waveCoord = rowColWave(stN, 100., time, 0.05);
+    vec2 waveCoord = rowColWave(stN, 100., time, 0.01);
     
-    vec3 camFrame = texture2D(channel0, vec2(1.-stN.x, stN.y)).xyz;
-    vec3 quantCam = quant(texture2D(channel0, quant(vec2(1.-stN.x, stN.y), 100.)).xyz, 3.);
-    vec3 camPoint = texture2D(channel0, vec2(1. - mouseN.x, mouseN.y)).xyz;
+    vec3 camFrame = texture2D(channel2, stN).xyz;
+    vec3 quantCam = quant(texture2D(channel0, quant(stN, 100.)).xyz, 3.);
+    vec3 camPoint = texture2D(channel2, mouse.xy).xyz;
     vec3 vid = texture2D(channel1, stN).xyz;
-    vec3 camTex = texture2D(channel1, quant(camFrame.zx, 100.)).xyz;
+    vec3 camTex = texture2D(channel0, quant(camFrame.zx, 100.)).xyz;
     // camTex = swirl(time/5., stN);
     // camTex = mod(camFrame * (2.+ sinN(time/5.)*20.), 1.);
-    camTex = texture2D(channel0, vec2(1.-waveCoord.x, waveCoord.y)).xyz;
+    camTex = texture2D(channel2, waveCoord).xyz;
+    vec3 vidWarp = texture2D(channel1, waveCoord).xyz;
     
     vec3 c;
     
     if(colourDistance(camFrame, camPoint) < 0.45 ){
-        c = camTex;
+        c = mix(camTex, vidWarp, 0.2);
     }
     else {
         c = camFrame;
