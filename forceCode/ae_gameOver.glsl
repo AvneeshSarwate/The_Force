@@ -85,28 +85,41 @@ void main() {
     float tScale = time / 10.;
     vec2 colorPoint = vec2(sinN(tScale), cosN(tScale));
     vec2 mouseN = mouse.zw / resolution.xy / 2.;
-    mouseN = vec2(mouseN.x, 1. - mouseN.y);
+    float tm = time/2.;
+    mouseN =vec2(sinN(tm), cosN(tm)) / 2. + 0.25;  vec2(mouseN.x, 1. - mouseN.y);
     
-    vec2 waveCoord = rowColWave(stN, 100., time, 0.01);
+    vec2 waveCoord = rowColWave(stN, 100., time, 0.02);
     
-    vec3 camFrame = texture2D(channel2, stN).xyz;
+    vec3 camFrame = texture2D(channel0, stN).xyz;
     vec3 quantCam = quant(texture2D(channel0, quant(stN, 100.)).xyz, 3.);
-    vec3 camPoint = texture2D(channel2, mouse.xy).xyz;
+    vec3 camPoint = texture2D(channel0, mouseN.xy).xyz;
     vec3 vid = texture2D(channel1, stN).xyz;
+    vec3 camWarp = texture2D(channel0, vec2(1.-waveCoord.x, waveCoord.y)).rgb;
     vec3 camTex = texture2D(channel0, quant(camFrame.zx, 100.)).xyz;
+    
     // camTex = swirl(time/5., stN);
     // camTex = mod(camFrame * (2.+ sinN(time/5.)*20.), 1.);
-    camTex = texture2D(channel2, waveCoord).xyz;
+    // camTex = texture2D(channel2, waveCoord).xyz;
     vec3 vidWarp = texture2D(channel1, waveCoord).xyz;
     
     vec3 c;
     
-    if(colourDistance(camFrame, camPoint) < 0.45 ){
-        c = mix(camTex, vidWarp, 0.2);
+    float dist = colourDistance(camFrame, camPoint);
+    
+    vec3 fill = mix(camFrame, vidWarp, 0.35);
+    vec3 background = camFrame;
+    
+    if(dist < 0.25 ){
+        c = fill;
     }
     else {
-        c = camFrame;
+        c = background;
     }
+    
+    float maxDist = colourDistance(vec3(0.), vec3(1.));
+    // c = mix(fill, background, dist/maxDist);
+    
+    if(distance(mouseN, stN) < 0.02) c = white;
     
     gl_FragColor = vec4(c, 1.0);
 }
