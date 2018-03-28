@@ -139,9 +139,9 @@ void main () {
     vec2 deepTileWave = rowColWave(camN, 1. + sinN(time) *2., t2, power);
     float zoomScale = 1.; (5.*sinN(stime*2.)+1.);
     vec2 warpTileCoord2 = wrap(rotate(deepTileWave, vec2(0.5), rw)*zoomScale, 0., 1.);
-    vec3 wrapTile = texture2D(channel0, warpTileCoord2).rgb;
+    vec3 wrapTile = texture(channel0, warpTileCoord2).rgb;
     
-    vec3 cam = 1. - texture2D(channel0, quant(vec2(1.-stN.x, stN.y), 150.+sinN(time/2.)*50.)).rgb;
+    vec3 cam = 1. - texture(channel0, quant(vec2(1.-stN.x, stN.y), 150.+sinN(time/2.)*50.)).rgb;
     
     vec3 coll = wrap(cam*(1.+sinN(time)*10.), 0., 1.);
     

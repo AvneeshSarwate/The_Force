@@ -1,33 +1,3 @@
-// normalize a sine wave to [0, 1]
-float sinN(float t){
-   return (sin(t) + 1.) / 2.; 
-}
-
-// normalize a cosine wave to [0, 1]
-float cosN(float t){
-   return (cos(t) + 1.) / 2.; 
-}
-
-vec3 swirl(float time2, vec2 stN){
-    stN = rotate(vec2(0.5+sin(time2)*0.5, 0.5+cos(time2)*0.5), stN, sin(time2));
-    
-    vec2 segGrid = vec2(floor(stN.x*30.0 * sin(time2/7.)), floor(stN.y*30.0 * sin(time2/7.)));
-
-    vec2 xy;
-    float noiseVal = rand(stN)*sin(time2/7.) * 0.15;
-    if(mod(segGrid.x, 2.) == mod(segGrid.y, 2.)) xy = rotate(vec2(sinN(time2), cosN(time2)), stN.xy, time2 + noiseVal);
-    else xy = rotate(vec2(sinN(time2), cosN(time2)), stN.xy, - time2 - noiseVal);
-    
-    float section = floor(xy.x*30.0 * sin(time2/7.)); 
-    float tile = mod(section, 2.);
-
-    float section2 = floor(xy.y*30.0 * cos(time2/7.)); 
-    float tile2 = mod(section2, 2.);
-    float timeMod = time2 - (1. * floor(time2/1.)); 
-    
-    return vec3(tile, tile2, timeMod);
-}
-
 
 vec2 cube_to_axial(vec3 cube){
     float q = cube.x;
@@ -133,7 +103,7 @@ float hexLumAvg(vec2 p, float numHex){
         vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
         for(float j = 0.; j < 3.; j++){
             vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
-            vec3 cam = texture2D(channel0, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 cam = texture(channel0, vec2(1.-samp.x, samp.y)).xyz;
             avgLum += lum(cam).x;
         }
     }
@@ -158,8 +128,8 @@ float hexDiffAvg(vec2 p, float numHex){
         vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
         for(float j = 0.; j < 3.; j++){
             vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
-            vec3 cam = texture2D(channel0, vec2(1.-samp.x, samp.y)).xyz;
-            vec3 snap = texture2D(channel3, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 cam = texture(channel0, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 snap = texture(channel3, vec2(1.-samp.x, samp.y)).xyz;
             diff += colourDistance(cam, snap);
         }
     }
@@ -177,9 +147,9 @@ float quant(float num, float quantLevels){
 
 void main(){
     vec2 stN = uvN();
-    vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
+    vec3 cam = texture(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
-    float scaleval = 30. + sinN(time*3.) * 80.;
+    float scaleval = 50. + sinN(time*3.) * 60.;
     vec2 u = trans(uvN() , scaleval);
     
     float size = 1.;

@@ -76,15 +76,10 @@ vec2 quant(vec2 num, float quantLevels){
 
 void main () {
 
-    int cue = 4;
+    int cue = 1;
 
     //the current pixel coordinate 
     vec2 stN = uvN();
-    
-    //mirror screen, taking the "left" side from the behind-cam perspective
-    if(cue == 3){
-        stN = stN.x > 0.5 ? stN : vec2(1.- stN.x, stN.y);
-    }
     
     //the current pixel in camera coordinate (this is sometimes transformed)
     vec2 camPos = vec2(1.- stN.x, stN.y);
@@ -95,21 +90,16 @@ void main () {
   
     // the color of the current (post zoom) pixel in the snapshot
     vec3 snap = texture(channel3, camPos).rgb;
-    vec3 warpSnap = texture(channel3, coordWarp(camPos)).rgb;
 
     //the color of the current (post zoom) pixel in the live webcam input
     vec3 cam = texture(channel0, camPos).rgb;  
-    vec3 warpCam = texture(channel0, coordWarp(camPos)).rgb;  
 
     //the color of the last drawn frame (used to implement fading trails)
     vec3 bb = texture(backbuffer, vec2(stN.x, stN.y)).rgb;
 
 
-    vec3 negCam = 1. - texture(channel0, quant(vec2(1.-stN.x, stN.y), 150.+sinN(time/2.)*50.)).rgb;
-    vec3 warpNeg = 1. - texture(channel0, quant(coordWarp(vec2(1.-stN.x, stN.y)), 150.+sinN(time/2.)*50.)).rgb;
     
-    vec3 coll = wrap(negCam*(1.+sinN(time)*10.), 0., 1.);
-    vec3 warpColl = wrap(warpNeg*(1.+sinN(time)*10.), 0., 1.);
+    vec3 coll = texture(channel1, stN).rgb;
 
     // the vector that will hold the final color value for this pixel
     vec3 c;
@@ -120,10 +110,8 @@ void main () {
     //the value for how much the current pixel will be "faded" into the background
     float feedback;
     // how high the difference is between camera and snapshot for the current pixel (not used)
-    float warpDiff = colourDistance(warpCam, warpSnap);
     float pointDiff = colourDistance(cam, snap);
     
-    vec3 warpSwirl = swirl(time/10., warpCam.xy);
     
     vec3 trail = coll;
     vec3 foreGround = cam;
@@ -132,55 +120,47 @@ void main () {
     
     float diffStyle = pointDiff;
     
-    if(cue == 1 ){
-        diffThresh = 0.9;
+    if(cue == 2 ){
+        diffThresh = 0.45;
         diffStyle = pointDiff;
-        decay = 0.93;
+        decay = 0.99;
         foreGround = cam;
         trail = coll;
-    }
-    if(cue == 2 ){
-        diffThresh = 0.3;
-        diffStyle = warpDiff;
-        decay = 0.98;
-        foreGround = coll;
-        trail = warpCam;
-    }
-    if(cue == 3 ){
-        diffThresh = 0.3;
-        diffStyle = warpDiff;
-        decay = 0.98;
-        foreGround = coll;
-        trail = warpCam;
-    }
-    if(cue == 4){
-        diffThresh = 0.3;
-        diffStyle = warpDiff;
-        decay = 0.99;
-        trail = cam * (1. - lastFeedback);
-        foreGround = vec3(lastFeedback);
-    }
-    
-    // implement the trailing effectm using the alpha channel to track the state of decay 
-    if(diffStyle > diffThresh){
-        if(lastFeedback < 1.) {
-            feedback = 1.;
-            c = trail; 
-        } 
-        // else {
-        //     feedback = lastFeedback * decay;
-        //     c = mix(snap, bb, lastFeedback);
-        // }
-    }
-    else {
-        feedback = lastFeedback * decay;
-        if(lastFeedback > 0.8) {
-            c = mix(foreGround, trail, lastFeedback); 
-        } else {
-            feedback = 0.;
-            c = foreGround;
+        // implement the trailing effectm using the alpha channel to track the state of decay 
+        if(diffStyle > diffThresh){
+            if(lastFeedback < 1.) {
+                feedback = 1.;
+                c = trail; 
+            } 
+            // else {
+            //     feedback = lastFeedback * decay;
+            //     c = mix(snap, bb, lastFeedback);
+            // }
+        }
+        else {
+            feedback = lastFeedback * decay;
+            if(lastFeedback > 0.8) {
+                c = mix(foreGround, trail, lastFeedback); 
+            } else {
+                feedback = 0.;
+                c = foreGround;
+            }
         }
     }
+    if(cue == 1 ){
+        diffThresh = 0.3;
+        vec2 mouseN = mouse.zw / resolution.xy / 2.;
+        mouseN = vec2(mouseN.x, 1. - mouseN.y);
+        vec3 chromaKeyColor = texture(channel0, vec2(1.-mouseN.x, mouseN.y)).rgb;
+        if(colourDistance(cam, chromaKeyColor) < diffThresh ){
+            c = coll;
+        }
+        else {
+            c = cam;
+        }
+    }
+    
+    
     
     gl_FragColor = vec4(vec3(c), feedback);
 }

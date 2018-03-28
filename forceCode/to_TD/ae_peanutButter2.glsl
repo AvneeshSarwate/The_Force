@@ -133,7 +133,7 @@ float hexLumAvg(vec2 p, float numHex){
         vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
         for(float j = 0.; j < 3.; j++){
             vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
-            vec3 cam = texture2D(channel0, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 cam = texture(channel0, vec2(1.-samp.x, samp.y)).xyz;
             avgLum += lum(cam).x;
         }
     }
@@ -158,8 +158,8 @@ float hexDiffAvg(vec2 p, float numHex){
         vec2 corner = rotate(vec2(center.x+1., center.y), center, rad);
         for(float j = 0.; j < 3.; j++){
             vec2 samp = mix(center, corner, (0.2*(j+1.))) / numHex;
-            vec3 cam = texture2D(channel0, vec2(1.-samp.x, samp.y)).xyz;
-            vec3 snap = texture2D(channel3, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 cam = texture(channel0, vec2(1.-samp.x, samp.y)).xyz;
+            vec3 snap = texture(channel3, vec2(1.-samp.x, samp.y)).xyz;
             diff += colourDistance(cam, snap);
         }
     }
@@ -189,7 +189,7 @@ vec2 quant(vec2 num, float quantLevels){
 
 void main(){
     vec2 stN = uvN();
-    vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
+    vec3 cam = texture(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
     float scaleval = 30. + sinN(time*3.) * 80.;
     vec2 u = trans(uvN() , scaleval);
@@ -215,16 +215,16 @@ void main(){
     vec3 cc;
     float decay = 0.92;
     float feedback;
-    float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
+    float lastFeedback = texture(backbuffer, vec2(stN.x, stN.y)).a; 
     bool condition = avgLum > 0.2;
     vec3 trail = swirl(time/5., stN) * lum(cam);
     vec3 foreGround = black;
     
     int cue = 2;
     if(cue == 2) {
-        vec3 quantCam = texture2D(channel0, quant(vec2(1. - stN.x, stN.y), 100.)).xyz;
+        vec3 quantCam = texture(channel0, quant(vec2(1. - stN.x, stN.y), 100.)).xyz;
         trail = white * lum(quantCam);
-        foreGround = texture2D(channel1, stN).rgb; swirl(time/2., stN);
+        foreGround = texture(channel1, stN).rgb; swirl(time/2., stN);
     }
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
