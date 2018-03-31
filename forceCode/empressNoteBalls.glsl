@@ -328,6 +328,8 @@ void main () {
     
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
     
+    vec3 cam =  texture2D(channel0, stN).xyz;
+    
 
     float ballInd = noteColorBalls(stN);
     vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
@@ -336,6 +338,9 @@ void main () {
         ballColor = bb.rgb;
     }else {
         ballColor = getNoteColor(int(ballInd));
+    }
+    if(ballInd < 6.){
+        ballColor = cam;
     }
 
     bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
@@ -347,7 +352,7 @@ void main () {
         if(lastFeedback < 1.1) { 
             feedback = 1.;
             c = trail; 
-            c = wrap(c*(1.+sinN(time)*10.), 0., 1.);
+            c = wrap(c*(1.+sinN(time)*2.), 0., 1.);
         } 
         // else {
         //     feedback = lastFeedback * decay;
@@ -365,5 +370,5 @@ void main () {
     }
     
     
-    gl_FragColor = vec4(vec3(c), feedback);
+    gl_FragColor = vec4(vec3(cam), feedback);
 }

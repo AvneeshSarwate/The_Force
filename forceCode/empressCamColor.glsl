@@ -179,7 +179,7 @@ if it exceeds the range on either side -
 for example wrap(10, 1, 9) -> 8
 and wrap (-2, -1, 9) -> 0
 */
-float wrap3(float val, float low, float high){
+float wrap(float val, float low, float high){
     float range  = high - low;
     if(val > high){
         float dif = val-high;
@@ -203,18 +203,23 @@ float wrap3(float val, float low, float high){
     }
     return val;
 }
+
 vec2 wrap(vec2 val, float low, float high){
-    return vec2(wrap3(val.x, low, high), wrap3(val.y, low, high));
+    return vec2(wrap(val.x, low, high), wrap(val.y, low, high));
+}
+
+vec3 wrap(vec3 val, float low, float high){
+    return vec3(wrap(val.x, low, high), wrap(val.y, low, high), wrap(val.z, low, high));
 }
 
 //slice the matrix up into columns and translate the individual columns in a moving wave
 vec2 columnWaves3(vec2 stN, float numColumns, float time2, float power){
-    return vec2(wrap3(stN.x + sin(time2*8.)*0.05 * power, 0., 1.), wrap3(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.));
+    return vec2(wrap(stN.x + sin(time2*8.)*0.05 * power, 0., 1.), wrap(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.));
 }
 
 //slice the matrix up into rows and translate the individual rows in a moving wave
 vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
-    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*0.05 * power, 0., 1.));
+    return vec2(wrap(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.), wrap(stN.y + cos(time2*8.)*0.05 * power, 0., 1.));
 }
 
 
@@ -228,37 +233,108 @@ vec2 rowColWave(vec2 stN, float div, float time2, float power){
     return stN;
 }
 
+float getNoteVel(int ind){
+    if(ind == 0) return noteVel[0];
+    if(ind == 1) return noteVel[1];
+    if(ind == 2) return noteVel[2];
+    if(ind == 3) return noteVel[3];
+    if(ind == 4) return noteVel[4];
+    if(ind == 5) return noteVel[5];
+    if(ind == 6) return noteVel[6];
+    if(ind == 7) return noteVel[7];
+    if(ind == 8) return noteVel[8];
+    if(ind == 9) return noteVel[9];
+}
+
+float noteColorBalls(vec2 stN){
+    
+    float rad = .05;
+    bool cond = false;
+    float ballInd = -1.;
+    
+    for (float i = 0.0; i < 10.; i++) {
+        if(i == numNotesOn) break;
+        vec2 p = vec2(sinN(time * rand(i+1.) * 1.3 + i), cosN(time * rand(i+1.) * 1.1 + i));
+        if(distance(stN, p) < 0.01 + getNoteVel(int(i))/(128. * 4.)) ballInd = i;
+    }
+    
+    return ballInd;
+}
+
+vec3 getNoteColor(int ind){
+    if(ind == 0) return noteColors[0];
+    if(ind == 1) return noteColors[1];
+    if(ind == 2) return noteColors[2];
+    if(ind == 3) return noteColors[3];
+    if(ind == 4) return noteColors[4];
+    if(ind == 5) return noteColors[5];
+    if(ind == 6) return noteColors[6];
+    if(ind == 7) return noteColors[7];
+    if(ind == 8) return noteColors[8];
+    if(ind == 9) return noteColors[9];
+}
+
+float colourDistance(vec3 e1, vec3 e2) {
+  float rmean = (e1.r + e2.r ) / 2.;
+  float r = e1.r - e2.r;
+  float g = e1.g - e2.g;
+  float b = e1.b - e2.b;
+  return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
+}
+
 void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
+    vec2 camN = vec2(1.- stN.x, stN.y);
+    vec2 warpStn = coordWarp(stN);
+    vec2 warpQ = quant(warpStn, 10.);
+    
+    float t0, t1, t2, t3, t4, rw;
+    t0 = time/4.;
+    t1 = time/2.;
+    t2 = time;
+    t3 = time;
+    rw =  randWalk/90.; //a random walk value used to parameterize the rotation of the final frame
+    t4 = time;
+    vec2 deepTileWave = rowColWave(camN * (.2 + sinN(t0)*3.), 1. + sinN(t1) * 20., t2, 0.1 + sinN(t3)/2.);
+    vec2 warpTileCoord2 = wrap(rotate(deepTileWave, vec2(0.5), rw)*5., 0., 1.);
+    vec3 liquidGrid = texture2D(channel5, deepTileWave).xyz;
+    
     
     vec3 c;
-    float decay = 0.997;
+    float decay = 0.99;
     float feedback;
     
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a; 
-    
-    vec3 camColor = texture2D(channel0, quant(stN, 140.)).xyz;
+    vec3 camQ = texture2D(channel0, quant(camN, 140.)).xyz;
+    vec3 cam = texture2D(channel0, camN).xyz;
+    vec3 snap = texture2D(channel3, camN).xyz;
+    vec3 album = texture2D(channel5, camN).xyz;
 
-    vec3 foreGround = texture2D(channel5, mix(stN, quant(camColor.xy, 30.), sinN(time))).xyz;
+    vec3 foreGround = texture2D(channel5, mix(stN, quant(camQ.xy, 30.), sinN(time))).xyz;
     
-    vec2 warpStn = quant(coordWarp(stN), 10.);
+    
+    
 
     int ballInd = noteColorBalls(warpStn, time*2.);
+    ballInd = noteColorBalls(stN, time*2.);
     vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
     vec3 ballColor;
     if(ballInd == -1){ 
         ballColor = bb.rgb;
     }else {
         ballColor = getArrayElem(noteColors, ballInd);
-        ballColor = colorWarp(foreGround, (ballInd+1)*2);
-        ballColor = vec3(1.) - quant(hexAvg(stN, 150., channel5), 10.);
+        ballColor = wrap(ballColor*(1.+sinN(time)*10.), 0., 1.);
+        // ballColor = colorWarp(foreGround, (ballInd+1)*2);
+        // ballColor = vec3(1.) - quant(hexAvg(stN, 150., channel5), 10.);
     }
-
-    bool condition = multiBallCondition(warpStn, time*2.); distance(in1.xy, stN) < .1;
-    vec3 trail = ballColor;
     
+    bool condition =  multiBallCondition(stN, time*2.); colourDistance(cam, snap) > 0.2; 
+    vec3 trail = ballColor;
+
+    foreGround = album;
+    trail = ballColor;
     
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -266,10 +342,6 @@ void main () {
             feedback = 1.;
             c = trail; 
         } 
-        // else {
-        //     feedback = lastFeedback * decay;
-        //     c = mix(snap, bb, lastFeedback);
-        // }
     }
     else {
         feedback = lastFeedback * decay;
@@ -279,6 +351,7 @@ void main () {
             feedback = 0.;
             c = foreGround;
         }
+        c = bb.rgb;
     }
     
     gl_FragColor = vec4(vec3(c), feedback);
