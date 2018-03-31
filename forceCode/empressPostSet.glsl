@@ -107,8 +107,8 @@ vec2 coordWarp(vec2 stN){
     
     float rad = .5;
     
-    for (float i = 0.0; i < 20.; i++) {
-        vec2 p = vec2(sinN(time/5. * rand(i) * 1.3 + i), cosN(time/5. * rand(i) * 1.1 + i));
+    for (float i = 0.0; i < 10.; i++) {
+        vec2 p = vec2(sinN(time/3. * rand(i) * 1.3 + i), cosN(time/3. * rand(i) * 1.1 + i));
         warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
     }
     
@@ -321,7 +321,7 @@ void main () {
     int BALDGIRL = 3;
     int SCOPE = 4;
     
-    int SONG = BALDGIRL;
+    int SONG = SCOPE;
 
     //the current pixel coordinate 
     vec2 stN = uvN();
@@ -352,7 +352,7 @@ void main () {
     vec3 cam = texture2D(channel0, camN).xyz;
     vec3 snap = texture2D(channel3, camN).xyz;
     vec3 album = texture2D(channel5, camN).xyz;
-    vec3 liquid = texture2D(channel5, coordWarp(stN)).xyz;
+    vec3 liquid = texture2D(channel5, coordWarp(stN )).xyz;
 
     vec3 foreGround = texture2D(channel5, mix(stN, quant(camQ.xy, 30.), sinN(time))).xyz;
     
@@ -373,13 +373,15 @@ void main () {
         if(SONG == BALDGIRL) ballColor = vec3(1.) - quant(hexAvg(stN, 150., channel5), 10.);
     }
     
-    bool condition =  multiBallCondition(stN, time*2.); colourDistance(cam, snap) > 0.2; 
+    bool condition =   colourDistance(cam, snap) > 0.2; multiBallCondition(stN, time*2.);
     if(SONG == BALDGIRL) condition = multiBallCondition(warpQ, time*2.);
     vec3 trail = ballColor;
 
+    foreGround = vec3(cam*10.);
+    trail = album;
+    // a
     foreGround = album;
-    trail = ballColor;
-    
+    trail = vec3(cam*10.);
     // implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
         if(lastFeedback < 1.1) { 
@@ -407,5 +409,6 @@ void main () {
         c = kscope(stN);
     }
     
-    gl_FragColor = vec4(vec3(c), feedback);
+    // if(SONG != PARTYTRIX) c = mod((liquid)*(1.+sinN(time)*5.), 1.);
+    gl_FragColor = vec4(vec3(album), feedback);
 }
