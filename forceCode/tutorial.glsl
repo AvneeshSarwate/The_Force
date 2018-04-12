@@ -28,7 +28,7 @@ void ex2() {
 //this example shows how I use it to do feedback/trail effects
 void ex3() {
     vec2 stN = uvN();
-    vec2 camPos = vec2(1.-stN.x, stN.y);
+    vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
     vec3 cam = texture2D(channel0, camPos).rgb; 
     vec3 snap = texture2D(channel3, camPos).rgb;
 
@@ -46,5 +46,5 @@ void ex3() {
 
 
 void main(){
-    ex3();
+    ex1();
 }

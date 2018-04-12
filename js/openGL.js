@@ -231,19 +231,31 @@ function shaderMinusSequencing(code){
 var seq = 0;
 function parseAndTriggerSequence(patternString){
     console.log("pattern", patternString);
-    var patternCode = patternString.substring("pattern(".length, patternString.length-1);
-    if(seq){
+    var patternTrim = patternString.trim();
+    var patternCode = patternTrim.substring("pattern(".length, patternTrim.length-1);
+    if(seq || patternCode == "stop"){
       seq.stop();
       seq.dispose();
     } 
-    seq = new Tone.Sequence(function(time, note){
-      mMousePosX = Math.random() * 500;
-      mMousePosY = Math.random() * 500;
-      //console.log(mMousePosX, mMousePosY);
-      //straight quater notes
-      $('#tonedebug').html(note);
-    }, ["C4", ["E4", "G4"], "A4"], "4n");
-    // seq.start();
+    if(patternCode == "stop"){
+      return "stopped";
+    }else {
+      try { 
+        seq = new Tone.Sequence(function(time, note){
+          // mMousePosX = Math.random() * 500;
+          // mMousePosY = Math.random() * 500;
+          // //console.log(mMousePosX, mMousePosY);
+          // //straight quater notes
+          // $('#tonedebug').html(note);
+          videos[0].currentTime = note;
+          console.log("pattern note", note);
+        }, eval(patternCode), "4n");
+        seq.start();
+        return "success";
+      } catch(err){
+        return err; 
+      } 
+    }
 }
 
 function newShader(vs, shaderCode) {
@@ -748,12 +760,12 @@ function paint(timeVal) {
     if(chordChromaColorU !== null) gl.uniform3f(chordChromaColorU, col[0], col[1], col[2]);
 
     //the uniform assumes 10 note colors - we pad with 0s if there are not enough notes
-    var noteColorData = [].concat.apply([], getNoteColors()); //flatten the color values to a single array
+    var noteColorData = [].concat.apply([], getNoteColors().slice(0, 10)); //flatten the color values to a single array
     //var noteColorBuffer = noteColorData.concat(Array.from(new Array(Math.max(30-noteColorData.length, 0)), () => 0)); //add padding TODO: is 0 padding even needed?
     if(noteColorsU !== null) gl.uniform3fv(noteColorsU, noteColorData);
 
     if(numNotesOnU !== null) gl.uniform1f(numNotesOnU, onNoteSet.size);
-    if(noteVelU !== null) gl.uniform1fv(noteVelU, getNoteVelocities());
+    if(noteVelU !== null) gl.uniform1fv(noteVelU, getNoteVelocities().slice(0, 10));
 
     // gl.bindBuffer( gl.ARRAY_BUFFER, mQuadVBO);
     // gl.vertexAttribPointer(vertPosU, 2,  gl.FLOAT, false, 0, 0);
