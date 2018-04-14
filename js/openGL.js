@@ -450,7 +450,7 @@ function createOSCUniforms() {
 function createMIDIUniforms() {
     mMIDIStr = "";
     if (midiIn !== null) {
-        mMIDIStr = "uniform int midi[128];";
+        mMIDIStr = "uniform float midi[128];";
     }
 
 }
@@ -868,7 +868,7 @@ function paint(timeVal) {
 
     //MIDI values
     if (midi !== null) {
-        gl.uniform1iv(midiU, midiData);
+        gl.uniform1fv(midiU, midiData);
     }
 
     // if (l5 !== null)  gl.uniform1fv(l5, times);
