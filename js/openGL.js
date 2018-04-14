@@ -23,6 +23,9 @@ var oscM = [null, null, null, null, null, null, null, null, null, null];
 var gammaValues = [1.0, 1.0, 1.0, 1.0];
 var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU = null;
 
+var vjNoteUniforms = Array.from(new Array(10), () => null);
+var vjLastNoteUniforms = Array.from(new Array(5), () => null);
+
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
 
@@ -302,6 +305,13 @@ function newShader(vs, shaderCode) {
     ch6 = gl.getUniformLocation(mProgram, "channel6");
     ch7 = gl.getUniformLocation(mProgram, "channel7");
     ch8 = gl.getUniformLocation(mProgram, "channel8");
+
+    for(var i = 0; i < 5; i++){
+      vjNoteUniforms[i*2] = gl.getUniformLocation(mProgram, "vjvel"+i);
+      vjNoteUniforms[i*2+1] = gl.getUniformLocation(mProgram, "vjlastvel"+i);
+    }
+    vjLastNoteUniform = gl.getUniformLocation(mProgram, "vjlastnote");
+
 
     bs = gl.getUniformLocation(mProgram, "bands");
     bandsTimeU = gl.getUniformLocation(mProgram, "bandsTime");
@@ -766,6 +776,16 @@ function paint(timeVal) {
 
     if(numNotesOnU !== null) gl.uniform1f(numNotesOnU, onNoteSet.size);
     if(noteVelU !== null) gl.uniform1fv(noteVelU, getNoteVelocities().slice(0, 10));
+
+
+    for(var i = 0; i < 5; i++){
+      // vjNoteUniforms[i*2] = gl.getUniformLocation(mProgram, "vjvel"+i);
+      if(vjNoteUniforms[i*2] !== null) gl.uniform1fv(vjNoteUniforms[i*2], vjPadNoteInfo[i].notes.map(note => note.vel));
+      // vjNoteUniforms[i*2+1] = gl.getUniformLocation(mProgram, "vjlastvel"+i);
+      if(vjNoteUniforms[i*2+1] !== null) gl.uniform1fv(vjNoteUniforms[i*2+1], vjPadNoteInfo[i].notes.map(note => note.lastVel));
+    }
+    // vjLastNoteUniform = gl.getUniformLocation(mProgram, "vjlastnote");
+    if(vjLastNoteUniform !== null) gl.uniform1fv(vjLastNoteUniform, vjPadNoteInfo.map(chan => chan.last));
 
     // gl.bindBuffer( gl.ARRAY_BUFFER, mQuadVBO);
     // gl.vertexAttribPointer(vertPosU, 2,  gl.FLOAT, false, 0, 0);

@@ -18,6 +18,18 @@ uniform vec3      channelResolution[4];
 uniform vec4      bands;
 uniform vec4      bandsTime;
 uniform sampler2D backbuffer;
+uniform float     vjvel0[16];
+uniform float     vjlastvel0[16];
+uniform float     vjvel1[16];
+uniform float     vjlastvel1[16];
+uniform float     vjvel2[16];
+uniform float     vjlastvel2[16];
+uniform float     vjvel3[16];
+uniform float     vjlastvel3[16];
+uniform float     vjvel4[16];
+uniform float     vjlastvel4[16];
+uniform float     vjlastnote[5];
+
 
 float PI = 3.14159;
 float PI2 = 6.28318;

@@ -9,7 +9,8 @@ var onNoteSet = new Set();
 var pitchClassToColor = {};
 var noteInfo = {velocity: {}};
 var vjPadNoteInfo = arrayOf(5).map(() => ({'notes':arrayOf(16).map(() => ({'vel':0, 'lastVel':0})), 'last':0}) )
-var usingVJPad = false;
+
+var usingVJPad = window.location.href.split("?")[1].split("&")[1] == 'vjPad';
 
 function onMIDISuccess(midiAccess) {
     console.log("MIDI ready!");
