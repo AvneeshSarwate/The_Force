@@ -3,18 +3,30 @@ var midiIn = null;
 var midiOut = null;
 var midiData = Array.apply(null, Array(128)).map(function() {
     return 0; });
+var arrayOf = n => Array.from(new Array(n), () => 0);
 var chroma = Array.from(new Array(12), () => 0);
 var onNoteSet = new Set();
 var pitchClassToColor = {};
 var noteInfo = {velocity: {}};
+var vjPadNoteInfo = arrayOf(5).map(() => ({'notes':arrayOf(16).map(() => ({'vel':0, 'lastVel':0})), 'last':0}) )
+var usingVJPad = false;
 
 function onMIDISuccess(midiAccess) {
     console.log("MIDI ready!");
     midi = midiAccess; // store in the global (in real usage, would probably keep in an object instance)
     // midi.onstatechange = do something here like assign a function
-    listInputsAndOutputs(midi);
-    startLoggingMIDIInput(null, true);
 
+
+    var midiName = window.location.href.split("?")[1].split("&")[1];
+    usingVJPad = midiName == "vjPad";
+    var midiDeviceName = usingVJPad ? "IAC Driver Bus 2" : null;
+    console.log(midiDeviceName, midiName);  
+
+    var useAllDevices = true;  
+    useAllDevices = !usingVJPad;
+
+    listInputsAndOutputs(midi);
+    startLoggingMIDIInput(midiDeviceName, useAllDevices);
 }
 
 function onMIDIFailure(msg) {
@@ -66,9 +78,12 @@ function onMIDIMessage(event) {
     }
     // console.log(str);
     var midiNote = event.data[1];
+    var midiVel = event.data[2]
 
     // Mask off the lower nibble (MIDI channel, which we don't care about)
     // var channel = ev.data[0] & 0xf;
+    var chan = event.data[0] & 0x0f;
+    console.log("MIDI EVENT", chan, midiNote, midiVel);
     switch (event.data[0] & 0xf0) {
         case 0x90:
             if (event.data[2] != 0) { // if velocity != 0, this is a note-on message
@@ -77,6 +92,12 @@ function onMIDIMessage(event) {
                 chroma[midiNote%12] = 1; 
                 onNoteSet.add(midiNote);
                 noteInfo.velocity[midiNote] = event.data[2];
+                if(usingVJPad){
+                    vjPadNoteInfo[chan].last = midiNote
+                    vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
+                    vjPadNoteInfo[chan].notes[midiNote].lastVel = event.data[2];
+                    console.log("vjPad", chan, midiNote, event.data[2]);
+                }
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -87,6 +108,7 @@ function onMIDIMessage(event) {
             chroma[midiNote%12] = 0; 
             noteInfo.velocity[midiNote] = 0;
             onNoteSet.delete(midiNote);
+            if(usingVJPad) vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
             break;
 
         case 0xb0:

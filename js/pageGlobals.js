@@ -51,7 +51,7 @@ var swipePart;
 $( document ).ready(function() {
 
 
-    var shaderString = window.location.href.split("?")[1];
+    var shaderString = window.location.href.split("?")[1].split("&")[0];
     var shaderToGet = shaderString.split("_old")[0];
     if(shaderString.indexOf("_old") > -1) {
         useAudioInput = false;
