@@ -12,6 +12,28 @@ var vjPadNoteInfo = arrayOf(5).map(() => ({'notes':arrayOf(16).map(() => ({'vel'
 
 var usingVJPad = window.location.href.split("?")[1].split("&")[1] == 'vjPad';
 
+var pitchSequence = new Array();
+var velocitySequence = new Array();
+var lastMatchedPattern = -1;
+var patterns = [
+    [60, 62, 63],
+    [63, 65, 67]
+];
+
+function matchPattern(){
+    for(var i = 0; i < patterns.length; i++){
+        var pattern = patterns[i];
+        var patternIsMatched = true;
+        var pitchSeqEndInd = pitchSequence.length - 1;
+        var patternEndInd = pattern.length - 1;
+        for(var j = 0; j < pattern.length; j++){
+            var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-i] == pattern[patternEndInd-i]);
+        }
+        if(patternIsMatched) return i;
+    }
+    return -1;
+}
+
 function onMIDISuccess(midiAccess) {
     console.log("MIDI ready!");
     midi = midiAccess; // store in the global (in real usage, would probably keep in an object instance)
@@ -93,6 +115,8 @@ function onMIDIMessage(event) {
                 chroma[midiNote%12] = 1; 
                 onNoteSet.add(midiNote);
                 noteInfo.velocity[midiNote] = event.data[2];
+                pitchSequence.push(midiNote);
+                velocitySequence.push(midiVel);
                 if(usingVJPad){
                     vjPadNoteInfo[chan].last = midiNote
                     vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
@@ -116,6 +140,9 @@ function onMIDIMessage(event) {
             midiData[event.data[1]] = event.data[2];
             break;
     }
+
+    var matchInd = matchPattern();
+    lastMatchedPattern = matchInd < 0 ? lastMatchedPattern : matchInd;
 
     if ($('#oscPanel').length) //onscreen
     {

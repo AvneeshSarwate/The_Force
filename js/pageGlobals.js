@@ -60,6 +60,9 @@ $( document ).ready(function() {
     if(shaderToGet.indexOf("empress") > -1){
         initialLoaderFunction = empressAlbumArtLoader;
     }
+    if(shaderToGet.indexOf("deantoni" > -1)){
+        initialLoaderFunction = deantoniLoader;
+    }
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             console.log(shaderCode);

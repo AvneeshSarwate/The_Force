@@ -484,8 +484,10 @@ function setupVideo(url, ind) {
      checkReady();
   }, true);
 
-  video.src = url;
-  video.play();
+  if(url) {
+    video.src = url;
+    video.play();
+  }
 
   function checkReady() {
     if (playing && timeupdate) {
