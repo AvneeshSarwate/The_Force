@@ -29,6 +29,7 @@ uniform float     vjlastvel3[16];
 uniform float     vjvel4[16];
 uniform float     vjlastvel4[16];
 uniform float     vjlastnote[5];
+uniform float     lastPattern;
 
 
 float PI = 3.14159;

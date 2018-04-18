@@ -25,6 +25,7 @@ var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU =
 
 var vjNoteUniforms = Array.from(new Array(10), () => null);
 var vjLastNoteUniforms = Array.from(new Array(5), () => null);
+var lastPatternU = null;
 
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
@@ -320,6 +321,8 @@ function newShader(vs, shaderCode) {
     noteColorsU = gl.getUniformLocation(mProgram, "noteColors");
     numNotesOnU = gl.getUniformLocation(mProgram, "numNotesOn");
     noteVelU = gl.getUniformLocation(mProgram, "noteVel");
+
+    lastPatternU = gl.getUniformLocation(mProgram, "lastPattern");
 
     //OSC uniforms
     for (var i = 0; i < oscM.length; i++) {
@@ -778,6 +781,8 @@ function paint(timeVal) {
 
     if(numNotesOnU !== null) gl.uniform1f(numNotesOnU, onNoteSet.size);
     if(noteVelU !== null) gl.uniform1fv(noteVelU, getNoteVelocities().slice(0, 10));
+
+    if(lastPatternU !== null) gl.uniform1f(lastPatternU, lastMatchedPattern);
 
 
     for(var i = 0; i < 5; i++){
