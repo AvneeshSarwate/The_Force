@@ -73,6 +73,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL){
             videos[videoInd] = video;
             videoTextures[videoInd] = texture;
             mInputs[textureInd] = texture;
+            video.play();
         }
     }
     req.onerror = function() {
