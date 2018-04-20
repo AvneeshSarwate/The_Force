@@ -1,3 +1,23 @@
+function loadImageToTexture(slotID, imageUrl){
+    destroyInput(slotID);
+    var texture = {};
+    texture.type = "tex_2D";
+    texture.globject = gl.createTexture();
+    texture.image = new Image();
+    texture.loaded = false;
+    whichSlot = "";
+    texture.image.onload = function()
+    {
+        createGLTextureNearest(gl, texture.image, texture.globject);
+        texture.loaded = true;
+    }
+    texture.image.src = imageUrl;
+    mInputs[slotID] = texture;
+    createInputStr();
+}
+
+
+
 function empressAlbumArtLoader(){
 	var slotID = 5;
     destroyInput(slotID);
@@ -19,7 +39,7 @@ function empressAlbumArtLoader(){
 
 
 
-function blobVideoLoad(videoInd, textureInd, videoFileURL){
+function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
     var req = new XMLHttpRequest();
     req.open('GET', videoFileURL, true);
     req.responseType = 'blob';
@@ -40,7 +60,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL){
             var timeupdate = false;
 
             video.autoplay = true;
-            video.muted = true;
+            video.muted = !playAudio;
             video.loop = true;
 
               // Waiting for these 2 events ensures
@@ -85,4 +105,9 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL){
 
 function deantoniLoader(){
     blobVideoLoad(1, 5, "GLASS_VEIN.mov");
+}
+
+function reedLoader(){
+    blobVideoLoad(1, 5, "happyBirthday.mp4", true);
+    loadImageToTexture(6, "reedFace.jpg");
 }

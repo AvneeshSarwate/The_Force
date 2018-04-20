@@ -63,6 +63,9 @@ $( document ).ready(function() {
     if(shaderToGet.indexOf("deantoni" > -1)){
         initialLoaderFunction = deantoniLoader;
     }
+    if(shaderToGet.indexOf("reed" ) > -1){
+        initialLoaderFunction = reedLoader;
+    }
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             console.log(shaderCode);

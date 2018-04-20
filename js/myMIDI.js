@@ -8,7 +8,7 @@ var chroma = Array.from(new Array(12), () => 0);
 var onNoteSet = new Set();
 var pitchClassToColor = {};
 var noteInfo = {velocity: {}};
-var vjPadNoteInfo = arrayOf(5).map(() => ({'notes':arrayOf(16).map(() => ({'vel':0, 'lastVel':0})), 'last':0}) )
+var vjPadNoteInfo = arrayOf(16).map(() => ({'notes':arrayOf(128).map(() => ({'vel':0, 'lastVel':0})), 'last':0}) )
 
 var usingVJPad = window.location.href.split("?")[1].split("&")[1] == 'vjPad';
 
