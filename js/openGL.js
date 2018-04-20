@@ -251,7 +251,7 @@ function parseAndTriggerSequence(patternString){
           // //console.log(mMousePosX, mMousePosY);
           // //straight quater notes
           // $('#tonedebug').html(note);
-          videos[0].currentTime = note;
+          videos[1].currentTime = note;
           console.log("pattern note", note);
         }, eval(patternCode), "4n");
         seq.start();
