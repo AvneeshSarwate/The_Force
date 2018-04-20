@@ -60,8 +60,12 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
             var timeupdate = false;
 
             video.autoplay = true;
-            video.muted = !playAudio;
+            video.muted = true;
             video.loop = true;
+
+            if(playAudio){
+                setTimeout(function(){video.muted = false}, 1000);
+            }
 
               // Waiting for these 2 events ensures
               // there is data in the video
