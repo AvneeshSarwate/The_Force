@@ -64,7 +64,10 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
             video.loop = true;
 
             if(playAudio){
-                setTimeout(function(){video.muted = false}, 1000);
+                $("#demogl").click(function(){
+                    video.muted = false;
+                    video.play();
+                });
             }
 
               // Waiting for these 2 events ensures
@@ -97,7 +100,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
             videos[videoInd] = video;
             videoTextures[videoInd] = texture;
             mInputs[textureInd] = texture;
-            video.play();
+            if(!playAudio) video.play();
         }
     }
     req.onerror = function() {
@@ -114,4 +117,5 @@ function deantoniLoader(){
 function reedLoader(){
     blobVideoLoad(1, 5, "happyBirthday.mp4", true);
     loadImageToTexture(6, "reedFace.jpg");
+    loadImageToTexture(7, "clicktoplay.png");
 }
