@@ -142,7 +142,7 @@ function enoLoader(){
 
 
     var filter =  new Tone.Filter(2000, "lowpass", -48).toMaster();
-    player = new Tone.Player("/airport2.mp3", bufferLoadFunc).connect(filter);
+    player = new Tone.Player("airport2.mp3", bufferLoadFunc).connect(filter);
     player.autostart = true;
 
     sequenceFunc = function(time, note){
@@ -159,7 +159,7 @@ function enoLoader(){
         }
     }
 
-    loadImageToTexture(5, "/airports.jpg");
+    loadImageToTexture(5, "airports.jpg");
 
     customLoaderUniformSet = function(){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
