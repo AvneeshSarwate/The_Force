@@ -128,6 +128,7 @@ var startTime = 0;
 var progressTime = 0;
 var startIncTime = 6.67;
 function enoLoader(){
+
     var bufferLoadFunc = function(){
         startTime = Date.now();
         console.log("eno buffer loaded");
@@ -138,8 +139,12 @@ function enoLoader(){
             playingSeq = true;
         }, Tone.now() + startIncTime);
     }
-    player = new Tone.Player("/airport2.mp3", bufferLoadFunc).toMaster();
+
+
+    var filter =  new Tone.Filter(2000, "lowpass", -48).toMaster();
+    player = new Tone.Player("/airport2.mp3", bufferLoadFunc).connect(filter);
     player.autostart = true;
+
     sequenceFunc = function(time, note){
         if(playingSeq && enoTime < songLength){
             if(progressTime < 10) enoIncrement += 0
@@ -153,6 +158,7 @@ function enoLoader(){
             console.log("pattern note", enoTime, enoIncrement, progressTime);
         }
     }
+
     loadImageToTexture(5, "/airports.jpg");
 
     customLoaderUniformSet = function(){
