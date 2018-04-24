@@ -127,6 +127,7 @@ var playingSeq = false;
 var startTime = 0;
 var progressTime = 0;
 var startIncTime = 6.67;
+var resetEno;
 function enoLoader(){
 
     var bufferLoadFunc = function(){
@@ -140,10 +141,20 @@ function enoLoader(){
         }, Tone.now() + startIncTime);
     }
 
-
     var filter =  new Tone.Filter(2000, "lowpass", -48).toMaster();
     player = new Tone.Player("airport2.mp3", bufferLoadFunc).connect(filter);
     player.autostart = true;
+
+    resetEno = function(){
+        enoTime = 0;
+        enoIncrement = 1;
+        songLength = 2912;
+        playingSeq = false; 
+        startTime = 0;
+        Tone.Transport.bpm.value = 120;
+        player.start(Tone.now(), 0);
+        bufferLoadFunc();
+    }
 
     sequenceFunc = function(time, note){
         if(playingSeq && enoTime < songLength){
