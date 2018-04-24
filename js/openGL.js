@@ -234,6 +234,18 @@ function shaderMinusSequencing(code){
 
 var seq = 0;
 var player;
+var sequenceFunc = function(time, note){ };
+// function(time, note){
+//           // mMousePosX = Math.random() * 500;
+//           // mMousePosY = Math.random() * 500;
+//           // //console.log(mMousePosX, mMousePosY);
+//           // //straight quater notes
+//           // $('#tonedebug').html(note);
+//           player.stop()
+//           player.start(Tone.now(), note);
+//           console.log("pattern note", note);
+//         }
+
 function parseAndTriggerSequence(patternString){
     console.log("pattern", patternString);
     var patternTrim = patternString.trim();
@@ -246,17 +258,7 @@ function parseAndTriggerSequence(patternString){
       return "stopped";
     }else {
       try { 
-        seq = new Tone.Sequence(function(time, note){
-          // mMousePosX = Math.random() * 500;
-          // mMousePosY = Math.random() * 500;
-          // //console.log(mMousePosX, mMousePosY);
-          // //straight quater notes
-          // $('#tonedebug').html(note);
-          videos[1].currentTime = note;
-          player.stop()
-          player.start(Tone.now(), note);
-          console.log("pattern note", note);
-        }, eval(patternCode), "4n");
+        seq = new Tone.Sequence(sequenceFunc, eval(patternCode), "4n");
         seq.start();
         return "success";
       } catch(err){

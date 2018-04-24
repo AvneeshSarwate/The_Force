@@ -120,7 +120,38 @@ function reedLoader(){
     loadImageToTexture(7, "clicktoplay.png");
 }
 
+var enoTime = 0;
+var enoIncrement = 1;
+var songLength = 2912;
+var playingSeq = false; 
+var startTime = 0;
+var progressTime = 0;
+var startIncTime = 6.67;
 function enoLoader(){
-    player = new Tone.Player("/airport2.mp3").toMaster();
+    var bufferLoadFunc = function(){
+        startTime = Date.now();
+        console.log("eno buffer loaded");
+        Tone.Transport.scheduleOnce(function(time){
+            console.log("eno incrementing started");
+            Tone.Transport.bpm.rampTo(600, 60-startIncTime);
+            enoTime = startIncTime;
+            playingSeq = true;
+        }, Tone.now() + startIncTime);
+    }
+    player = new Tone.Player("/airport2.mp3", bufferLoadFunc).toMaster();
     player.autostart = true;
+    sequenceFunc = function(time, note){
+        if(playingSeq && enoTime < songLength){
+            if(progressTime < 10) enoIncrement += 0
+            else if(progressTime < 19.5) enoIncrement += 0.005
+            else if(progressTime < 28.5) enoIncrement += 0.025
+            else if(enoIncrement < 15 && progressTime > 28.5) enoIncrement += 0.045;
+            enoTime += enoIncrement;
+            player.stop()
+            player.start(Tone.now(), enoTime);
+            progressTime = (Date.now() - startTime)/1000;
+            console.log("pattern note", enoTime, enoIncrement, progressTime);
+        }
+    }
+    loadImageToTexture(5, "/airports.jpg");
 }
