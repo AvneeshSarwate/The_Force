@@ -110,7 +110,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
     req.send();
 }
 
-function deantoniLoader(){
+function interactiveLoader(){
     blobVideoLoad(1, 5, "GLASS_VEIN.mov");
 }
 
@@ -118,4 +118,9 @@ function reedLoader(){
     blobVideoLoad(1, 5, "happyBirthday.mp4", true);
     loadImageToTexture(6, "reedFace.jpg");
     loadImageToTexture(7, "clicktoplay.png");
+}
+
+function enoLoader(){
+    player = new Tone.Player("/airport2.mp3").toMaster();
+    player.autostart = true;
 }

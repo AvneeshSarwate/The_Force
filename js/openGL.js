@@ -233,6 +233,7 @@ function shaderMinusSequencing(code){
 }  
 
 var seq = 0;
+var player;
 function parseAndTriggerSequence(patternString){
     console.log("pattern", patternString);
     var patternTrim = patternString.trim();
@@ -252,6 +253,8 @@ function parseAndTriggerSequence(patternString){
           // //straight quater notes
           // $('#tonedebug').html(note);
           videos[1].currentTime = note;
+          player.stop()
+          player.start(Tone.now(), note);
           console.log("pattern note", note);
         }, eval(patternCode), "4n");
         seq.start();

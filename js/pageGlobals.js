@@ -60,8 +60,8 @@ $( document ).ready(function() {
     if(shaderToGet.indexOf("empress") > -1){
         initialLoaderFunction = empressAlbumArtLoader;
     }
-    if(shaderToGet.indexOf("deantoni" > -1)){
-        initialLoaderFunction = deantoniLoader;
+    if(shaderToGet.indexOf("interactive" > -1)){
+        initialLoaderFunction = interactiveLoader;
     }
     if(shaderToGet.indexOf("reed" ) > -1){
         initialLoaderFunction = reedLoader;
@@ -1133,10 +1133,12 @@ $( document ).ready(function() {
         wcTex.image = {height: webcam.height, width: webcam.width};
         wcTex.loaded = true;
         
-        createNewVideoTexture(gl, "./starfield.mov", 0);   
+        if(!mInputs[1]) {
+            createNewVideoTexture(gl, "./starfield.mov", 0);   
+            mInputs[1] = videoTextures[0]; 
+        }
 
         mInputs[0] = wcTex;
-        mInputs[1] = videoTextures[0]; 
     }
 
     mTime = Date.now();
