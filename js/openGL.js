@@ -733,6 +733,9 @@ setInterval(function(){
   shaderTimeUpdates += 1;
 }, 34);
 
+
+var customLoaderUniformSet = function(){};
+
 function paint(timeVal) {
     if (gl === null) return;
     if (mProgram === null) return;
@@ -801,6 +804,8 @@ function paint(timeVal) {
 
     // gl.bindBuffer( gl.ARRAY_BUFFER, mQuadVBO);
     // gl.vertexAttribPointer(vertPosU, 2,  gl.FLOAT, false, 0, 0);
+
+    customLoaderUniformSet();
 
     //minputs
     //fourband sound

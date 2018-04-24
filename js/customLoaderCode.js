@@ -154,4 +154,10 @@ function enoLoader(){
         }
     }
     loadImageToTexture(5, "/airports.jpg");
+
+    customLoaderUniformSet = function(){
+        var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
+        if(enoProgU) gl.uniform1f(enoProgU, enoTime/songLength);
+    }
+
 }
