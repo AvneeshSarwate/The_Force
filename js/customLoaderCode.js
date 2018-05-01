@@ -39,7 +39,7 @@ function empressAlbumArtLoader(){
 
 
 
-function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
+function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, videoPlayFunc){
     var req = new XMLHttpRequest();
     req.open('GET', videoFileURL, true);
     req.responseType = 'blob';
@@ -67,6 +67,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio){
                 $("#demogl").click(function(){
                     video.muted = false;
                     video.play();
+                    if(videoPlayFunc) videoPlayFunc();
                 });
             }
 
@@ -151,7 +152,9 @@ function enoLoader(){
         songLength = 2912;
         playingSeq = false; 
         startTime = 0;
+        progressTime = 0;
         Tone.Transport.bpm.value = 120;
+        player.stop();
         player.start(Tone.now(), 0);
         bufferLoadFunc();
     }
@@ -175,6 +178,24 @@ function enoLoader(){
     customLoaderUniformSet = function(){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, enoTime/songLength);
+    }
+
+}
+
+function goreLoader(){
+    var goreSequencer = new Tone.Sequence(function(time, note){
+        videos[1].currentTime = videos[1].currentTime + (-1 + Math.random()*2);
+        videos[1].playBackRate = Math.min(5, Math.max(1/16, videos[1].playBackRate + (-0.1 + Math.random()*0.2)));
+    }, [1, [1, 1]], "4n");
+    var videoPlayFunc = function(){
+        goreSequencer.start();
+        console.log("gore sequencer started");
+    }
+    blobVideoLoad(1, 6, "gore.mp4", true, videoPlayFunc);
+    loadImageToTexture(7, "clicktoplay.png");
+    customLoaderUniformSet = function(){
+        var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
+        if(enoProgU) gl.uniform1f(enoProgU, videos[1] ? videos[1].currentTime/100 : 0);
     }
 
 }

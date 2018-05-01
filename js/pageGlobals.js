@@ -67,7 +67,10 @@ $( document ).ready(function() {
         initialLoaderFunction = reedLoader;
     }
     if(shaderToGet.indexOf("eno") > -1){
-        initialLoaderFunction = enoLoader
+        initialLoaderFunction = enoLoader;
+    }
+    if(shaderToGet.indexOf("gore") > -1){;
+        initialLoaderFunction = goreLoader
     }
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
