@@ -70,7 +70,10 @@ $( document ).ready(function() {
         initialLoaderFunction = enoLoader;
     }
     if(shaderToGet.indexOf("gore") > -1){;
-        initialLoaderFunction = goreLoader
+        initialLoaderFunction = goreLoader;
+    }
+    if(shaderToGet.indexOf("watchman") > -1){
+        initialLoaderFunction = watchmanLoader;
     }
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

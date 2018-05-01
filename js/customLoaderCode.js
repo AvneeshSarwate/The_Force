@@ -197,5 +197,9 @@ function goreLoader(){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, videos[1] ? videos[1].currentTime/100 : 0);
     }
+}
 
+function watchmanLoader(){
+    blobVideoLoad(1, 5, "watchman.mp4", true);
+    loadImageToTexture(7, "clicktoplay.png");
 }
