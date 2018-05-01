@@ -76,7 +76,7 @@ vec2 quant(vec2 num, float quantLevels){
 
 void main () {
 
-    int cue = 4;
+    int cue = 3;
 
     //the current pixel coordinate 
     vec2 stN = uvN();
