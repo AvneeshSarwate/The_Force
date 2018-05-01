@@ -74,6 +74,7 @@ void main () {
     //the current pixel coordinate 
     vec2 stN = uvN();
     
+    
 
     vec3 c;
     vec3 vid;
