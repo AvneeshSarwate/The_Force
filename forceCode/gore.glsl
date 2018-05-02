@@ -81,7 +81,7 @@ void main () {
     if(mouse.z > 0.) {
         //define several different timescales for the transformations
         float t0, t1, t2, t3, t4, rw;
-        float ep = time; 10.; enoProg / 200000.;
+        float ep = time + mouse.y / resolution.y * 10.; 10.; enoProg / 200000.;
         t0 = ep/4.;
         t1 = ep/2.;
         t2 = ep;
@@ -89,8 +89,11 @@ void main () {
         rw =  randWalk/90.; //a random walk value used to parameterize the rotation of the final frame
         t4 = ep;
         
-        vec2 deepTileWave = rowColWave(stN * (1. + 5.*enoProg), 1. + sinN(time) * 10. * enoProg, time/10., 0.08 * enoProg);
-        vec2 warpTileCoord2 = wrap(rotate(deepTileWave, vec2(0.5), rw*enoProg)*(1.5+ 4.*enoProg), 0., 1.);
+        float enoProg2 = mouse.x / resolution.x * enoProg;
+        float enoProg3 = mouse.y / resolution.y * enoProg;
+        
+        vec2 deepTileWave = rowColWave(stN * (1. + 5.*enoProg2), 1. + sinN(ep) * 10. * enoProg3, ep/10., 0.08 * enoProg2);
+        vec2 warpTileCoord2 = wrap(rotate(deepTileWave, vec2(0.5), rw*enoProg3)*(1.5+ 4.*enoProg2), 0., 1.);
         vec3 wrapTile = texture2D(channel6, warpTileCoord2).rgb;
         vid = texture2D(channel6, stN).rgb;
         c = wrapTile;

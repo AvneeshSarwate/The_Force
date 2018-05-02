@@ -64,6 +64,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, videoPlayF
             video.loop = true;
 
             if(playAudio){
+                loadImageToTexture(7, "clicktoplay.png");
                 $("#demogl").click(function(){
                     video.muted = false;
                     video.play();
@@ -184,15 +185,17 @@ function enoLoader(){
 
 function goreLoader(){
     var goreSequencer = new Tone.Sequence(function(time, note){
-        videos[1].currentTime = videos[1].currentTime + (-1 + Math.random()*2);
-        videos[1].playBackRate = Math.min(5, Math.max(1/16, videos[1].playBackRate + (-0.1 + Math.random()*0.2)));
+        if(videos[1]) {
+            videos[1].currentTime = videos[1].currentTime + (-1 + Math.random()*2);
+            videos[1].playBackRate = Math.min(5, Math.max(1/16, videos[1].playBackRate + (-0.1 + Math.random()*0.2)));
+        }
     }, [1, [1, 1]], "4n");
     var videoPlayFunc = function(){
         goreSequencer.start();
         console.log("gore sequencer started");
     }
+    loadImageToTexture(7, "black.jpg");
     blobVideoLoad(1, 6, "gore.mp4", true, videoPlayFunc);
-    loadImageToTexture(7, "clicktoplay.png");
     customLoaderUniformSet = function(){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, videos[1] ? videos[1].currentTime/100 : 0);
