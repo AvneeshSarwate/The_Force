@@ -7,6 +7,16 @@ float quant(float num, float quantLevels){
     return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 //a function that simulates lenses moving across a screen
 //having lots of lenses moving across a screen is similar to 
 //the visual effect of looking at an image through rippling water
@@ -26,9 +36,10 @@ vec3 coordWarp(vec2 stN, float t2){
 void main () {
 
     //the current pixel coordinate 
+    float t2 = time/2.;
     vec2 stN = uvN();
-    vec3 warp = coordWarp(stN, time);
-    vec3 warp2 = coordWarp(warp.xy, time/10.);
+    vec3 warp = coordWarp(stN, t2);
+    vec3 warp2 = coordWarp(warp.xy, t2/10.);
 
     vec3 cam = texture2D(channel0, vec2(1.-warp.x, warp.y)).rgb;
     
@@ -36,13 +47,18 @@ void main () {
     vec2 coord = warp2.xy;
     
     
-    float dist = distance(mix(coord, stN, logi(sin(time*5. + cos(time)*10.) * sin(time/10.) *1.)-0.35), vec2(0.5));
+    float dist = distance(quant(mix(coord, stN, logi(sin(t2*5. + cos(t2)*10.) * sin(t2/10.) *1.)-0.35), 50. + sinN(t2/3.+1.)*1000.), vec2(0.5));
     for(float d = 0.05; d < 0.5; d += 0.03){
         if(d < dist && dist < d + 0.015) inStripe = inStripe || true;
         else inStripe = inStripe || false;
     }
     
     vec3 c = !inStripe ? warp : black;
+    vec3 bb = texture2D(backbuffer, warp2.xy).rgb;
+    // c = quant(c, 2.);
+
+    c = mix(bb, c, 4.2);
+    
     
     //The next two lines show a retexturing trick using the "swirl" procedural texture. 
     //The swirl function just generates a particular sinusodal spinning texture I like.
@@ -72,6 +88,3 @@ void main () {
     
     gl_FragColor = vec4(vec3(c), 1);
 }
-
-
-    
