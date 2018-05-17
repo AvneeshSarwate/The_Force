@@ -1,7 +1,3 @@
-float sinN(float t){
-   return (sin(t) + 1.) / 2.; 
-}
-
 float quant(float num, float quantLevels){
     float roundPart = floor(fract(num*quantLevels)*2.);
     return (floor(num*quantLevels)+roundPart)/quantLevels;
