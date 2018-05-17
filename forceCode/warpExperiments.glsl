@@ -33,7 +33,10 @@ void main () {
     vec3 cam = texture2D(channel0, vec2(1.-warp.x, warp.y)).rgb;
     
     bool inStripe = false;
-    float dist = distance(warp2.xy, vec2(0.5));
+    vec2 coord = warp2.xy;
+    
+    
+    float dist = distance(mix(coord, stN, logi(sin(time*5. + cos(time)*10.) * sin(time/10.) *1.)-0.35), vec2(0.5));
     for(float d = 0.05; d < 0.5; d += 0.03){
         if(d < dist && dist < d + 0.015) inStripe = inStripe || true;
         else inStripe = inStripe || false;
@@ -55,7 +58,6 @@ void main () {
     //cam = swirl(time/10., cam.rg);
     // cam = texture2D(channel1, cam.rg).xyz;
     
-    vec2 coord = warp2.xy;
     
     // float randval = rand(vec2(quant(coord.x+time/10., 10.), quant(coord.y+time/7., 70.)));
     // float randval2 = rand(vec2(quant(coord.x+sin(time)/6., 10.), quant(coord.y+sin(time)/5., 70.)));
