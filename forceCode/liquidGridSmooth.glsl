@@ -79,7 +79,7 @@ void main () {
 
     //define several different timescales for the transformations
     float t0, t1, t2, t3, t4, rw;
-    t0 = time/4.;
+    t0 = time/4.5;
     t1 = time/2.;
     t2 = time;
     t3 = time;
