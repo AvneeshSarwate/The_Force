@@ -80,9 +80,9 @@ void main () {
     //define several different timescales for the transformations
     float t0, t1, t2, t3, t4, rw;
     t0 = time/4.5;
-    t1 = time/2.;
-    t2 = time;
-    t3 = time;
+    t1 = time/2.1;
+    t2 = time/1.1;
+    t3 = time/0.93;
     rw =  randWalk/290.; //a random walk value used to parameterize the rotation of the final frame
     t4 = time;
     
