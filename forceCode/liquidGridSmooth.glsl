@@ -74,6 +74,9 @@ void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
+    vec2 translate = vec2(sin(time/2.5), cos(time/3.1))*stN;
+    // stN = wrap(stN+translate, 0., 1.);
+    // stN = mod(stN+translate, 1.);
     vec2 camN = vec2(1.- stN.x, stN.y);
     
 
@@ -92,6 +95,7 @@ void main () {
     
     vec2 trans = rowColWave(coord, div, t2/10., power);
     trans = wrap(rotate(trans, vec2(0.5), rw)*1., 0., 1.);
+    // trans = quant(trans, 3.);
     vec3 wrapTile = texture2D(channel0, trans).rgb;
     
     
