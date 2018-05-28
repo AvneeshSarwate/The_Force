@@ -70,6 +70,14 @@ vec2 rowColWave(vec2 stN, float div, float time2, float power){
     return stN;
 }
 
+float colourDistance(vec3 e1, vec3 e2) {
+  float rmean = (e1.r + e2.r ) / 2.;
+  float r = e1.r - e2.r;
+  float g = e1.g - e2.g;
+  float b = e1.b - e2.b;
+  return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
+}
+
 void main () {
 
     //the current pixel coordinate 
@@ -78,6 +86,21 @@ void main () {
     // stN = wrap(stN+translate, 0., 1.);
     // stN = mod(stN+translate, 1.);
     vec2 camN = vec2(1.- stN.x, stN.y);
+    vec3 cam = texture2D(channel0, camN).rgb;
+    vec3 snap = texture2D(channel3, camN).rgb;
+    float colorDist = colourDistance(cam, snap)/colourDistance(vec3(0.), vec3(1.)); 
+    
+    
+    float tScale = time / 5.;
+    vec2 colorPoint = vec2(sinN(tScale), cosN(tScale));
+    vec2 mouseN = mouse.zw / resolution.xy / 2.;
+    mouseN = vec2(mouseN.x, 1. - mouseN.y);
+    vec3 mouseCam = texture2D(channel0, colorPoint).xyz;
+    float blend = 0.1;
+    
+    blend = (colourDistance(mouseCam, cam) / colourDistance(vec3(0.), vec3(1.))) > 0.2 ? 0.1: 0.;
+    
+    stN = mix(stN, cam.xy, blend * sinN(time / 9.5));
     
 
     //define several different timescales for the transformations
@@ -118,6 +141,6 @@ void main () {
 
     c = mix(bb, c, 0.1 + sinN(t0)*0.5);
     
-    gl_FragColor = vec4(c, 1);
+    gl_FragColor = vec4(vec3(c), 1);
 }
 
