@@ -47,7 +47,7 @@ void main () {
     bool inStripe = false;
     vec2 coord = warp2.xy;
     
-    vec2 mixCoord = quant(mix(coord, stN, logi(sin(t2*5. + cos(t2)*10.) * sin(t2/10.) *1.)-0.35), 50. + sinN(t2/3.+1.)*1000.);
+    vec2 mixCoord = quant(mix(coord, stN, logi(sin(t2*5. + cos(t2)*10.) * sin(t2/10.) *1.)-0.35), 5. + pow(sinN(t2/3.+1.), 2.)*1000.);
     float dist = distance(mixCoord, vec2(0.5));
     float stripeRadius = 0.;
     for(float d = 0.05; d < 0.5; d += 0.03){
@@ -63,8 +63,12 @@ void main () {
     vec3 bb = texture2D(backbuffer, warp2.xy).rgb;
     // c = quant(c, 2.);
 
-    c = mix(bb, c, 3.2 * (vec3(sinN(t2), sin(t2+0.5), sinN(t2+1.)))) ;
+    c = mix(bb, c, 1. * (vec3(sinN(t2*0.8), sinN(t2*0.9+0.5), sinN(t2*0.7+1.)))) ;
     // c = black;
+    
+    vec3 bb2 = texture2D(backbuffer, stN.xy).rgb;
+    c = mix(bb2, c, .1 + sinN(time/3.5)*0.4);
+    
     
     //The next two lines show a retexturing trick using the "swirl" procedural texture. 
     //The swirl function just generates a particular sinusodal spinning texture I like.
