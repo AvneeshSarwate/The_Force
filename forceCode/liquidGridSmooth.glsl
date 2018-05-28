@@ -93,14 +93,19 @@ void main () {
     
     float tScale = time / 5.;
     vec2 colorPoint = vec2(sinN(tScale), cosN(tScale));
-    vec2 mouseN = mouse.zw / resolution.xy / 2.;
+    vec2 mouseN = mouse.xy / resolution.xy / 2.;
+    vec2 mouseK = mouse.zw / resolution.xy / 2.;
     mouseN = vec2(mouseN.x, 1. - mouseN.y);
     vec3 mouseCam = texture2D(channel0, colorPoint).xyz;
-    float blend = 0.1;
+    float blend = 0.0;
+    
+    
     
     blend = (colourDistance(mouseCam, cam) / colourDistance(vec3(0.), vec3(1.))) > 0.2 ? 0.1: 0.;
-    
-    stN = mix(stN, cam.xy, blend * sinN(time / 9.5));
+    blend = blend * sinN(time / 9.5);
+    blend = mouseK.x / 5.;
+    // blend = 0.;
+    stN = mix(stN, quant(cam.xy, 5.), blend);
     
 
     //define several different timescales for the transformations
@@ -124,14 +129,25 @@ void main () {
     
     bool inStripe = false;
     float dist = distance(trans, vec2(0.5));
-    float stripeRadius = 0.;
-    for(float d = 0.05; d < 0.5; d += 0.03){
-        if(d < dist && dist < d + 0.015) {
+    // for(float d = 0.05; d < 0.5; d += 0.03){
+    //     if(d < dist && dist < d + 0.015) {
+    //         inStripe = inStripe || true;
+    //     } else {
+    //         inStripe = inStripe || false;
+    //     }
+    // }
+
+    float numStripes = 3. +  (mouseK.y == 0. ? 7. : pow(mouseK.y, 2.5) * 20.);
+    float d = 0.05;
+    float stripeWidth =(0.5 - d) / numStripes;
+    for(int i = 0; i < 100; i++){
+        if(d < dist && dist < d + stripeWidth/2.) {
             inStripe = inStripe || true;
-            stripeRadius = d;
         } else {
             inStripe = inStripe || false;
         }
+        d = d + stripeWidth;
+        if(d > 0.5) break;
     }
     
     vec3 c = !inStripe ? white : black;
