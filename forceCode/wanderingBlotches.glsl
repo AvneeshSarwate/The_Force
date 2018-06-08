@@ -196,6 +196,7 @@ void main () {
     //                  cos((sinN(time/15.2)* 20. + cosN(time/13.2)*35.)/500.)*1./2.) *0.01;
     stN = stN - vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
                      cosN(time)) *0.01;
+    stN = wrap(stN, 0., 1.);
 
 
     vec3 cc;
