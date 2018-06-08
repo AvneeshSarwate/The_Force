@@ -163,6 +163,10 @@ float timeWarp(float t){
     return (t + sinN(t+sinN(t)) *1.8);
 }
 
+vec2 pointWarp(vec2 stN, float t){
+    return vec2(0.);
+}
+
 
 bool multiBallCondition(vec2 stN, float t){
     
@@ -193,7 +197,9 @@ void main () {
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     // bool condition = circleSlice(stN, time/2., randWalk/2. + 1500.).z == 0.; 
-    bool condition = multiBallCondition(stN * rotate(stN, vec2(0.5), time/2.), time);
+    vec2 center = vec2(sinN(time)*0.5 +.25, cosN(time)*0.5 +.25);
+    float rotateTime = time/2.;
+    bool condition = multiBallCondition(stN * rotate(stN, center, rotateTime), 130.);
     
     
     
