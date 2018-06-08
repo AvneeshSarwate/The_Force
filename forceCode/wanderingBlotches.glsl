@@ -163,8 +163,10 @@ float timeWarp(float t){
     return (t + sinN(t+sinN(t)) *1.8);
 }
 
-vec2 pointWarp(vec2 stN, float t){
-    return vec2(0.);
+vec2 pointWarp(vec2 stN, float t, float i){
+    vec2 center = vec2(sinN(randWalk/(80. + 10.*i))*0.5 +.25, cosN(randWalk/(80. + 10.*i))*0.5 +.25);
+    // center = vec2(0.5);
+    return stN * rotate(stN, center, t);
 }
 
 
@@ -173,11 +175,12 @@ bool multiBallCondition(vec2 stN, float t){
     
     bool cond = false;
     
-    for (float i = 0.0; i < 20.; i++) {
-        float rad = .01 + sinN(t-i)*0.04;
+    for (float i = 0.0; i < 40.; i++) {
+        float rad = 0.03; .01 + sinN(t-i)*0.04;
         float twarp = timeWarp(t-i);
+        vec2 coordWarp = pointWarp(stN, (time-i), i);
         vec2 p = vec2(sinN(twarp * rand(i+1.) * 1.3 + i), cosN(twarp * rand(i+1.) * 1.1 + i));
-        cond = cond || distance(stN, p) < rad;
+        cond = cond || distance(coordWarp, p) < rad;
     }
     
     return cond;
@@ -191,7 +194,7 @@ void main () {
 
 
     vec3 cc;
-    float decay = 0.98;
+    float decay = 0.99;
     float feedback;
     vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
     float lastFeedback = bb.a;
@@ -199,7 +202,8 @@ void main () {
     // bool condition = circleSlice(stN, time/2., randWalk/2. + 1500.).z == 0.; 
     vec2 center = vec2(sinN(time)*0.5 +.25, cosN(time)*0.5 +.25);
     float rotateTime = time/2.;
-    bool condition = multiBallCondition(stN * rotate(stN, center, rotateTime), 130.);
+    vec2 rotatedPoint = stN * rotate(stN, center, rotateTime);
+    bool condition = multiBallCondition((stN*3. - 1.5) / 2., time);
     
     
     
@@ -210,7 +214,7 @@ void main () {
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
-        if(lastFeedback < .6) {
+        if(lastFeedback < .4) {
             feedback = 1.;
             cc = trail; 
         } else {
