@@ -70,6 +70,44 @@ vec2 rowColWave(vec2 stN, float div, float time2, float power){
     return stN;
 }
 
+vec4 colormap_hsv2rgb(float h, float s, float v) {
+    float r = v;
+    float g = v;
+    float b = v;
+    if (s > 0.0) {
+        h *= 6.0;
+        int i = int(h);
+        float f = h - float(i);
+        if (i == 1) {
+            r *= 1.0 - s * f;
+            b *= 1.0 - s;
+        } else if (i == 2) {
+            r *= 1.0 - s;
+            b *= 1.0 - s * (1.0 - f);
+        } else if (i == 3) {
+            r *= 1.0 - s;
+            g *= 1.0 - s * f;
+        } else if (i == 4) {
+            r *= 1.0 - s * (1.0 - f);
+            g *= 1.0 - s;
+        } else if (i == 5) {
+            g *= 1.0 - s;
+            b *= 1.0 - s * f;
+        } else {
+            g *= 1.0 - s * (1.0 - f);
+            b *= 1.0 - s;
+        }
+    }
+    return vec4(r, g, b, 1.0);
+}
+
+vec4 colormap(float x) {
+    float h = clamp(-7.44981265666511E-01 * x + 7.47965390904122E-01, 0.0, 1.0);
+    float s = 1.0;
+    float v = 1.0;
+    return colormap_hsv2rgb(h, s, v);
+}
+
 float colourDistance(vec3 e1, vec3 e2) {
   float rmean = (e1.r + e2.r ) / 2.;
   float r = e1.r - e2.r;
@@ -78,55 +116,21 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
-void main () {
-
-    //the current pixel coordinate 
-    vec2 stN = uvN();
-    vec2 translate = vec2(sin(time/2.5), cos(time/3.1))*stN;
-    // stN = wrap(stN+translate, 0., 1.);
-    // stN = mod(stN+translate, 1.);
-    vec2 camN = vec2(1.- stN.x, stN.y);
-    vec3 cam = texture2D(channel0, camN).rgb;
-    vec3 snap = texture2D(channel3, camN).rgb;
-    float colorDist = colourDistance(cam, snap)/colourDistance(vec3(0.), vec3(1.)); 
+vec4 circleSlice(vec2 stN, float t, float randw){
     
-    
-    float tScale = time / 5.;
-    vec2 colorPoint = vec2(sinN(tScale), cosN(tScale));
-    vec2 mouseN = mouse.xy / resolution.xy / 2.;
-    vec2 mouseK = vec2(0., .5); mouse.zw / resolution.xy / 2.;
-    mouseN = vec2(mouseN.x, 1. - mouseN.y);
-    vec3 mouseCam = texture2D(channel0, colorPoint).xyz;
-    float blend = 0.0;
-    
-    
-    
-    blend = (colourDistance(mouseCam, cam) / colourDistance(vec3(0.), vec3(1.))) > 0.2 ? 0.1: 0.;
-    blend = blend * sinN(time / 9.5);
-    blend = mouseK.x / 5.;
-    // blend = 0.;
-    stN = mix(stN, quant(cam.xy, 5.), blend);
-    
-
     //define several different timescales for the transformations
     float t0, t1, t2, t3, t4, rw;
-    t0 = time/4.5;
-    t1 = time/2.1;
-    t2 = time/1.1;
-    t3 = time/0.93;
-    rw =  randWalk/290.; //a random walk value used to parameterize the rotation of the final frame
-    t4 = time;
+    t0 = t/4.5;
+    t1 = t/2.1;
+    t2 = t/1.1;
+    t3 = t/0.93;
+    rw =  randw/290.; //a random walk value used to parameterize the rotation of the final frame
+    t4 = t;
     
-    vec2 coord = stN*0.8; camN * (.2 + sinN(t0)*3.);
-    float div = 500.; 1. + sinN(t1) * 20.;
-    float power = 0.5; 0.1 + sinN(t3)/2.;
-    
-    vec2 trans = rowColWave(coord, div, t2/10., power);
-    trans = wrap(rotate(trans, vec2(0.5), rw)*1., 0., 1.);
-    // trans = quant(trans, 3.);
-    vec3 wrapTile = texture2D(channel0, trans).rgb;
-    
-    float divx = sinN(t0) * 1200.+10.;
+    t1 = t1 / 2.;
+    t0 = t0 / 2.;
+    rw = rw / 2.;
+    float divx = sinN(t0) * 120.+10.;
     float divy = cosN(t1) * 1400.+10.;
     stN = stN * rotate(stN, vec2(0.5), rw);
     vec2 trans2 = vec2(mod(floor(stN.y * divx), 2.) == 0. ? mod(stN.x + (t1 + rw)/4., 1.) : mod(stN.x - t1/4., 1.), 
@@ -137,7 +141,7 @@ void main () {
     float dist = distance(trans2, vec2(0.5));
 
 
-    float numStripes = 3. +  (mouseK.y == 0. ? 7. : pow(mouseK.y, 2.5) * 20.);
+    float numStripes = 20.;
     float d = 0.05;
     float stripeWidth =(0.5 - d) / numStripes;
     for(int i = 0; i < 100; i++){
@@ -150,13 +154,56 @@ void main () {
         if(d > 0.5) break;
     }
     
-    vec3 c = !inStripe ? white : black;
+    vec4 c = !inStripe ? vec4(white, 1) : vec4(black, 0);
+    return c;
     
-    vec3 bb = texture2D(backbuffer, stN).rgb;
+}
+
+void main () {
+
+    //the current pixel coordinate 
+    vec2 stN = uvN();
+
+    vec4 c = circleSlice(stN, time/6., randWalk);   
+
+    
+    vec4 bb = texture2D(backbuffer, stN);
     // c = quant(c, 2.);
 
-    // c = mix(c, bb, 0.2 + sinN(t0)*0.7);
+    // c = mix(c, bb, 0.4 + sinN(t0)*0.5);
     
-    gl_FragColor = vec4(vec3(c), 1);
+    vec3 cc;
+    float decay = 0.92;
+    float feedback;
+    float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a;
+    bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    bool condition = circleSlice(stN, time/2., randWalk/2.).z == 0.; 
+    vec3 trail = black; // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = white;
+    
+    
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < 1.1) {
+            feedback = 1.;
+            cc = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
+    }
+    else {
+        feedback = lastFeedback * decay;
+        if(lastFeedback > 0.4) {
+            cc = mix(foreGround, trail, lastFeedback); 
+        } else {
+            feedback = 0.;
+            cc = foreGround;
+        }
+    }
+    
+    
+    gl_FragColor = vec4(cc, feedback);
 }
 
