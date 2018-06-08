@@ -191,6 +191,11 @@ void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
+    // stN = rotate(stN, vec2(0.5), time/18000.);
+    // stN = stN - vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
+    //                  cos((sinN(time/15.2)* 20. + cosN(time/13.2)*35.)/500.)*1./2.) *0.01;
+    stN = stN - vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
+                     cosN(time)) *0.01;
 
 
     vec3 cc;
@@ -239,6 +244,7 @@ void main () {
     bool cond2 = multiBallCondition(stN, time);
     // cc = cond2 ? black : white;
     
+    cc = mix(bb.rgb, cc, 0.5);
     
     gl_FragColor = vec4(cc, feedback);
 }
