@@ -177,7 +177,7 @@ void main () {
     float feedback;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a;
     bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = circleSlice(stN, time/2., randWalk/2.).z == 0.; 
+    bool condition = circleSlice(stN, time/2., randWalk/2. + 1500.).z == 0.; 
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
