@@ -160,16 +160,17 @@ vec4 circleSlice(vec2 stN, float t, float randw){
 }
 
 float timeWarp(float t){
-    return (t + sinN(t*sinN(t)) *1.8)/100.;
+    return (t + sinN(t+sinN(t)) *1.8);
 }
 
 
 bool multiBallCondition(vec2 stN, float t){
     
-    float rad = .01 + sinN(t)*0.04;
+    
     bool cond = false;
     
     for (float i = 0.0; i < 20.; i++) {
+        float rad = .01 + sinN(t-i)*0.04;
         float twarp = timeWarp(t-i);
         vec2 p = vec2(sinN(twarp * rand(i+1.) * 1.3 + i), cosN(twarp * rand(i+1.) * 1.1 + i));
         cond = cond || distance(stN, p) < rad;
@@ -224,6 +225,9 @@ void main () {
             cc = foreGround;
         }
     }
+    
+    bool cond2 = multiBallCondition(stN, time);
+    // cc = cond2 ? black : white;
     
     
     gl_FragColor = vec4(cc, feedback);
