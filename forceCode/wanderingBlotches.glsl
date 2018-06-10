@@ -186,6 +186,10 @@ bool multiBallCondition(vec2 stN, float t){
     return cond;
 }
 
+vec2 movementDeviation(float t){ //argument time
+    return vec2(sin((cosN(t/5.52)* 20. + sinN(t/6.32)*305.)/50.), 
+                     cosN((sinN(t/1.52)* 20. + cosN(t/1.32)*250.)/500.)) *0.005 * sinN(time/10.) + 0.001;
+}
 
 void main () {
 
@@ -194,8 +198,7 @@ void main () {
     // stN = rotate(stN, vec2(0.5), time/18000.);
     // stN = stN - vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
     //                  cos((sinN(time/15.2)* 20. + cosN(time/13.2)*35.)/500.)*1./2.) *0.01;
-    vec2 movement = vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
-                     cosN(time)) *0.01;
+    vec2 movement = movementDeviation(time);
     // if(movement.x < 0. && gl_FragCoord.x == resolution.x) {
     //     gl_FragColor = vec4(white, 0);
     //     return;
@@ -205,21 +208,23 @@ void main () {
     //     return;
     // }
     // movement = vec2(-0.01, 0);
+    bool newBorderPixel = false;
     if(movement.x < 0. && stN.x > 1. -  abs(movement.x)){
-        gl_FragColor = vec4(white, 0);
-        return;
+        newBorderPixel = true;
     }
     if(movement.x > 0. && stN.x < movement.x){
-        gl_FragColor = vec4(white, 0);
-        return;
+        newBorderPixel = true;
     }
     if(movement.y < 0. && stN.y > 1. -  abs(movement.y)){
-        gl_FragColor = vec4(white, 0);
-        return;
+       newBorderPixel = true;
     }
     if(movement.y > 0. && stN.y < movement.y){
+        newBorderPixel = true;
+    }
+    if(newBorderPixel){
         gl_FragColor = vec4(white, 0);
         return;
+        // movement = movementDeviation(time+2.);
     }
     stN = stN - movement;
     stN = wrap(stN, 0., 1.);
