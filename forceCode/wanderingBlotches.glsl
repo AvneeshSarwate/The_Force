@@ -194,8 +194,34 @@ void main () {
     // stN = rotate(stN, vec2(0.5), time/18000.);
     // stN = stN - vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
     //                  cos((sinN(time/15.2)* 20. + cosN(time/13.2)*35.)/500.)*1./2.) *0.01;
-    stN = stN - vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
+    vec2 movement = vec2(sin((cosN(time/15.2)* 20. + sinN(time/13.2)*35.)/500.)*10., 
                      cosN(time)) *0.01;
+    // if(movement.x < 0. && gl_FragCoord.x == resolution.x) {
+    //     gl_FragColor = vec4(white, 0);
+    //     return;
+    // }
+    // if(movement.x > 0. && gl_FragCoord.x == 0.) {
+    //     gl_FragColor = vec4(white, 0);
+    //     return;
+    // }
+    // movement = vec2(-0.01, 0);
+    if(movement.x < 0. && stN.x > 1. -  abs(movement.x)){
+        gl_FragColor = vec4(white, 0);
+        return;
+    }
+    if(movement.x > 0. && stN.x < movement.x){
+        gl_FragColor = vec4(white, 0);
+        return;
+    }
+    if(movement.y < 0. && stN.y > 1. -  abs(movement.y)){
+        gl_FragColor = vec4(white, 0);
+        return;
+    }
+    if(movement.y > 0. && stN.y < movement.y){
+        gl_FragColor = vec4(white, 0);
+        return;
+    }
+    stN = stN - movement;
     stN = wrap(stN, 0., 1.);
 
 
