@@ -164,7 +164,8 @@ float timeWarp(float t){
 }
 
 vec2 pointWarp(vec2 stN, float t, float i){
-    vec2 center = vec2(sinN(randWalk/(80. + 10.*i))*0.5 +.25, cosN(randWalk/(80. + 10.*i))*0.5 +.25);
+    float rwscale = randWalk/(80. + 10.*i);
+    vec2 center = vec2(sinN(rwscale), cosN(rwscale))*0.5 +.25;
     // center = vec2(0.5);
     return stN * rotate(stN, center, t);
 }
@@ -175,11 +176,12 @@ bool multiBallCondition(vec2 stN, float t){
     
     bool cond = false;
     
+    float rad = 0.03;
     for (float i = 0.0; i < 40.; i++) {
-        float rad = 0.03; .01 + sinN(t-i)*0.04;
         float twarp = timeWarp(t-i);
         vec2 coordWarp = pointWarp(stN, (time-i), i);
-        vec2 p = vec2(sinN(twarp * rand(i+1.) * 1.3 + i), cosN(twarp * rand(i+1.) * 1.1 + i));
+        float randt = twarp * rand(i+1.);
+        vec2 p = vec2(sinN(randt * 1.3 + i), cosN(randt * 1.1 + i));
         cond = cond || distance(coordWarp, p) < rad;
     }
     
