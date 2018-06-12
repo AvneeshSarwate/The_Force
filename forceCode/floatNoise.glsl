@@ -136,23 +136,23 @@ vec4 circleSlice(vec2 stN, float t, float randw){
     vec2 trans2 = vec2(mod(floor(stN.y * divx), 2.) == 0. ? mod(stN.x + (t1 + rw)/4., 1.) : mod(stN.x - t1/4., 1.), 
                        mod(floor(stN.x * divy), 2.) == 0. ? mod(stN.y + t1, 1.) : mod(stN.y - t1, 1.));
     
-    
-    bool inStripe = false;
+    float numStripes = 2000. + sinN(t2/5.) * 2000.;
+    bool inStripe = mod(floor(quant(stN.x, numStripes)*numStripes), 2.) == 1.;
     float dist = distance(trans2, vec2(0.5));
 
 
-    float numStripes = 20.;
+    
     float d = 0.05;
     float stripeWidth =(0.5 - d) / numStripes;
-    for(int i = 0; i < 100; i++){
-        if(d < dist && dist < d + stripeWidth/2.) {
-            inStripe = inStripe || true;
-        } else {
-            inStripe = inStripe || false;
-        }
-        d = d + stripeWidth;
-        if(d > 0.5) break;
-    }
+    // for(int i = 0; i < 100; i++){
+    //     if(d < dist && dist < d + stripeWidth/2.) {
+    //         inStripe = inStripe || true;
+    //     } else {
+    //         inStripe = inStripe || false;
+    //     }
+    //     d = d + stripeWidth;
+    //     if(d > 0.5) break;
+    // }
     
     vec4 c = !inStripe ? vec4(white, 1) : vec4(black, 0);
     return c;
@@ -177,7 +177,7 @@ void main () {
     float feedback;
     float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = circleSlice(stN, time/2., randWalk/2. + 1500.).z == 0.; 
+    bool condition = circleSlice(stN, time/50., (2. + cosN(time/5.)*20.)).z == 0.; 
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
