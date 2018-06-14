@@ -1,5 +1,22 @@
-float logi(float x){
-    return 1. / (1. + (1./exp(x)));
+void main2() {
+    vec2 stN = uvN();
+    vec3 c = texture2D(channel0, vec2(1.-stN.x, stN.y)).rgb;
+    
+    if(lastPattern == 0.) c = texture2D(channel1, stN).rgb;
+    if(lastPattern == -1.) c = texture2D(channel5, mix(stN, c.rg, 0.2 + sinN(time)*0.6)).rgb;
+    vec2 vidCamWarp = mix(c.rg, stN, sinN(time/7.));
+    c = swirl(time/5., vidCamWarp);
+    c = texture2D(channel0, vidCamWarp).rgb;
+    
+    gl_FragColor = vec4(c, 1.0);
+}
+
+
+
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
 float quant(float num, float quantLevels){
@@ -7,19 +24,129 @@ float quant(float num, float quantLevels){
     return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
-vec2 quant(vec2 num, float quantLevels){
-    vec2 roundPart = floor(fract(num*quantLevels)*2.);
-    return (floor(num*quantLevels)+roundPart)/quantLevels;
+
+vec2 cube_to_axial(vec3 cube){
+    float q = cube.x;
+    float r = cube.z;
+    return vec2(q, r);
 }
 
-vec3 quant(vec3 num, float quantLevels){
-    vec3 roundPart = floor(fract(num*quantLevels)*2.);
-    return (floor(num*quantLevels)+roundPart)/quantLevels;
+vec3 axial_to_cube(vec2 hex){
+    float x = hex.x;
+    float z = hex.y;
+    float y = -x-z;
+    return vec3(x, y, z);
 }
 
-//a function that simulates lenses moving across a screen
-//having lots of lenses moving across a screen is similar to 
-//the visual effect of looking at an image through rippling water
+float round(float v){
+    return floor(v+0.5);
+}
+
+vec3 cube_round(vec3 cube){
+    float rx = round(cube.x);
+    float ry = round(cube.y);
+    float rz = round(cube.z);
+
+    float x_diff = abs(rx - cube.x);
+    float y_diff = abs(ry - cube.y);
+    float z_diff = abs(rz - cube.z);
+
+    if (x_diff > y_diff && x_diff > z_diff){
+        rx = -ry-rz;
+    }
+    else if (y_diff > z_diff) {
+        ry = -rx-rz;
+    } else{
+        rz = -rx-ry;
+    }
+
+    return vec3(rx, ry, rz);
+}
+
+vec2 hex_round(vec2 hex){
+    return cube_to_axial(cube_round(axial_to_cube(hex))); 
+}
+
+vec2 cube_to_oddr(vec3 cube){
+      float col = cube.x + (cube.z - mod(cube.z,2.)) / 2.;
+      float row = cube.z;
+      return vec2(col, row);
+}
+
+vec3 oddr_to_cube(vec2 hex){
+      float x = hex.x - (hex.x - mod(hex.x,2.)) / 2.;
+      float z = hex.y;
+      float y = -x-z;
+      return vec3(x, y, z);
+}
+
+vec2 hex_to_pixel(vec2 hex, float size){
+    float x = size * sqrt(3.) * (hex.x + hex.y/2.);
+    float y = size * 3./2. * hex.y;
+    return vec2(x, y);
+}
+
+vec2 pixel_to_hex(vec2 p, float size){
+    float x = p.x;
+    float y = p.y;
+    float q = (x * sqrt(3.)/3. - y / 3.) / size;
+    float r = y * 2./3. / size;
+    return vec2(q, r);
+}
+
+vec2 hexCenter2(vec2 p, float size){
+    return hex_to_pixel(hex_round(pixel_to_hex(p, size)), size);
+}
+
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
+
+bool multiBallCondition(vec2 stN, float t2){
+    
+    float rad = .05;
+    bool cond = false;
+    
+    for (int i = 0; i < 10; i++) {
+        float i_f = float(i);
+        if(i_f == numNotesOn) break;
+        vec2 p = vec2(sinN(t2 * rand(i_f+1.) * 1.3 + i_f), cosN(t2 * rand(i_f+1.) * 1.1 + i_f));
+        cond = cond || distance(stN, p) < 0.01 + noteVel[i]/(128. * 4.);
+    }
+    
+    return cond;
+}
+
+float colormap_red(float x) {
+    return ((((1.30858855846896E+03 * x - 2.84649723684787E+03) * x + 1.76048857883363E+03) * x - 3.99775093706324E+02) * x + 2.69759225316811E+01) * x + 2.54587325383574E+02;
+}
+
+float colormap_green(float x) {
+    return ((((-8.85605750526301E+02 * x + 2.20590941129997E+03) * x - 1.50123293069936E+03) * x + 2.38490009587258E+01) * x - 6.03460495073813E+01) * x + 2.54768707485247E+02;
+}
+
+float colormap_blue(float x) {
+    if (x < 0.2363454401493073) {
+        return (-3.68734834041388E+01 * x - 3.28163398692792E+02) * x + 2.27342862588147E+02;
+    } else if (x < 0.7571054399013519) {
+        return ((((1.60988309475108E+04 * x - 4.18782706486673E+04) * x + 4.14508040221340E+04) * x - 1.88926043556059E+04) * x + 3.50108270140290E+03) * x - 5.28541997751406E+01;
+    } else {
+        return 1.68513761929930E+01 * x - 1.06424668227935E+01;
+    }
+}
+
+vec4 colormap(float x) {
+    float r = clamp(colormap_red(x) / 255.0, 0.0, 1.0);
+    float g = clamp(colormap_green(x) / 255.0, 0.0, 1.0);
+    float b = clamp(colormap_blue(x) / 255.0, 0.0, 1.0);
+    return vec4(r, g, b, 1.0);
+}
+float lum(vec3 color){
+    vec3 weights = vec3(0.212, 0.7152, 0.0722);
+    return dot(color, weights);
+}
+
 vec3 coordWarp(vec2 stN, float t2){ 
     vec2 warp = stN;
     
@@ -33,68 +160,58 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
-void main () {
-
-    //the current pixel coordinate 
-    float t2 = time/2.;
-    t2 = t2 +sinN(t2)*1.;
+void main() {
     vec2 stN = uvN();
-    vec3 warp = coordWarp(stN, t2);
-    vec3 warp2 = coordWarp(warp.xy, t2/10.);
+    
+    vec3 v0 = texture2D(channel5, stN).rgb;
+    vec3 v1 = texture2D(channel6, stN).rgb;
+    vec3 v2 = texture2D(channel7, stN).rgb;
+    vec3 v3 = texture2D(channel8, stN).rgb;
+    // stN = rotate(stN, vec2(0.5), time/5.);
+    float numStripes = 10. + sinN(lastNoteOnTime/3.)*10.;
+    float numVideos = 4.;
+    float stripeMod = mod(floor(quant(stN.y, numStripes)*numStripes), numVideos);
+    vec3 c = black;
+    if(stripeMod == 0.) c= v0;
+    if(stripeMod == 1.) c= v1;
+    if(stripeMod == 2.) c= v2;
+    if(stripeMod == 3.) c= v3;
 
-    vec3 cam = texture2D(channel0, vec2(1.-warp.x, warp.y)).rgb;
+
+    vec4 bb = texture2D(backbuffer, stN);    
+    vec3 cc;
+    float decay = 0.99;
+    float feedback;
+    // float lastFeedback = texture2D(backbuffer, rotate(stN, vec2(0.5), time/5.)).a;
+    float lastFeedback = texture2D(backbuffer, stN).a;
+    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    bool condition = multiBallCondition(coordWarp(stN, time/10.).xy, time); 
+    vec3 trail = colormap(lum(c)/lum(vec3(1.))).rgb; // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = c;
     
-    bool inStripe = false;
-    vec2 coord = warp2.xy;
     
-    vec2 mixCoord = quant(mix(coord, stN, logi(sin(t2*5. + cos(t2)*10.) * sin(t2/10.) *1.)-0.35), 5. + pow(sinN(t2/3.+1.), 2.)*1000.);
-    float dist = distance(mixCoord, vec2(0.5));
-    float stripeRadius = 0.;
-    for(float d = 0.05; d < 0.5; d += 0.03){
-        if(d < dist && dist < d + 0.015) {
-            inStripe = inStripe || true;
-            stripeRadius = d;
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < 1.1) {
+            feedback = 1.;
+            cc = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
+    }
+    else {
+        feedback = lastFeedback * decay;
+        if(lastFeedback > 0.4) {
+            cc = mix(foreGround, trail, lastFeedback); 
         } else {
-            inStripe = inStripe || false;
+            feedback = 0.;
+            cc = foreGround;
         }
     }
-    
-    vec3 c = !inStripe ? warp : black;
-    vec3 bb = texture2D(backbuffer, warp2.xy).rgb;
-    // c = quant(c, 2.);
-
-    c = mix(bb, c, 1. * (vec3(sinN(t2*0.8), sinN(t2*0.9+0.5), sinN(t2*0.7+1.)))) ;
-    // c = black;
-    
-    vec3 bb2 = texture2D(backbuffer, stN.xy).rgb;
-    c = mix(bb2, c, .1 + sinN(time/3.5)*0.4);
-    
-    
-    //The next two lines show a retexturing trick using the "swirl" procedural texture. 
-    //The swirl function just generates a particular sinusodal spinning texture I like.
-    //Usually, the second argument of the swirl function is uvN or some
-    //scaled transformation of that. However, if you pass in the rg (or rb, gb, etc)
-    //of the current camera pixel color, you can re-color your camera input to a
-    //texture generally similar to the "swirl" texture. In fact, this technique of 
-    //replacing the pixel xy with the camera(xy).rg can be used to take any texture-map
-    //and cheaply re-texturize the camera input with it.  
-    //The first of the following lines shows retexturing via the "swirl" procedural texture.
-    //The next lne shows retexturing via an example video stored in channel1
-    
-    //cam = swirl(time/10., cam.rg);
-    // cam = texture2D(channel1, cam.rg).xyz;
-    
-    
-    // float randval = rand(vec2(quant(coord.x+time/10., 10.), quant(coord.y+time/7., 70.)));
-    // float randval2 = rand(vec2(quant(coord.x+sin(time)/6., 10.), quant(coord.y+sin(time)/5., 70.)));
-    // float randval3 = rand(vec2(quant(time, 5.), quant(coord.x+sin(time/1.)/4., 20.+sinN(time/5.)*51.) + quant(coord.y+cos(time/1.)/4.,  20.+sinN(time/5.)*50.)));
-    // float randval4 = rand(vec2(quant(time, 10.), quant(coord.x, 200.) + quant(coord.y, 10.))) > 0.25 + sinN(time)/2. ? 1. : 0.;
 
     
-    vec3 vid = texture2D(channel1, stN).xyz; //the original video
-
-    vec3 sw = swirl(time/2., stN); //the original "swirl" texture
     
-    
-    gl_FragColor = vec4(vec3(c), 1);
+    gl_FragColor = vec4(vec3(cc), feedback);
 }
