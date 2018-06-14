@@ -103,6 +103,49 @@ float sigmoid(float x){
 }
 
 
+bool multiBallCondition(vec2 stN, float t2){
+    
+    float rad = .05;
+    bool cond = false;
+    
+    for (int i = 0; i < 10; i++) {
+        float i_f = float(i);
+        if(i_f == numNotesOn) break;
+        vec2 p = vec2(sinN(t2 * rand(i_f+1.) * 1.3 + i_f), cosN(t2 * rand(i_f+1.) * 1.1 + i_f));
+        cond = cond || distance(stN, p) < 0.01 + noteVel[i]/(128. * 4.);
+    }
+    
+    return cond;
+}
+
+float colormap_red(float x) {
+    return ((((1.30858855846896E+03 * x - 2.84649723684787E+03) * x + 1.76048857883363E+03) * x - 3.99775093706324E+02) * x + 2.69759225316811E+01) * x + 2.54587325383574E+02;
+}
+
+float colormap_green(float x) {
+    return ((((-8.85605750526301E+02 * x + 2.20590941129997E+03) * x - 1.50123293069936E+03) * x + 2.38490009587258E+01) * x - 6.03460495073813E+01) * x + 2.54768707485247E+02;
+}
+
+float colormap_blue(float x) {
+    if (x < 0.2363454401493073) {
+        return (-3.68734834041388E+01 * x - 3.28163398692792E+02) * x + 2.27342862588147E+02;
+    } else if (x < 0.7571054399013519) {
+        return ((((1.60988309475108E+04 * x - 4.18782706486673E+04) * x + 4.14508040221340E+04) * x - 1.88926043556059E+04) * x + 3.50108270140290E+03) * x - 5.28541997751406E+01;
+    } else {
+        return 1.68513761929930E+01 * x - 1.06424668227935E+01;
+    }
+}
+
+vec4 colormap(float x) {
+    float r = clamp(colormap_red(x) / 255.0, 0.0, 1.0);
+    float g = clamp(colormap_green(x) / 255.0, 0.0, 1.0);
+    float b = clamp(colormap_blue(x) / 255.0, 0.0, 1.0);
+    return vec4(r, g, b, 1.0);
+}
+float lum(vec3 color){
+    vec3 weights = vec3(0.212, 0.7152, 0.0722);
+    return dot(color, weights);
+}
 
 void main() {
     vec2 stN = uvN();
@@ -120,7 +163,41 @@ void main() {
     if(stripeMod == 1.) c= v1;
     if(stripeMod == 2.) c= v2;
     if(stripeMod == 3.) c= v3;
+
+
+    vec4 bb = texture2D(backbuffer, stN);    
+    vec3 cc;
+    float decay = 0.6;
+    float feedback;
+    float lastFeedback = texture2D(backbuffer, rotate(stN, vec2(0.5), time/5.)).a;
+    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    bool condition = multiBallCondition(stN, time); 
+    vec3 trail = colormap(lum(c)/lum(vec3(1.))).rgb; // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = c;
     
     
-    gl_FragColor = vec4(vec3(c), 1.0);
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < 1.1) {
+            feedback = 1.;
+            cc = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
+    }
+    else {
+        feedback = lastFeedback * decay;
+        if(lastFeedback > 0.4) {
+            cc = mix(foreGround, trail, lastFeedback); 
+        } else {
+            feedback = 0.;
+            cc = foreGround;
+        }
+    }
+
+    
+    
+    gl_FragColor = vec4(vec3(cc), feedback);
 }
