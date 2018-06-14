@@ -186,7 +186,7 @@ function enoLoader(){
 
     loadImageToTexture(5, "airports.jpg");
 
-    customLoaderUniformSet = function(){
+    customLoaderUniformSet = function(time){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, enoTime/songLength);
     }
@@ -206,7 +206,7 @@ function goreLoader(){
     }
     loadImageToTexture(7, "black.jpg");
     blobVideoLoad(1, 6, "gore.mp4", true, videoPlayFunc);
-    customLoaderUniformSet = function(){
+    customLoaderUniformSet = function(time){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, videos[1] ? videos[1].currentTime/100 : 0);
     }
@@ -215,4 +215,22 @@ function goreLoader(){
 function watchmanLoader(){
     blobVideoLoad(1, 5, "watchman.mp4", true);
     loadImageToTexture(7, "clicktoplay.png");
+}
+
+var sinN = (x) => (Math.sin(x) + 1)/2;
+function movieSpliceLoader(){
+    var movieFiles = "gore.mp4";
+    blobVideoLoad(0, 5, movieFiles, false);
+    blobVideoLoad(1, 6, movieFiles, false);
+    blobVideoLoad(2, 7, movieFiles, false);
+    blobVideoLoad(3, 8, movieFiles, false);
+
+    //time in secondsPassed
+    customLoaderUniformSet = function(time){
+        for(var i = 0; i < videos.length; i++){
+            if(videos[i]){
+                videos[i].playbackRate = 0.8 + sinN(time/3+i)*0.4;
+            }
+        }
+    }
 }

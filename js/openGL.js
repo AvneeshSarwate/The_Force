@@ -805,7 +805,7 @@ function paint(timeVal) {
     // gl.bindBuffer( gl.ARRAY_BUFFER, mQuadVBO);
     // gl.vertexAttribPointer(vertPosU, 2,  gl.FLOAT, false, 0, 0);
 
-    customLoaderUniformSet();
+    customLoaderUniformSet((Date.now() - mTime) * 0.001);
 
     //minputs
     //fourband sound

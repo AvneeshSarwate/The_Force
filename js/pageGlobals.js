@@ -57,24 +57,14 @@ $( document ).ready(function() {
         useAudioInput = false;
         useVideoInput = false;
     }
-    if(shaderToGet.indexOf("empress") > -1){
-        initialLoaderFunction = empressAlbumArtLoader;
-    }
-    if(shaderToGet.indexOf("interactive" > -1)){
-        initialLoaderFunction = interactiveLoader;
-    }
-    if(shaderToGet.indexOf("reed" ) > -1){
-        initialLoaderFunction = reedLoader;
-    }
-    if(shaderToGet.indexOf("eno") > -1){
-        initialLoaderFunction = enoLoader;
-    }
-    if(shaderToGet.indexOf("gore") > -1){;
-        initialLoaderFunction = goreLoader;
-    }
-    if(shaderToGet.indexOf("watchman") > -1){
-        initialLoaderFunction = watchmanLoader;
-    }
+    if(shaderToGet.indexOf("empress") > -1) initialLoaderFunction = empressAlbumArtLoader;    
+    if(shaderToGet.indexOf("interactive") > -1) initialLoaderFunction = interactiveLoader;    
+    if(shaderToGet.indexOf("reed" ) > -1) initialLoaderFunction = reedLoader;    
+    if(shaderToGet.indexOf("eno") > -1) initialLoaderFunction = enoLoader;    
+    if(shaderToGet.indexOf("gore") > -1) initialLoaderFunction = goreLoader;    
+    if(shaderToGet.indexOf("watchman") > -1) initialLoaderFunction = watchmanLoader;
+    if(shaderToGet.indexOf("movieSplice") > -1) initialLoaderFunction = movieSpliceLoader;
+    
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             console.log(shaderCode);
@@ -1142,10 +1132,10 @@ $( document ).ready(function() {
         wcTex.image = {height: webcam.height, width: webcam.width};
         wcTex.loaded = true;
         
-        if(!mInputs[1]) {
-            createNewVideoTexture(gl, "./starfield.mov", 0);   
-            mInputs[1] = videoTextures[0]; 
-        }
+        // if(!mInputs[1]) {
+        //     createNewVideoTexture(gl, "./starfield.mov", 0);   
+        //     mInputs[1] = videoTextures[0]; 
+        // }
 
         mInputs[0] = wcTex;
     }
