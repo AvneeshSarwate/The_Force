@@ -11,6 +11,16 @@ var noteInfo = {velocity: {}};
 var vjPadNoteInfo = arrayOf(16).map(() => ({'notes':arrayOf(128).map(() => ({'vel':0, 'lastVel':0})), 'last':0}) )
 
 var usingVJPad = window.location.href.split("?")[1].split("&")[1] == 'vjPad';
+var usingXkey = window.location.href.split("?")[1].split("&")[1] == 'Xkey';
+
+var noteOnEventCount = 0;
+var noteOffEventCount = 0;
+var lastNoteOnTime = 0;
+var lastNoteValue = 0;
+var lastVelocity = 0;
+var lastNoteOffTime = 0;
+var midiOnEventFlag = false;
+var midiOffEventFlat = false;
 
 var pitchSequence = new Array();
 var velocitySequence = new Array();
@@ -43,6 +53,7 @@ function onMIDISuccess(midiAccess) {
     var midiName = window.location.href.split("?")[1].split("&")[1];
     usingVJPad = midiName == "vjPad";
     var midiDeviceName = usingVJPad ? "IAC Driver Bus 2" : null;
+    midiDeviceName = usingXkey ? "Xkey" : midiDeviceName;
     console.log(midiDeviceName, midiName);  
 
     var useAllDevices = true;  
@@ -106,7 +117,7 @@ function onMIDIMessage(event) {
     // Mask off the lower nibble (MIDI channel, which we don't care about)
     // var channel = ev.data[0] & 0xf;
     var chan = event.data[0] & 0x0f;
-    console.log("MIDI EVENT", chan, midiNote, midiVel);
+    //console.log("MIDI EVENT", chan, midiNote, midiVel);
     switch (event.data[0] & 0xf0) {
         case 0x90:
             if (event.data[2] != 0) { // if velocity != 0, this is a note-on message
@@ -123,6 +134,8 @@ function onMIDIMessage(event) {
                     vjPadNoteInfo[chan].notes[midiNote].lastVel = event.data[2];
                     console.log("vjPad", chan, midiNote, event.data[2]);
                 }
+                noteOnEventCount++;
+                lastNoteOnTime = (Date.now() - mTime) * 0.001;
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -134,13 +147,14 @@ function onMIDIMessage(event) {
             noteInfo.velocity[midiNote] = 0;
             onNoteSet.delete(midiNote);
             if(usingVJPad) vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
+            noteOffEventCount++
             break;
 
         case 0xb0:
             midiData[event.data[1]] = event.data[2];
             break;
     }
-
+    // console.log(noteOnEventCount, noteOffEventCount);
     var matchInd = matchPattern();
     lastMatchedPattern = matchInd < 0 ? lastMatchedPattern : matchInd;
 

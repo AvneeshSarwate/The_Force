@@ -112,7 +112,7 @@ void main() {
     vec3 v2 = texture2D(channel7, stN).rgb;
     vec3 v3 = texture2D(channel8, stN).rgb;
     // stN = rotate(stN, vec2(0.5), time/5.);
-    float numStripes = 10. + sinN(time/3.)*0.;
+    float numStripes = 10. + sinN(lastNoteOnTime/3.)*10.;
     float numVideos = 4.;
     float stripeMod = mod(floor(quant(stN.y, numStripes)*numStripes), numVideos);
     vec3 c = black;

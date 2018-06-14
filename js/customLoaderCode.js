@@ -1,3 +1,5 @@
+var customLoaderUniforms = "";
+
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
     var texture = {};
@@ -225,12 +227,36 @@ function movieSpliceLoader(){
     blobVideoLoad(2, 7, movieFiles, false);
     blobVideoLoad(3, 8, movieFiles, false);
 
+    customLoaderUniforms = `
+uniform float lastNoteOnTime;
+    `;
+    
+    //these variables help stop videos from constantly getting start/stopped on every frame 
+    //when the global midi event count values stay static
+    var midiOnCountTracker = 0;
+    var midiOffCountTracker = 0;
+
     //time in secondsPassed
-    customLoaderUniformSet = function(time){
+    customLoaderUniformSet = function(time, mProgram){
+        var lasteNoteOnU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
+        if(lasteNoteOnU) gl.uniform1f(lasteNoteOnU, lastNoteOnTime);
         for(var i = 0; i < videos.length; i++){
             if(videos[i]){
                 videos[i].playbackRate = 0.8 + sinN(time/3+i)*0.4;
             }
+        }
+        //todo - instead of this - move the channel 5-8 texture update code here?
+        var noteOnCountMod = noteOnEventCount % 4;
+        var noteOffCountMod = noteOffEventCount % 4; 
+        if(noteOnEventCount > midiOnCountTracker && !videos[noteOnCountMod].paused) {
+            midiOnCountTracker++;
+            videos[noteOnCountMod].pause();
+            console.log("paused", noteOnCountMod);
+        }
+        if(noteOffEventCount > midiOffCountTracker && videos[noteOffCountMod].paused) { 
+            midiOffCountTracker++
+            videos[noteOffCountMod].play();
+            console.log("played", noteOffCountMod);
         }
     }
 }

@@ -268,7 +268,7 @@ function parseAndTriggerSequence(patternString){
 }
 
 function newShader(vs, shaderCode) {
-    var res = createShader(vs, mHeader + mInputsStr + mOSCStr + mMIDIStr + shaderCode); //, true);
+    var res = createShader(vs, mHeader + customLoaderUniforms + mInputsStr + mOSCStr + mMIDIStr + shaderCode); //, true);
 
     if (res.mSuccess === false) {
         return res;
@@ -805,7 +805,7 @@ function paint(timeVal) {
     // gl.bindBuffer( gl.ARRAY_BUFFER, mQuadVBO);
     // gl.vertexAttribPointer(vertPosU, 2,  gl.FLOAT, false, 0, 0);
 
-    customLoaderUniformSet((Date.now() - mTime) * 0.001);
+    customLoaderUniformSet((Date.now() - mTime) * 0.001, mProgram);
 
     //minputs
     //fourband sound
