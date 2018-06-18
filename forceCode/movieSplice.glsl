@@ -147,6 +147,19 @@ float lum(vec3 color){
     return dot(color, weights);
 }
 
+vec3 coordWarp(vec2 stN, float t2){ 
+    vec2 warp = stN;
+    
+    float rad = .5;
+    
+    for (float i = 0.0; i < 20.; i++) {
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
 void main() {
     vec2 stN = uvN();
     
@@ -167,11 +180,12 @@ void main() {
 
     vec4 bb = texture2D(backbuffer, stN);    
     vec3 cc;
-    float decay = 0.6;
+    float decay = 0.99;
     float feedback;
-    float lastFeedback = texture2D(backbuffer, rotate(stN, vec2(0.5), time/5.)).a;
+    // float lastFeedback = texture2D(backbuffer, rotate(stN, vec2(0.5), time/5.)).a;
+    float lastFeedback = texture2D(backbuffer, stN).a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = multiBallCondition(stN, time); 
+    bool condition = multiBallCondition(coordWarp(stN, time/10.).xy, time); 
     vec3 trail = colormap(lum(c)/lum(vec3(1.))).rgb; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = c;
     
