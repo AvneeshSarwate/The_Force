@@ -199,19 +199,19 @@ void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
-    stN = stN +hash(coordWarp(stN, time/100.)).xy/200.;
+    stN = stN + (hash(coordWarp(stN, time/100.)).xy + -0.5)/200.;
 
 
     
     vec3 cc;
-    float decay = 0.97;
+    float decay = 0.99;
     float feedback;
     float precisionNoise = 0.1;
     vec4 bb = texture2D(backbuffer, coordWarp(stN, time/8.).xy);
     vec4 bbStraight = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    vec2 multBall = multiBallCondition(stN, time/2.);
+    vec2 multBall = multiBallCondition(coordWarp(stN, time/30.3).xy, time/2.);
     bool condition = multBall.x == 1.; 
     vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5))/2.7 + lum(hash(coordWarp(stN, 100.)))/2.5; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
