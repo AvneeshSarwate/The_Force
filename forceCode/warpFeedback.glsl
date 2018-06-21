@@ -196,10 +196,10 @@ vec3 lum(vec3 color){
 }
 
 void main () {
-
+    float t2 = time + 1000.;
     //the current pixel coordinate 
     vec2 stN = uvN();
-    stN = stN + (hash(coordWarp(stN, time/100.)).xy + -0.5)/200.;
+    stN = stN + (hash(coordWarp(stN, t2/100.)).xy + -0.5)/200.;
 
     float lumMax = lum(vec3(1.)).x;
     
@@ -207,15 +207,15 @@ void main () {
     float decay = 0.99;
     float feedback;
     vec2 feedbackWarpedSTN = stN;
-    feedbackWarpedSTN = coordWarp(feedbackWarpedSTN, time/8.).xy;
+    feedbackWarpedSTN = coordWarp(feedbackWarpedSTN, t2/8.).xy;
     // feedbackWarpedSTN =rowColWave(feedbackWarpedSTN, 1000., time/10., 0.003).xy;
-    vec4 bb = texture2D(backbuffer, feedbackWarpedSTN);
+    vec4 bb = texture2D(backbuffer, mix(feedbackWarpedSTN, uvN(), wrap3(randWalk/1800., 0., 1.)));
     vec4 bbStraight = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    vec2 multBall = multiBallCondition(coordWarp(stN, time/10.3).xy, time/2.);
+    vec2 multBall = multiBallCondition(coordWarp(stN, randWalk/1750.).xy, t2/2.);
     bool condition = multBall.x == 1.; 
-    vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5)) + lum(hash(coordWarp(stN, 100.)))/lumMax/20.; // swirl(time/5., trans2) * c.x;
+    vec3 trail = vec3(wrap3(multBall.y+t2/4., 0., 0.5)) + lum(hash(coordWarp(stN, 100.)))/lumMax/20.; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
     
@@ -243,4 +243,3 @@ void main () {
     
     gl_FragColor = vec4(cc, feedback);
 }
-
