@@ -188,7 +188,12 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
-
+// calculates the luminance value of a pixel
+// formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
+vec3 lum(vec3 color){
+    vec3 weights = vec3(0.212, 0.7152, 0.0722);
+    return vec3(dot(color, weights));
+}
 
 void main () {
 
@@ -203,11 +208,12 @@ void main () {
     float feedback;
     float precisionNoise = 0.1;
     vec4 bb = texture2D(backbuffer, coordWarp(stN, time/8.).xy);
+    vec4 bbStraight = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     vec2 multBall = multiBallCondition(stN, time/2.);
     bool condition = multBall.x == 1.; 
-    vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5)); // swirl(time/5., trans2) * c.x;
+    vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5))/2.7 + lum(hash(coordWarp(stN, 100.)))/2.5; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
     
@@ -215,7 +221,7 @@ void main () {
     if(condition){
         if(lastFeedback < 1.1) {
             feedback = 1. * multBall.y;
-            cc = bb.rgb; 
+            cc = bbStraight.rgb; 
         } 
         // else {
         //     feedback = lastFeedback * decay;
