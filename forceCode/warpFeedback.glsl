@@ -174,7 +174,7 @@ vec3 coordWarp(vec2 stN, float t2){
 
 vec2 multiBallCondition(vec2 stN, float t2){
     
-    float rad = .05;
+    float rad = .08;
     bool cond = false;
     float ballInd = -1.;
     
@@ -201,19 +201,21 @@ void main () {
     vec2 stN = uvN();
     stN = stN + (hash(coordWarp(stN, time/100.)).xy + -0.5)/200.;
 
-
+    float lumMax = lum(vec3(1.)).x;
     
     vec3 cc;
     float decay = 0.99;
     float feedback;
-    float precisionNoise = 0.1;
-    vec4 bb = texture2D(backbuffer, coordWarp(stN, time/8.).xy);
+    vec2 feedbackWarpedSTN = stN;
+    feedbackWarpedSTN = coordWarp(feedbackWarpedSTN, time/8.).xy;
+    // feedbackWarpedSTN =rowColWave(feedbackWarpedSTN, 1000., time/10., 0.003).xy;
+    vec4 bb = texture2D(backbuffer, feedbackWarpedSTN);
     vec4 bbStraight = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    vec2 multBall = multiBallCondition(coordWarp(stN, time/30.3).xy, time/2.);
+    vec2 multBall = multiBallCondition(coordWarp(stN, time/10.3).xy, time/2.);
     bool condition = multBall.x == 1.; 
-    vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5))/2.7 + lum(hash(coordWarp(stN, 100.)))/2.5; // swirl(time/5., trans2) * c.x;
+    vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5)) + lum(hash(coordWarp(stN, 100.)))/lumMax/20.; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
     
