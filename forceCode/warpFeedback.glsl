@@ -174,18 +174,18 @@ vec3 coordWarp(vec2 stN, float t2){
 
 vec2 multiBallCondition(vec2 stN, float t2){
     
-    float rad = .01;
+    float rad = .05;
     bool cond = false;
     float ballInd = -1.;
     
     for (int i = 0; i < 20; i++) {
         float i_f = float(i);
-        vec2 p = vec2(sinN(t2 * rand(i_f+1.) * 1.3 + i_f), cosN(t2 * rand(i_f+1.) * 1.1 + i_f));
+        vec2 p = vec2(sinN(t2 * rand(vec2(i_f+1., 10.)) * 1.3 + i_f), cosN(t2 * rand(vec2(i_f+1., 10.)) * 1.1 + i_f));
         cond = cond || distance(stN, p) < rad;
         if(distance(stN, p) < rad) ballInd = float(i); 
     }
     
-    return vec2(cond ? 1. :0., ballInd);
+    return vec2(cond ? 1. :0., ballInd/20.);
 }
 
 
@@ -194,31 +194,28 @@ void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
+    stN = stN +hash(coordWarp(stN, time/100.)).xy/200.;
 
-    // vec4 c = circleSlice(stN, time/6., randWalk);   
 
-    
-    vec4 bb = texture2D(backbuffer, stN);
-    // c = quant(c, 2.);
-
-    // c = mix(c, bb, 0.4 + sinN(t0)*0.5);
     
     vec3 cc;
     float decay = 0.97;
     float feedback;
-    float lastFeedback = texture2D(backbuffer, coordWarp(stN, time/5.).xy).a;
+    float precisionNoise = 0.1;
+    vec4 bb = texture2D(backbuffer, coordWarp(stN, time/8.).xy);
+    float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    vec2 multBall = multiBallCondition(stN, time);
+    vec2 multBall = multiBallCondition(stN, time/2.);
     bool condition = multBall.x == 1.; 
-    vec3 trail = colormap(wrap3(multBall.y+time/5., 0., 1.)).rgb; // swirl(time/5., trans2) * c.x;
+    vec3 trail = vec3(wrap3(multBall.y+time/4., 0., 0.5)); // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
         if(lastFeedback < 1.1) {
-            feedback = 1.;
-            cc = trail; 
+            feedback = 1. * multBall.y;
+            cc = bb.rgb; 
         } 
         // else {
         //     feedback = lastFeedback * decay;
@@ -227,7 +224,7 @@ void main () {
     }
     else {
         feedback = lastFeedback * decay;
-        if(lastFeedback > 0.4) {
+        if(lastFeedback > 0.2) {
             cc = mix(foreGround, trail, lastFeedback); 
         } else {
             feedback = 0.;
