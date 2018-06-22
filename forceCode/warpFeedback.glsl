@@ -221,14 +221,13 @@ void main () {
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
-        if(lastFeedback < 1.1) {
+        if(lastFeedback < 0.5+sinN(time/10.)*0.5) {
             feedback = 1. * multBall.y;
             cc = bbStraight.rgb; 
-        } 
-        // else {
-        //     feedback = lastFeedback * decay;
-        //     c = mix(snap, bb, lastFeedback);
-        // }
+        } else {
+            feedback = lastFeedback * decay;
+            cc = mix(foreGround, bb.rgb, feedback);
+        }
     }
     else {
         feedback = lastFeedback * decay;
@@ -241,5 +240,5 @@ void main () {
     }
     
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(quant(cc, 1.+quant(sinN(time/5.5), 4.)*4.), feedback);
 }
