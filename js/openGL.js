@@ -22,6 +22,7 @@ resos = resos.concat(resos);
 var oscM = [null, null, null, null, null, null, null, null, null, null];
 var gammaValues = [1.0, 1.0, 1.0, 1.0];
 var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU = null;
+var lastNoteOnTimeU, lastNoteOffTimeU; 
 
 var vjNoteUniforms = Array.from(new Array(10), () => null);
 var vjLastNoteUniforms = Array.from(new Array(5), () => null);
@@ -328,6 +329,9 @@ function newShader(vs, shaderCode) {
     noteVelU = gl.getUniformLocation(mProgram, "noteVel");
 
     lastPatternU = gl.getUniformLocation(mProgram, "lastPattern");
+
+    lastNoteOnTimeU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
+    lastNoteOffTimeU = gl.getUniformLocation(mProgram, "lastNoteOffTime");
 
     //OSC uniforms
     for (var i = 0; i < oscM.length; i++) {
@@ -791,6 +795,8 @@ function paint(timeVal) {
     if(noteVelU !== null) gl.uniform1fv(noteVelU, getNoteVelocities().slice(0, 10));
 
     if(lastPatternU !== null) gl.uniform1f(lastPatternU, lastMatchedPattern);
+    if(lastNoteOnTimeU !== null) gl.uniform1f(lastNoteOnTimeU, lastNoteOnTime);
+    if(lastNoteOffTimeU !== null) gl.uniform1f(lastNoteOffTimeU, lastNoteOffTime);
 
 
     for(var i = 0; i < 5; i++){
