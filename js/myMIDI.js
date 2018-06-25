@@ -15,12 +15,13 @@ var usingXkey = window.location.href.split("?")[1].split("&")[1] == 'Xkey';
 
 var noteOnEventCount = 0;
 var noteOffEventCount = 0;
-var lastNoteOnTime = 0;
+var lastNoteOnTime = arrayOf(128);
 var lastNoteValue = 0;
 var lastVelocity = 0;
-var lastNoteOffTime = 0;
+var lastNoteOffTime = arrayOf(128);
 var midiOnEventFlag = false;
 var midiOffEventFlat = false;
+var midiCC = arrayOf(128);
 
 var pitchSequence = new Array();
 var velocitySequence = new Array();
@@ -135,7 +136,7 @@ function onMIDIMessage(event) {
                     console.log("vjPad", chan, midiNote, event.data[2]);
                 }
                 noteOnEventCount++;
-                lastNoteOnTime = (Date.now() - mTime) * 0.001;
+                lastNoteOnTime[midiNote] = (Date.now() - mTime) * 0.001;
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -146,12 +147,14 @@ function onMIDIMessage(event) {
             chroma[midiNote%12] = 0; 
             noteInfo.velocity[midiNote] = 0;
             onNoteSet.delete(midiNote);
+            lastNoteOffTime[midiNote] = (Date.now() - mTime) * 0.001;
             if(usingVJPad) vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
             noteOffEventCount++
             break;
 
         case 0xb0:
             midiData[event.data[1]] = event.data[2];
+            midiCC[midiNote] = midiVel;
             break;
     }
     // console.log(noteOnEventCount, noteOffEventCount);

@@ -31,8 +31,9 @@ uniform float     vjlastvel4[16];
 uniform float     vjlastnote[5];
 uniform float     lastPattern;
 uniform float     enoProg;
-uniform float     lastNoteOnTime;
-uniform float     lastNoteOffTime;
+uniform float     lastNoteOnTime[128];
+uniform float     lastNoteOffTime[128];
+uniform float     midiCC[128];
 
 
 float PI = 3.14159;

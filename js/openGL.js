@@ -12,7 +12,7 @@ var vsScreen = null;
 var vsDraw = null;
 var elapsedBandPeaks = [0.0, 0.0, 0.0, 0.0];
 //unifoms
-var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiU;
+var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiCCU;
 var timeVec, zoom;
 var randValueU, randValueVal = 0, randWalkU, randWalkVal = 0;
 var markovState = 0, markovP = 0.05;
@@ -342,7 +342,7 @@ function newShader(vs, shaderCode) {
 
     //MIDI uniform
     if (midi !== null) {
-        midiU = gl.getUniformLocation(mProgram, "midi");
+        midiCCU = gl.getUniformLocation(mProgram, "midiCC");
     }
 
     return res; //means success
@@ -795,8 +795,9 @@ function paint(timeVal) {
     if(noteVelU !== null) gl.uniform1fv(noteVelU, getNoteVelocities().slice(0, 10));
 
     if(lastPatternU !== null) gl.uniform1f(lastPatternU, lastMatchedPattern);
-    if(lastNoteOnTimeU !== null) gl.uniform1f(lastNoteOnTimeU, lastNoteOnTime);
-    if(lastNoteOffTimeU !== null) gl.uniform1f(lastNoteOffTimeU, lastNoteOffTime);
+    if(lastNoteOnTimeU !== null) gl.uniform1fv(lastNoteOnTimeU, lastNoteOnTime);
+    if(lastNoteOffTimeU !== null) gl.uniform1fv(lastNoteOffTimeU, lastNoteOffTime);
+    if(midiCCU !== null) gl.uniform1fv(midiCCU, midiCC);
 
 
     for(var i = 0; i < 5; i++){
@@ -891,7 +892,7 @@ function paint(timeVal) {
 
     //MIDI values
     if (midi !== null) {
-        gl.uniform1fv(midiU, midiData);
+        gl.uniform1fv(midiCCU, midiCC);
     }
 
     // if (l5 !== null)  gl.uniform1fv(l5, times);

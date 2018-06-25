@@ -391,8 +391,8 @@ void main () {
     vec3 c2 = vec3(wrap3((quantx+stN.y + t2 * quantx) * 10., 0., 1.));
     // c = snowflakes(quant(coordWarp(stN, lastNoteOnTime + min((time-lastNoteOnTime)*2., 1.)).xy , 50.), 5.);
     stN = uvN();
-    float tMidi = min(time - lastNoteOnTime, 1.) + lastNoteOnTime;
-    float x = stN.x +time/100.;
+    float tMidi = min(time - lastNoteOnTime[24], 1.) + lastNoteOnTime[24];
+    float x = stN.x +midiCC[2]/100.;
     x = sinN(x*100. * sinN(x*5.)+0.5);
     stN = rotate(stN, vec2(0.5), tMidi);
     float y = stN.y +tMidi/100.;
