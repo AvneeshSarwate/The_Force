@@ -31,6 +31,8 @@ uniform float     vjlastvel4[16];
 uniform float     vjlastnote[5];
 uniform float     lastPattern;
 uniform float     enoProg;
+uniform float     lastNoteOnTime;
+uniform float     lastNoteOffTime;
 
 
 float PI = 3.14159;

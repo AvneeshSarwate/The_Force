@@ -380,7 +380,23 @@ void main () {
     //     // }
     //     c = bb.rgb;
     // }
+    // stN = rotate(stN, vec2(0.5), time/5.) * rotate(stN, vec2(0.5), -randWalk/50.);
+    // stN = coordWarp(stN, time/5.).xy;
+    stN = mix(stN, vec2(0.5), sinN(time));
+    float t2 = time/1.;
+    float numq = 100.;
+    float quanty = quant(stN.y, numq);
+    vec3 c = vec3(wrap3((quanty+stN.x + t2 * quanty) * 10., 0., 1.));
+    float quantx = quant(stN.x, numq);
+    vec3 c2 = vec3(wrap3((quantx+stN.y + t2 * quantx) * 10., 0., 1.));
+    // c = snowflakes(quant(coordWarp(stN, lastNoteOnTime + min((time-lastNoteOnTime)*2., 1.)).xy , 50.), 5.);
+    stN = uvN();
+    float tMidi = min(time - lastNoteOnTime, 1.) + lastNoteOnTime;
+    float x = stN.x +time/100.;
+    x = sinN(x*100. * sinN(x*5.)+0.5);
+    stN = rotate(stN, vec2(0.5), tMidi);
+    float y = stN.y +tMidi/100.;
+    y = sinN(y*100. * sinN(y*5.)+0.5);
     
-    
-    gl_FragColor = vec4(snowflakes(quant(coordWarp(stN, lastNoteOnTime + min((time-lastNoteOnTime)*2., 1.)).xy , 50.), 5.), 1);
+    gl_FragColor = vec4(vec3(x*y), 1);
 }
