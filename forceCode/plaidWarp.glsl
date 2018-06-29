@@ -246,5 +246,7 @@ void main () {
     //take2
     c = inStripeX2(stN, randWalk/100.) * inStripeY2(stN, time/5.);
     
+    //todo - don't forget to make these lines linear lenses
+    
     gl_FragColor = vec4(c, 1);
 }
