@@ -218,9 +218,10 @@ vec3 lum(vec3 color){
 void main () {
     vec2 stN = uvN();
     vec3 c;
-    stN = coordWarp(stN, time).xy;
+    // stN = coordWarp(stN, time).xy;
+    stN = rowColWave(stN, 10., -time, 0.09);
     // stN = rotate(stN, vec2(0.5), 0.5);
-    c = inStripeX(stN, randWalk/100.) * inStripeY(stN, time/5.);
+    c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     gl_FragColor = vec4(c, 1);
 }
