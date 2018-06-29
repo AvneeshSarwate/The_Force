@@ -208,6 +208,26 @@ vec3 inStripeY(vec2 stN, float t){
     return inStripe ? black : white;
 }
 
+vec3 inStripeX2(vec2 stN, float rw){
+    bool inStripe = false;
+    for(float i = 0.; i < 40.; i++){
+        float seed = 1./i;
+        float loc = mod(hash(vec3(seed)).x + rw, 1.);
+        if(abs(loc - stN.x) < 0.002) inStripe = inStripe || true;
+    }
+    return inStripe ? black : white;
+}
+
+vec3 inStripeY2(vec2 stN, float t){
+    bool inStripe = false;
+    for(float i = 0.; i < 40.; i++){
+        float seed = 1./i;
+        float loc = mod(hash(vec3(seed)).x + sinN(t) * i/5. + t, 1.);
+        if(abs(loc - stN.y) < 0.002) inStripe = inStripe || true;
+    }
+    return inStripe ? black : white;
+}
+
 // calculates the luminance value of a pixel
 // formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
 vec3 lum(vec3 color){
@@ -218,10 +238,13 @@ vec3 lum(vec3 color){
 void main () {
     vec2 stN = uvN();
     vec3 c;
-    // stN = coordWarp(stN, time).xy;
-    stN = rowColWave(stN, 10., -time, 0.09);
-    // stN = rotate(stN, vec2(0.5), 0.5);
-    c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
+
+    //take 1
+    // stN = rowColWave(stN, 10., -time, 0.09);
+    // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
+    
+    //take2
+    c = inStripeX2(stN, randWalk/100.) * inStripeY2(stN, time/5.);
     
     gl_FragColor = vec4(c, 1);
 }
