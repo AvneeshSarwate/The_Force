@@ -188,22 +188,22 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
-vec3 inStripeX(vec2 stN, float t){
+vec3 inStripeX(vec2 stN, float rw){
     bool inStripe = false;
-    for(float i = 0.; i < 20.; i++){
+    for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        float loc = mod(hash(vec3(stN.xx, seed)).x + randWalk/1000., 1.);
-        if(abs(loc - stN.x) < 0.008) inStripe = inStripe || true;
+        float loc = mod(hash(vec3(seed)).x + rw, 1.);
+        if(abs(loc - stN.x) < 0.002) inStripe = inStripe || true;
     }
     return inStripe ? black : white;
 }
 
 vec3 inStripeY(vec2 stN, float t){
     bool inStripe = false;
-    for(float i = 0.; i < 20.; i++){
+    for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        float loc = mod(hash(vec3(stN.yy, seed)).x + t/100., 1.);
-        if(abs(loc - stN.y) < 0.008) inStripe = inStripe || true;
+        float loc = mod(hash(vec3(seed)).x + t, 1.);
+        if(abs(loc - stN.y) < 0.002) inStripe = inStripe || true;
     }
     return inStripe ? black : white;
 }
@@ -217,11 +217,10 @@ vec3 lum(vec3 color){
 
 void main () {
     vec2 stN = uvN();
-
-    //use these stripes as lenses, 
-    //also figure out why transforming stN before passing as an
-    //argument results in chaotic noise
-    vec3 c = inStripeX(stN, time)* inStripeY(stN, time);
+    vec3 c;
+    stN = coordWarp(stN, time).xy;
+    // stN = rotate(stN, vec2(0.5), 0.5);
+    c = inStripeX(stN, randWalk/100.) * inStripeY(stN, time/5.);
     
     gl_FragColor = vec4(c, 1);
 }
