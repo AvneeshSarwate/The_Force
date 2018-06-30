@@ -255,7 +255,7 @@ vec2 yLens(vec2 stN, float t){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.y) < lensSize) coord = vec2(stN.x, mix(loc, coord.y, abs(loc - stN.y)/lensSize));
+        if(abs(loc - stN.y) < lensSize) coord = vec2(coord.x, mix(loc, coord.y, abs(loc - stN.y)/lensSize));
     }
     return coord;
 }
@@ -280,7 +280,7 @@ void main () {
     // }
     // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
     
-    stN = xLens(stN, time/5.);
+    // stN = xLens(stN, time/5.);
     stN = yLens(stN, time/6.);
     
     vec3 cam = texture2D(channel0, stN).rgb;
