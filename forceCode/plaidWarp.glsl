@@ -213,7 +213,7 @@ vec3 inStripeX2(vec2 stN, float rw){
     vec2 stN0 = stN;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(rw+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
         if(abs(loc - stN.x) < rand(seed)*0.005 + 0.001) inStripe = inStripe || true;
     }
@@ -225,7 +225,7 @@ vec3 inStripeY2(vec2 stN, float t){
     vec2 stN0 = stN;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(t+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
         if(abs(loc - stN.y) < rand(seed)*0.005  + 0.001) inStripe = inStripe || true;
     }
@@ -239,7 +239,7 @@ vec2 xLens(vec2 stN, float rw){
     float lensSize = 0.05;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        stN = rotate(stN0, vec2(0.5), 0.3 * sin(rw+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
         if(abs(loc - stN.x) < lensSize) coord = vec2(mix(loc, coord.x, abs(loc - stN.x)/lensSize), coord.y);
     }
@@ -253,7 +253,7 @@ vec2 yLens(vec2 stN, float t){
     float lensSize = 0.05;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        stN = rotate(stN0, vec2(0.5), 0.3 * sin(t+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
         if(abs(loc - stN.y) < lensSize) coord = vec2(coord.x, mix(loc, coord.y, abs(loc - stN.y)/lensSize));
     }
@@ -280,16 +280,67 @@ void main () {
     // }
     // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
     
-    // stN = xLens(stN, time/5.);
-    stN = yLens(stN, time/6.);
+    stN = xLens(stN, time/20.);
+    stN = yLens(stN, time/30.);
+    
+    
+    bool inStripe = false;
+    float dist = distance(stN, vec2(0.5));
+
+
+    float numStripes = 100.;
+    float d = 1. / numStripes;
+    float stripeWidth =(0.5 - d) / numStripes;
+    for(int i = 0; i < 100; i++){
+        if(d < dist && dist < d + stripeWidth/2.) {
+            inStripe = inStripe || true;
+        } else {
+            inStripe = inStripe || false;
+        }
+        d = d + stripeWidth;
+        if(d > 0.5) break;
+    }
+    
+    vec3 col = !inStripe ? white : black;
     
     vec3 cam = texture2D(channel0, stN).rgb;
     // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
-    c = inStripeX2(stN, time/6.) * inStripeY2(stN, time/5.);
+    c = inStripeX2(stN, time/63.) * inStripeY2(stN, time/55.);
+    
+    vec3 cc;
+    float decay = 0.97;
+    float feedback;
+    float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a;
+    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    bool condition = c == col && c == black; 
+    vec3 trail = black; // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = white;
+    
+    
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < 1.1) {
+            feedback = 1.;
+            cc = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
+    }
+    else {
+        feedback = lastFeedback * decay;
+        if(lastFeedback > 0.4) {
+            cc = mix(foreGround, trail, lastFeedback); 
+        } else {
+            feedback = 0.;
+            cc = foreGround;
+        }
+    }
     
     //todo - don't forget to make these lines linear lenses
     
-    gl_FragColor = vec4(c, 1);
+    gl_FragColor = vec4(cc, feedback);
 }
