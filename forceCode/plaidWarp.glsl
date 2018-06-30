@@ -312,7 +312,8 @@ void main () {
     vec3 cc;
     float decay = 0.97;
     float feedback;
-    float lastFeedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a;
+    vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
+    float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == col && c == black; 
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
@@ -339,6 +340,7 @@ void main () {
             cc = foreGround;
         }
     }
+    cc = mix(cc, bb.rgb, sinN(time/14.)*0.95);
     
     //todo - don't forget to make these lines linear lenses
     
