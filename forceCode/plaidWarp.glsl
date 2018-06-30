@@ -232,6 +232,34 @@ vec3 inStripeY2(vec2 stN, float t){
     return inStripe ? black : white;
 }
 
+vec2 xLens(vec2 stN, float rw){
+    bool inStripe = false;
+    vec2 stN0 = stN;
+    vec2 coord = stN;
+    float lensSize = 0.05;
+    for(float i = 0.; i < 40.; i++){
+        float seed = 1./i;
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
+        if(abs(loc - stN.x) < lensSize) coord = vec2(mix(loc, coord.x, abs(loc - stN.x)/lensSize), coord.y);
+    }
+    return coord;
+}
+
+vec2 yLens(vec2 stN, float t){
+    bool inStripe = false;
+    vec2 stN0 = stN;
+    vec2 coord = stN;
+    float lensSize = 0.05;
+    for(float i = 0.; i < 40.; i++){
+        float seed = 1./i;
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
+        if(abs(loc - stN.y) < lensSize) coord = vec2(stN.x, mix(loc, coord.y, abs(loc - stN.y)/lensSize));
+    }
+    return coord;
+}
+
 // calculates the luminance value of a pixel
 // formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
 vec3 lum(vec3 color){
@@ -246,11 +274,15 @@ void main () {
     //take 1
     // stN = rowColWave(stN, 100., -time, 0.05);
     // stN = coordWarp(stN, time).xy;
-    float t2 = time / 4.;
-    for(int i = 0; i < 2; i++) {
-        stN = wrap(rotate(stN, vec2(0.5), t2+0.1) * rotate(stN, vec2(0.5), t2), 0., 1.);
-    }
-    stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
+    // float t2 = time / 4.;
+    // for(int i = 0; i < 2; i++) {
+    //     stN = wrap(rotate(stN, vec2(0.5), t2+0.1) * rotate(stN, vec2(0.5), t2), 0., 1.);
+    // }
+    // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
+    
+    stN = xLens(stN, time/5.);
+    stN = yLens(stN, time/6.);
+    
     vec3 cam = texture2D(channel0, stN).rgb;
     // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
