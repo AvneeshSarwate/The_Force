@@ -166,10 +166,26 @@ vec3 coordWarp(vec2 stN, float t2){
     
     for (float i = 0.0; i < 20.; i++) {
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
-        warp = mix(stN, mix(p, warp, length(stN - p)/rad), .9);
+        warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
     }
     
     return vec3(warp, distance(warp, stN));
+}
+
+vec2 multiBallCondition(vec2 stN, float t2){
+    
+    float rad = .08;
+    bool cond = false;
+    float ballInd = -1.;
+    
+    for (int i = 0; i < 20; i++) {
+        float i_f = float(i);
+        vec2 p = vec2(sinN(t2 * rand(vec2(i_f+1., 10.)) * 1.3 + i_f), cosN(t2 * rand(vec2(i_f+1., 10.)) * 1.1 + i_f));
+        cond = cond || distance(stN, p) < rad;
+        if(distance(stN, p) < rad) ballInd = float(i); 
+    }
+    
+    return vec2(cond ? 1. :0., ballInd/20.);
 }
 
 vec3 inStripeX(vec2 stN, float rw){
@@ -198,8 +214,8 @@ vec3 inStripeX2(vec2 stN, float rw){
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
-        float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 10.);
-        if(abs(loc - stN.x) < rand(seed)*0.03 + 0.001) inStripe = inStripe || true;
+        float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
+        if(abs(loc - stN.x) < rand(seed)*0.005 + 0.001) inStripe = inStripe || true;
     }
     return inStripe ? black : white;
 }
@@ -210,8 +226,8 @@ vec3 inStripeY2(vec2 stN, float t){
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
-        float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 10.);
-        if(abs(loc - stN.y) < rand(seed)*0.03  + 0.001) inStripe = inStripe || true;
+        float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
+        if(abs(loc - stN.y) < rand(seed)*0.005  + 0.001) inStripe = inStripe || true;
     }
     return inStripe ? black : white;
 }
@@ -229,7 +245,13 @@ void main () {
 
     //take 1
     // stN = rowColWave(stN, 100., -time, 0.05);
-    stN = coordWarp(stN, time).xy;
+    // stN = coordWarp(stN, time).xy;
+    float t2 = time / 4.;
+    for(int i = 0; i < 2; i++) {
+        stN = wrap(rotate(stN, vec2(0.5), t2+0.1) * rotate(stN, vec2(0.5), t2), 0., 1.);
+    }
+    stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
+    vec3 cam = texture2D(channel0, stN).rgb;
     // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
