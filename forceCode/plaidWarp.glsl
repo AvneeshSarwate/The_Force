@@ -166,26 +166,10 @@ vec3 coordWarp(vec2 stN, float t2){
     
     for (float i = 0.0; i < 20.; i++) {
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
-        warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
+        warp = mix(stN, mix(p, warp, length(stN - p)/rad), .9);
     }
     
     return vec3(warp, distance(warp, stN));
-}
-
-vec2 multiBallCondition(vec2 stN, float t2){
-    
-    float rad = .08;
-    bool cond = false;
-    float ballInd = -1.;
-    
-    for (int i = 0; i < 20; i++) {
-        float i_f = float(i);
-        vec2 p = vec2(sinN(t2 * rand(vec2(i_f+1., 10.)) * 1.3 + i_f), cosN(t2 * rand(vec2(i_f+1., 10.)) * 1.1 + i_f));
-        cond = cond || distance(stN, p) < rad;
-        if(distance(stN, p) < rad) ballInd = float(i); 
-    }
-    
-    return vec2(cond ? 1. :0., ballInd/20.);
 }
 
 vec3 inStripeX(vec2 stN, float rw){
@@ -210,20 +194,24 @@ vec3 inStripeY(vec2 stN, float t){
 
 vec3 inStripeX2(vec2 stN, float rw){
     bool inStripe = false;
+    vec2 stN0 = stN;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        float loc = mod(hash(vec3(seed)).x + rw, 1.);
-        if(abs(loc - stN.x) < 0.002) inStripe = inStripe || true;
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 10.);
+        if(abs(loc - stN.x) < rand(seed)*0.03 + 0.001) inStripe = inStripe || true;
     }
     return inStripe ? black : white;
 }
 
 vec3 inStripeY2(vec2 stN, float t){
     bool inStripe = false;
+    vec2 stN0 = stN;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
-        float loc = mod(hash(vec3(seed)).x + sinN(t) * i/5. + t, 1.);
-        if(abs(loc - stN.y) < 0.002) inStripe = inStripe || true;
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(time+ i*50.));
+        float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 10.);
+        if(abs(loc - stN.y) < rand(seed)*0.03  + 0.001) inStripe = inStripe || true;
     }
     return inStripe ? black : white;
 }
@@ -240,11 +228,12 @@ void main () {
     vec3 c;
 
     //take 1
-    // stN = rowColWave(stN, 10., -time, 0.09);
+    // stN = rowColWave(stN, 100., -time, 0.05);
+    stN = coordWarp(stN, time).xy;
     // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
-    c = inStripeX2(stN, randWalk/100.) * inStripeY2(stN, time/5.);
+    c = inStripeX2(stN, time/6.) * inStripeY2(stN, time/5.);
     
     //todo - don't forget to make these lines linear lenses
     
