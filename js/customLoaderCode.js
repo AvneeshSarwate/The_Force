@@ -1,7 +1,19 @@
 var customLoaderUniforms = "";
 
-function setup() {};
-function draw() {};
+var p5w = 1280;
+var p5h = 720;
+function setup() {
+    createCanvas(p5w, p5h);
+};
+var frameCount = 0;
+function draw() {
+    clear();
+    var t = Date.now()/1000;
+    var c = [127+sin(t)*50, 127+sin(t+PI/2)*50, 127+sin(t+PI/3)*50]; 
+    fill(c);
+    rect(0, 0, p5w*sinN(t), p5h*cosN(t));
+    if(frameCount++ %10 == 0) console.log(c);
+};
 
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
@@ -223,6 +235,7 @@ function watchmanLoader(){
 }
 
 var sinN = (x) => (Math.sin(x) + 1)/2;
+var cosN = (x) => (Math.cos(x) + 1)/2;
 function movieSpliceLoader(){
     var movieFiles = "gore.mp4";
     blobVideoLoad(0, 5, movieFiles, false);

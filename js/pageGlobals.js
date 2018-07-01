@@ -48,6 +48,8 @@ var initialLoaderFunction;
 var swipeList = [];
 var swipePart;
 
+var p5Canvas;
+
 $( document ).ready(function() {
 
 
@@ -1093,8 +1095,12 @@ $( document ).ready(function() {
             if (webcamReady) {
               updateVideoTexture(gl, webcamTexture, webcam);
             }
-
-            // updateVideoTexture(gl, p5Texture, $("#defaultCanvas0").captureStream());
+            if(p5Canvas) {
+                updateVideoTexture(gl, p5Texture, p5Canvas);
+            } else {
+                p5Canvas = $("#defaultCanvas0")[0];
+                $("#defaultCanvas0").hide();
+            }
 
             if(webcamReady && takeSnapshot){
                 updateVideoTexture(gl, webcamSnapshotTexture, webcam);
