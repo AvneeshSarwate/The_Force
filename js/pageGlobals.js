@@ -1089,11 +1089,12 @@ $( document ).ready(function() {
 
         if(!isMobile && useVideoInput) {
             mInputs[0] = wcTex;
-            mInputs[1] = videoTextures[0]; 
 
             if (webcamReady) {
               updateVideoTexture(gl, webcamTexture, webcam);
             }
+
+            // updateVideoTexture(gl, p5Texture, $("#defaultCanvas0").captureStream());
 
             if(webcamReady && takeSnapshot){
                 updateVideoTexture(gl, webcamSnapshotTexture, webcam);
@@ -1132,13 +1133,21 @@ $( document ).ready(function() {
         wcTex.image = {height: webcam.height, width: webcam.width};
         wcTex.loaded = true;
         
-        // if(!mInputs[1]) {
-        //     createNewVideoTexture(gl, "./starfield.mov", 0);   
-        //     mInputs[1] = videoTextures[0]; 
-        // }
+        if(!mInputs[1]) {
+            createNewVideoTexture(gl, "./starfield.mov", 0);   
+            mInputs[1] = videoTextures[0]; 
+        }
 
         mInputs[0] = wcTex;
     }
+
+    p5Texture = initVideoTexture(gl, "blankurl");
+    p5Tex = {}
+    p5Tex.globject = p5Texture;
+    p5Tex.type = "tex_2D";
+    p5Tex.image = {height: webcam.height, width: webcam.width};
+    p5Tex.loaded = true;
+    mInputs[1] = p5Tex;
 
     mTime = Date.now();
     renderLoop2();

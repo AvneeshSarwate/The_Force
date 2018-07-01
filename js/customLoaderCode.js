@@ -1,5 +1,8 @@
 var customLoaderUniforms = "";
 
+function setup() {};
+function draw() {};
+
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
     var texture = {};

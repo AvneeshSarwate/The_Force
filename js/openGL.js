@@ -35,8 +35,10 @@ var testingImage = false;
 var testTexture;
 
 var webcamTexture;
+var p5Texture;
 var webcam;
 var wcTex;
+var p5Tex;
 
 var videos = [null, null, null, null];
 var videoTextures = [null, null, null, null];
@@ -88,7 +90,7 @@ function createGlContext() {
         $.ajax({ url: "shaders/header.frag", dataType: "text" })).done(function(d, v, f, h) {
 
         //build screen shader
-        var res = createShader(v[0], f[0]);
+        var res = createForceShader(v[0], f[0]);
 
         if (res.mSuccess === false) {
             console.log(res.mInfo);
@@ -269,7 +271,7 @@ function parseAndTriggerSequence(patternString){
 }
 
 function newShader(vs, shaderCode) {
-    var res = createShader(vs, mHeader + customLoaderUniforms + mInputsStr + mOSCStr + mMIDIStr + shaderCode); //, true);
+    var res = createForceShader(vs, mHeader + customLoaderUniforms + mInputsStr + mOSCStr + mMIDIStr + shaderCode); //, true);
 
     if (res.mSuccess === false) {
         return res;
@@ -348,7 +350,7 @@ function newShader(vs, shaderCode) {
     return res; //means success
 }
 
-function createShader(vertShader, fragShader) {
+function createForceShader(vertShader, fragShader) {
     if (gl === null) return;
 
     var tmpProgram = gl.createProgram();
