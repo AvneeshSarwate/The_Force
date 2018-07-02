@@ -66,6 +66,8 @@ $( document ).ready(function() {
     if(shaderToGet.indexOf("gore") > -1) initialLoaderFunction = goreLoader;    
     if(shaderToGet.indexOf("watchman") > -1) initialLoaderFunction = watchmanLoader;
     if(shaderToGet.indexOf("movieSplice") > -1) initialLoaderFunction = movieSpliceLoader;
+    if(shaderToGet.indexOf("p5hull") > -1) initialLoaderFunction = p5hullLoader;
+    if(shaderToGet.indexOf("p5Test") > -1) initialLoaderFunction = p5TestLoader;
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

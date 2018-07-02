@@ -1,19 +1,7 @@
 var customLoaderUniforms = "";
 
-var p5w = 1280;
-var p5h = 720;
-function setup() {
-    createCanvas(p5w, p5h);
-};
-var frameCount = 0;
-function draw() {
-    clear();
-    var t = Date.now()/1000;
-    var c = [127+sin(t)*50, 127+sin(t+PI/2)*50, 127+sin(t+PI/3)*50]; 
-    fill(c);
-    rect(0, 0, p5w*sinN(t), p5h*cosN(t));
-    if(frameCount++ %10 == 0) console.log(c);
-};
+function setup(){}
+function draw(){}
 
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
@@ -275,4 +263,14 @@ uniform float lastNoteOnTime;
             console.log("played", noteOffCountMod);
         }
     }
+}
+
+function p5TestLoader(){
+    setup = p5TestSetup;
+    draw = p5TestDraw;
+}
+
+function p5hullLoader(){
+    setup = hulldrawSetup;
+    draw = hulldraw;
 }
