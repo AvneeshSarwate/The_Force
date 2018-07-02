@@ -266,8 +266,8 @@ uniform float lastNoteOnTime;
 }
 
 function p5TestLoader(){
-    setup = p5TestSetup;
-    draw = p5TestDraw;
+    setup = testSetup;
+    draw = testDraw;
 }
 
 function p5hullLoader(){

@@ -8,10 +8,12 @@ function testSetup() {
 var frameCount = 0;
 function testDraw() {
     clear();
+    background(0);
     var t = Date.now()/1000;
     var c = [127+sin(t)*50, 127+sin(t+PI/2)*50, 127+sin(t+PI/3)*50]; 
+    line(c);
     fill(c);
-    rect(0, 0, p5w*sinN(t), p5h*cosN(t));
+    ellipse(500+sin(t)*300, 300+cos(t)*300, 100, 100);
     if(frameCount++ %10 == 0) console.log(c);
 }
 

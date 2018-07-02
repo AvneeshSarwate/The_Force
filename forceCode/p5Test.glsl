@@ -104,7 +104,7 @@ void main () {
     vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
     
     vec3 cc;
-    float decay = 0.96;
+    float decay = 0.98;
     float feedback;
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
@@ -121,7 +121,7 @@ void main () {
     else {
         feedback = lastFeedback * decay;
         if(lastFeedback > 0.4) {
-            cc = mix(black, bb.rgb, feedback);
+            cc = mix(foreGround, bb.rgb, feedback);
         } else {
             feedback = 0.;
             cc = black;
