@@ -30,7 +30,7 @@ import threading
 import OSC
 
 oscClient = OSC.OSCClient()
-oscClient.connect(("127.0.0.1", 7501))
+oscClient.connect(("127.0.0.1", 7500))
 
 enter_pressed = False;
 
@@ -66,6 +66,7 @@ def ae_snakeMessage(frame, info):
     msg.setAddress("/snakeTouch")
     if frame.n_contacts > 0:
         c = frame.contacts[0]
+        print c.x_pos, c.y_pos
         msg.append([c.x_pos, c.y_pos])
         oscClient.send(msg)
 

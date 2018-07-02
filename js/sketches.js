@@ -11,10 +11,10 @@ function testDraw() {
     background(0);
     var t = Date.now()/1000;
     var c = [127+sin(t)*50, 127+sin(t+PI/2)*50, 127+sin(t+PI/3)*50]; 
-    line(c);
+    stroke(c);
     fill(c);
     ellipse(500+sin(t)*300, 300+cos(t)*300, 100, 100);
-    if(frameCount++ %10 == 0) console.log(c);
+    //if(frameCount++ %10 == 0) console.log(c);
 }
 
 

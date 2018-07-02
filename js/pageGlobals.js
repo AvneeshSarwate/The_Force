@@ -60,14 +60,18 @@ $( document ).ready(function() {
         useVideoInput = false;
     }
     if(shaderToGet.indexOf("empress") > -1) initialLoaderFunction = empressAlbumArtLoader;    
-    if(shaderToGet.indexOf("interactive") > -1) initialLoaderFunction = interactiveLoader;    
-    if(shaderToGet.indexOf("reed" ) > -1) initialLoaderFunction = reedLoader;    
-    if(shaderToGet.indexOf("eno") > -1) initialLoaderFunction = enoLoader;    
-    if(shaderToGet.indexOf("gore") > -1) initialLoaderFunction = goreLoader;    
-    if(shaderToGet.indexOf("watchman") > -1) initialLoaderFunction = watchmanLoader;
-    if(shaderToGet.indexOf("movieSplice") > -1) initialLoaderFunction = movieSpliceLoader;
-    if(shaderToGet.indexOf("p5hull") > -1) initialLoaderFunction = p5hullLoader;
-    if(shaderToGet.indexOf("p5Test") > -1) initialLoaderFunction = p5TestLoader;
+    if(shaderToGet === "interactive") initialLoaderFunction = interactiveLoader;    
+    if(shaderToGet === "reed" ) initialLoaderFunction = reedLoader;    
+    if(shaderToGet === "eno") initialLoaderFunction = enoLoader;    
+    if(shaderToGet === "gore") initialLoaderFunction = goreLoader;    
+    if(shaderToGet === "watchman") initialLoaderFunction = watchmanLoader;
+    if(shaderToGet === "movieSplice") initialLoaderFunction = movieSpliceLoader;
+    if(shaderToGet === "p5hull") initialLoaderFunction = p5hullLoader;
+    if(shaderToGet === "p5Test") initialLoaderFunction = p5TestLoader;
+    if(shaderToGet === "p5Sensel") {
+        initialLoaderFunction = p5Sensel;
+        shaderToGet = "p5Test";
+    }
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

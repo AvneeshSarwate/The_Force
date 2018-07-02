@@ -59,6 +59,10 @@ function initOSC() {
         console.log("took snapshot");
     });
 
+    osc.on("/senselDraw", function(cMessage){
+        senselDrawHandler(cMessage.args);
+    })
+
     setInterval(function(){
         takeSnapshot = true;
     }, 80);

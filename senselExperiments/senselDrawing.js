@@ -1,17 +1,6 @@
-var port = new osc.WebSocketPort({
-    url: "ws://" + window.location.hostname + ":8086"
-});
-
-port.on("message", function (oscMessage) {
-    // Configure handlers here
-    if (oscMessage.address == "/senselDraw"){
-        pointData = Array.from(oscMessage.args);
-        //console.log(pointData);
-    } 
-});
-
-port.open();
-
+function senselDrawHandler(oscData){
+    pointData = oscData;
+}
 
 var pointData = [0];
 

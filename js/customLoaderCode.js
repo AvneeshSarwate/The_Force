@@ -274,3 +274,8 @@ function p5hullLoader(){
     setup = hulldrawSetup;
     draw = hulldraw;
 }
+
+function p5Sensel(){
+    setup = senselSetup;
+    draw = sensel;
+}
