@@ -56,32 +56,29 @@ function hulldraw(){
 
         var flowScreenPoints = new Array();
 
+        var flowThresh = 5;
+
         if (flow.flow && flow.flow.u != 0 && flow.flow.v != 0) {
             // uMotionGraph.addSample(flow.flow.u);
             // vMotionGraph.addSample(flow.flow.v);
 
             strokeWeight(2);
-            flow.flow.zones.forEach((zone, i) => {
+            flow.flow.zones
+            .filter((zone) => Math.abs(zone.u) > flowThresh && Math.abs(zone.v) > flowThresh)
+            .forEach((zone) => {
                 stroke(map(zone.u, -step, +step, 0, 255), map(zone.v, -step, +step, 0, 255), 128);
                 //fliped visualization to look like proper mirroring
                 strokeWeight(Math.abs(zone.u) + Math.abs(zone.v));
                 line(hFlip((zone.x*vidScale), p5w/2), zone.y*vidScale, hFlip((zone.x + zone.u)*vidScale, p5w/2), (zone.y + zone.v)*vidScale);
-                var flowThresh = 5;
-                if(Math.abs(zone.u) > flowThresh && Math.abs(zone.v) > flowThresh){
-                    flowScreenPoints.push([hFlip((zone.x*vidScale), p5w/2), zone.y*vidScale]);
-                }
-
-                var zoneInds =  toCellInd(zone.x, zone.y, 1); 
-                zoneInds.x = (devDim[0]-1) - zoneInds.x; //flip x axis b/c camera is flipped
-                var flowThresh = 5;
-                var filteredFlow = {u: Math.abs(zone.u) < flowThresh ? 0 : zone.u, v: Math.abs(zone.v) < flowThresh ? 0 : zone.v };
+                
+                flowScreenPoints.push([hFlip((zone.x*vidScale), p5w/2), zone.y*vidScale]);
 
             });
         }
 
         noFill();
         strokeWeight(10);
-        stroke(0);
+        stroke(255);
         var hullPoints = hull(flowScreenPoints, 300);
         var useBezier = false;
         if(useBezier) { 

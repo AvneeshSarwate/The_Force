@@ -1112,6 +1112,12 @@ $( document ).ready(function() {
                 texture.image = {height: webcam.height, width: webcam.width};
                 texture.loaded = webcamReady;
                 mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
+                if(p5Canvas) {
+                    updateVideoTexture(gl, p5SnapTexture, p5Canvas);
+                } else {
+                    p5Canvas = $("#defaultCanvas0")[0];
+                    $("#defaultCanvas0").hide();
+                }
                 takeSnapshot = false;
                 createInputStr();
             }
@@ -1156,6 +1162,15 @@ $( document ).ready(function() {
     p5Tex.image = {height: webcam.height, width: webcam.width};
     p5Tex.loaded = true;
     mInputs[1] = p5Tex;
+
+
+    p5SnapTexture = initVideoTexture(gl, "blankurl");
+    p5SnapTex = {}
+    p5SnapTex.globject = p5SnapTexture;
+    p5SnapTex.type = "tex_2D";
+    p5SnapTex.image = {height: webcam.height, width: webcam.width};
+    p5SnapTex.loaded = true;
+    mInputs[2] = p5SnapTex;
 
     mTime = Date.now();
     renderLoop2();

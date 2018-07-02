@@ -39,6 +39,8 @@ var p5Texture;
 var webcam;
 var wcTex;
 var p5Tex;
+var p5SnapTex;
+var p5SnapTexture;
 
 var videos = [null, null, null, null];
 var videoTextures = [null, null, null, null];
