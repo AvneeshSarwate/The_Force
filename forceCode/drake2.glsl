@@ -386,6 +386,11 @@ vec3 colorMix(float v){
     colors[2] = vec3(223.,204.,91.)/255.;
     colors[3] = vec3(167.,180.,199.)/255.;
     colors[4] = vec3(9.,169.,20.)/255.;
+    colors[0] = vec3(255,225,102)/255.;
+    colors[1] = vec3(255,209,18)/255.;
+    colors[2] = vec3(133,0,0)/255.;
+    colors[3] = vec3(99,0,0)/255.;
+    colors[4] = vec3(58,0,0)/255.;
     float v2 = mod(v, 5.);
     float v3 = mod(v, 1.);
     float mixfactor = 1.;
