@@ -130,8 +130,8 @@ vec2 circleSlice(vec2 stN, float t, float randw){
     t1 = t1 / 2.;
     t0 = t0 / 2.;
     rw = rw / 2.;
-    float divx = sinN(t0) * 120.+10.;
-    float divy = cosN(t1) * 1400.+10.;
+    float divx = sinN(t0) * 120.+5.;
+    float divy = cosN(t1) * 140.+5.;
     stN = stN * rotate(stN, vec2(0.5), rw);
     vec2 trans2 = vec2(mod(floor(stN.y * divx), 2.) == 0. ? mod(stN.x + (t1 + rw)/4., 1.) : mod(stN.x - t1/4., 1.), 
                        mod(floor(stN.x * divy), 2.) == 0. ? mod(stN.y + t1, 1.) : mod(stN.y - t1, 1.));

@@ -425,7 +425,7 @@ void main () {
     // vec3 trail = camWave; swirl(time/5., stN) ; cam;
     // vec3 foreGround = cam; mod(camWarp*(0.8 + sinN(time))*3., 1.);
     
-    vec2 deepTileWave = rowColWave(camN * (1. + sinN(time/4.)*5.), 1. + sinN(time/2.) * 20., time, 0.1 + sinN(time));
+    vec2 deepTileWave = rowColWave(camN * (1. + sinN(time/4.5)*5.), 1. + sinN(time/2.3) * 20., time, 0.1 + sinN(time));
     vec2 tileWaveRot = wrap(rotate(deepTileWave, vec2(sinN(time/3.), cosN(time/3.)), time)*(1. + sinN(time/5.)*10.), 0., 1.);
     // vec2 tileWaveRot2 = wrap(rotate(deepTileWave, vec2(0.5), randWalk/90.)*5., 0., 1.);
     // vec3 wrapTile = texture2D(channel0, tileWaveRot2).rgb;
@@ -436,7 +436,7 @@ void main () {
     // float randval = rand(vec2(quant(stN.x+time/10., 10.), quant(stN.y+time/7., 70.)));
     // float randval2 = rand(vec2(quant(stN.x+sin(time)/6., 10.), quant(stN.y+sin(time)/5., 70.)));
     // float randval3 = rand(vec2(quant(time, 5.), quant(stN.x+sin(time/1.)/4., 20.+sinN(time/5.)*51.) + quant(stN.y+cos(time/1.)/4.,  20.+sinN(time/5.)*50.)));
-    float randval4 = rand(vec2(quant(sinN(time/5.), 10.), quant(stN.x, 10.) + quant(stN.y, 10.))) > 0.25 + sinN(time/5.)/2. ? 1. : 0.;
+    float randval4 = rand(vec2(quant(sinN(time/15.), 10.), quant(stN.x, 10.) + quant(stN.y, 10.))) > 0.25 + sinN(time/5.)/2. ? 1. : 0.;
     
     
     // // implement the trailing effectm using the alpha channel to track the state of decay 
