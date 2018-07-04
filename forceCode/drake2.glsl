@@ -424,9 +424,9 @@ void main () {
     // bool condition = multiBallCondition(stN); distance(in1.xy, stN) < .1;
     // vec3 trail = camWave; swirl(time/5., stN) ; cam;
     // vec3 foreGround = cam; mod(camWarp*(0.8 + sinN(time))*3., 1.);
-    
-    vec2 deepTileWave = rowColWave(camN * (1. + sinN(time/4.5)*5.), 1. + sinN(time/2.3) * 20., time, 0.1 + sinN(time));
-    vec2 tileWaveRot = wrap(rotate(deepTileWave, vec2(sinN(time/3.), cosN(time/3.)), time)*(1. + sinN(time/5.)*10.), 0., 1.);
+    float t = time + bands.w;
+    vec2 deepTileWave = rowColWave(camN * (1. + sinN(t/4.5)*5.), 1. + sinN(t/2.3) * 20., t, 0.1 + sinN(t));
+    vec2 tileWaveRot = wrap(rotate(deepTileWave, vec2(sinN(t/3.), cosN(t/3.)), t)*(1. + sinN(t/5.)*10.), 0., 1.);
     // vec2 tileWaveRot2 = wrap(rotate(deepTileWave, vec2(0.5), randWalk/90.)*5., 0., 1.);
     // vec3 wrapTile = texture2D(channel0, tileWaveRot2).rgb;
     // vec3 warpswirl = swirl(time/10., deepTileWave);

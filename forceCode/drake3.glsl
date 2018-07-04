@@ -251,6 +251,7 @@ void main () {
     stN = wrap(stN, 0., 1.);
 
 
+    float t = time + bands.w*3.;
     vec3 cc;
     float decay = 0.99;
     float feedback;
@@ -258,10 +259,10 @@ void main () {
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     // bool condition = circleSlice(stN, time/2., randWalk/2. + 1500.).z == 0.; 
-    vec2 center = vec2(sinN(time)*0.5 +.25, cosN(time)*0.5 +.25);
-    float rotateTime = time/2.;
+    vec2 center = vec2(sinN(t)*0.5 +.25, cosN(t)*0.5 +.25);
+    float rotateTime = t/2.;
     vec2 rotatedPoint = stN * rotate(stN, center, rotateTime);
-    bool condition = multiBallCondition((stN*3. - 1.5) / 2., time);
+    bool condition = multiBallCondition((stN*3. - 1.5) / 2., t);
     
     
     
@@ -293,8 +294,7 @@ void main () {
             cc = foreGround;
         }
     }
-    
-    bool cond2 = multiBallCondition(stN, time);
+
     // cc = cond2 ? black : white;
     cc = colorMix(cc.x*5.);
     cc = mix(bb.rgb, cc, 0.5);
