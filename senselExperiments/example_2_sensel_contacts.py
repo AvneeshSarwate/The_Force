@@ -28,9 +28,10 @@ import sensel
 import binascii
 import threading
 import OSC
+import time
 
 oscClient = OSC.OSCClient()
-oscClient.connect(("127.0.0.1", 7500))
+oscClient.connect(("127.0.0.1", 57120))
 
 enter_pressed = False;
 
@@ -105,6 +106,7 @@ if __name__ == "__main__":
         t.start()
         while(enter_pressed == False):
             scanFrames(frame, info)
+            time.sleep(1.0/70)
         print "enter was pressed"
         closeSensel(frame)
     print "no handle"

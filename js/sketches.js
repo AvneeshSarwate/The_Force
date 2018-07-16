@@ -8,7 +8,7 @@ function testSetup() {
 var frameCount = 0;
 function testDraw() {
     clear();
-    background(0);
+    background(255);
     var t = Date.now()/1000;
     var c = [127+sin(t)*50, 127+sin(t+PI/2)*50, 127+sin(t+PI/3)*50]; 
     stroke(c);

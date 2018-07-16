@@ -135,6 +135,7 @@ function onMIDIMessage(event) {
                     vjPadNoteInfo[chan].notes[midiNote].lastVel = event.data[2];
                     console.log("vjPad", chan, midiNote, event.data[2]);
                 }
+                lastNoteValue = midiNote;
                 noteOnEventCount++;
                 lastNoteOnTime[midiNote] = (Date.now() - mTime) * 0.001;
                 break;

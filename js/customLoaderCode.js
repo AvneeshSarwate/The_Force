@@ -232,7 +232,7 @@ function movieSpliceLoader(){
     blobVideoLoad(3, 8, movieFiles, false);
 
     customLoaderUniforms = `
-uniform float lastNoteOnTime;
+uniform int lastNoteValue;
     `;
     
     //these variables help stop videos from constantly getting start/stopped on every frame 
@@ -242,8 +242,8 @@ uniform float lastNoteOnTime;
 
     //time in secondsPassed
     customLoaderUniformSet = function(time, mProgram){
-        var lasteNoteOnU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
-        if(lasteNoteOnU) gl.uniform1f(lasteNoteOnU, lastNoteOnTime);
+        var lastNoteValU = gl.getUniformLocation(mProgram, "lastNoteValue");
+        if(lastNoteValU) gl.uniform1f(lastNoteValU, lastNoteValue);
         for(var i = 0; i < videos.length; i++){
             if(videos[i]){
                 videos[i].playbackRate = 0.8 + sinN(time/3+i)*0.4;
