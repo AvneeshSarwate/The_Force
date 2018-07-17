@@ -257,7 +257,7 @@ vec2 yLens(vec2 stN, float t){
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
         if(abs(loc - stN.y) < lensSize) coord = vec2(coord.x, mix(loc, coord.y, abs(loc - stN.y)/lensSize));
     }
-    return mix(stN0, coord, 10.9);;
+    return mix(stN0, coord, 1.9);;
 }
 
 // calculates the luminance value of a pixel
@@ -285,37 +285,16 @@ void main () {
     stN = yLens(stN, time/15.);
     
     
-    bool inStripe = false;
-    float dist = distance(stN, vec2(0.5));
-
-
-    float numStripes = 100.;
-    float d = 1. / numStripes;
-    float stripeWidth =(0.5 - d) / numStripes;
-    for(int i = 0; i < 100; i++){
-        if(d < dist && dist < d + stripeWidth/2.) {
-            inStripe = inStripe || true;
-        } else {
-            inStripe = inStripe || false;
-        }
-        d = d + stripeWidth;
-        if(d > 0.5) break;
-    }
-    
-    vec3 col = !inStripe ? white : black;
-    
-    vec3 cam = texture2D(channel0, stN).rgb;
-    // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
     float timeVal = time/1. + 8000.;
-    stN = quant(stN, 1000.);
+    stN = quant(stN, 2000.);
     vec2 stN2 = rotate(stN, vec2(0.5), 10./200.);
     c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
     c =  c;
     
     vec3 cc;
-    float decay = 0.9;
+    float decay = 0.84;
     float feedback;
     vec4 bb = texture2D(backbuffer, mix(uvN(), stN, 0.05));
     float lastFeedback = bb.a;
