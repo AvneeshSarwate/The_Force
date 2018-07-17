@@ -307,8 +307,10 @@ void main () {
     // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
+    float timeVal = time+3000.;
     stN = quant(stN, 100.);
-    c = inStripeX2(stN, time/10. * (.5 + stN.x)) * inStripeY2(stN, time/7. * (.5 + stN.y));
+    vec2 stN2 = rotate(stN, vec2(0.5), time/2.);
+    c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
     
     vec3 cc;
     float decay = 0.97;
