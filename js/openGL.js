@@ -793,7 +793,7 @@ function paint(timeVal) {
     //the uniform assumes 10 note colors - we pad with 0s if there are not enough notes
     var noteColorData = [].concat.apply([], getNoteColors().slice(0, 10)); //flatten the color values to a single array
     //var noteColorBuffer = noteColorData.concat(Array.from(new Array(Math.max(30-noteColorData.length, 0)), () => 0)); //add padding TODO: is 0 padding even needed?
-    if(noteColorsU !== null) gl.uniform3fv(noteColorsU, noteColorData.length > 0 : noteColorData : Array.from(new Array(30), () => 0));
+    if(noteColorsU !== null) gl.uniform3fv(noteColorsU, noteColorData.length > 0 ? noteColorData : Array.from(new Array(30), () => 0));
 
     if(numNotesOnU !== null) gl.uniform1f(numNotesOnU, onNoteSet.size);
     var noteVelocities = getNoteVelocities().slice(0, 10);

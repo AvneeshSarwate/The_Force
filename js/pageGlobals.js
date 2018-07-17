@@ -75,7 +75,7 @@ $( document ).ready(function() {
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
-            console.log(shaderCode);
+            // console.log(shaderCode.replace("\n", "NEWLINE"));
             defaultShader = shaderCode;
             editor.setValue(shaderCode, -1);
             setShaderFromEditor(shaderCode);
