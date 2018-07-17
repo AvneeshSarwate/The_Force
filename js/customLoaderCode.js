@@ -44,7 +44,7 @@ function empressAlbumArtLoader(){
 
 
 var blobVideoURLs = {};
-function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, videoPlayFunc){
+function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, otherArgs){
     var req = new XMLHttpRequest();
     req.open('GET', videoFileURL, true);
     req.responseType = 'blob';
@@ -64,7 +64,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, videoPlayF
             $("#demogl").click(function(){
                 video.muted = false;
                 video.play();
-                if(videoPlayFunc) videoPlayFunc();
+                if(otherArgs.videoPlayFunc) otherArgs.videoPlayFunc();
             });
         }
 
@@ -117,6 +117,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, videoPlayF
                 blobVideoURLs[videoFileURL] = vid;
 
                 createVideoElement(vid);
+                if(otherArgs.multiPlayheadCacheLoader) otherArgs.multiPlayheadCacheLoader();
             }
         }
         req.onerror = function() {
@@ -210,7 +211,7 @@ function goreLoader(){
         console.log("gore sequencer started");
     }
     loadImageToTexture(7, "black.jpg");
-    blobVideoLoad(1, 6, "gore.mp4", true, videoPlayFunc);
+    blobVideoLoad(1, 6, "gore.mp4", true, {'videoPlayFunc': videoPlayFunc});
     customLoaderUniformSet = function(time){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, videos[1] ? videos[1].currentTime/100 : 0);
@@ -226,10 +227,12 @@ var sinN = (x) => (Math.sin(x) + 1)/2;
 var cosN = (x) => (Math.cos(x) + 1)/2;
 function movieSpliceLoader(){
     var movieFiles = "gore.mp4";
-    blobVideoLoad(0, 5, movieFiles, false);
-    blobVideoLoad(1, 6, movieFiles, false);
-    blobVideoLoad(2, 7, movieFiles, false);
-    blobVideoLoad(3, 8, movieFiles, false);
+    var cacheLoader = function(){
+        blobVideoLoad(1, 6, movieFiles, false);
+        blobVideoLoad(2, 7, movieFiles, false);
+        blobVideoLoad(3, 8, movieFiles, false);
+    };
+    blobVideoLoad(0, 5, movieFiles, false, {'multiPlayheadCacheLoader': cacheLoader});
 
     customLoaderUniforms = `
 uniform float lastNoteValue;
