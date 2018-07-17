@@ -269,7 +269,7 @@ vec3 lum(vec3 color){
 
 void main () {
     vec2 stN = uvN();
-    // stN = stN + hash(vec3(stN, time)).xy/200.;
+    stN = stN + hash(vec3(stN, time)).xy/200.;
     vec3 c;
 
     //take 1
@@ -281,8 +281,8 @@ void main () {
     // }
     // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
     
-    stN = xLens(stN, time/100.);
-    stN = yLens(stN, time/150.);
+    stN = xLens(stN, time/10.);
+    stN = yLens(stN, time/15.);
     
     
     bool inStripe = false;
@@ -308,7 +308,7 @@ void main () {
     // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
-    float timeVal = time/10. + 1000.;
+    float timeVal = time/1. + 8000.;
     stN = quant(stN, 1000.);
     vec2 stN2 = rotate(stN, vec2(0.5), 10./200.);
     c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
@@ -317,7 +317,7 @@ void main () {
     vec3 cc;
     float decay = 0.9;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(uvN(), stN, 0.3));
+    vec4 bb = texture2D(backbuffer, mix(uvN(), stN, 0.05));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition =  c == black; 
@@ -346,7 +346,7 @@ void main () {
             cc = foreGround;
         }
     }
-    // cc = mix(cc, bb.rgb, 0.5);
+    cc = mix(cc, bb.rgb, 0.9);
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
