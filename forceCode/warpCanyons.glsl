@@ -291,6 +291,7 @@ void main () {
     stN = quant(stN, 2000.);
     vec2 stN2 = rotate(stN, vec2(0.5), 10./200.);
     c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
+    // c = vec3(hash(vec3(stN, time)).x < 0.65);
     c =  c;
     
     vec3 cc;
