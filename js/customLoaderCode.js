@@ -232,7 +232,7 @@ function movieSpliceLoader(){
     blobVideoLoad(3, 8, movieFiles, false);
 
     customLoaderUniforms = `
-uniform int lastNoteValue;
+uniform float lastNoteValue;
     `;
     
     //these variables help stop videos from constantly getting start/stopped on every frame 

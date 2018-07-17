@@ -160,6 +160,8 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+uniform sampler2D vid;
+
 void main() {
     vec2 stN = uvN();
     
@@ -168,14 +170,21 @@ void main() {
     vec3 v2 = texture2D(channel7, stN).rgb;
     vec3 v3 = texture2D(channel8, stN).rgb;
     // stN = rotate(stN, vec2(0.5), time/5.);
-    float numStripes = 10. + sinN(lastNoteOnTime[60]/3.)*10.;
+    float numStripes = floor(10. + sinN(time/10.)*1000.);
     float numVideos = 4.;
     float stripeMod = mod(floor(quant(stN.y, numStripes)*numStripes), numVideos);
     vec3 c = black;
-    if(stripeMod == 0.) c= v0;
-    if(stripeMod == 1.) c= v1;
-    if(stripeMod == 2.) c= v2;
-    if(stripeMod == 3.) c= v3;
+    if(stripeMod == 0.) c = v0;
+    if(stripeMod == 1.) c = v1;
+    if(stripeMod == 2.) c = v2;
+    if(stripeMod == 3.) c = v3;
+    
+    vec2 warpStn = coordWarp(stN, time).xy;
+    vec3 cWarp = black;
+    if(stripeMod == 0.) cWarp = texture2D(channel5, warpStn).rgb;
+    if(stripeMod == 1.) cWarp = texture2D(channel6, warpStn).rgb;;
+    if(stripeMod == 2.) cWarp = texture2D(channel7, warpStn).rgb;;
+    if(stripeMod == 3.) cWarp = texture2D(channel8, warpStn).rgb;
 
 
     vec4 bb = texture2D(backbuffer, stN);    
@@ -186,7 +195,7 @@ void main() {
     float lastFeedback = texture2D(backbuffer, stN).a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = multiBallCondition(coordWarp(stN, time/10.).xy, time); 
-    vec3 trail = colormap(lum(c)/lum(vec3(1.))).rgb; // swirl(time/5., trans2) * c.x;
+    vec3 trail = cWarp; colormap(lum(c)/lum(vec3(1.))).rgb; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = c;
     
     
