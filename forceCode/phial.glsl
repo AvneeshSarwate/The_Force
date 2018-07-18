@@ -199,7 +199,17 @@ void main () {
     vec2 stN = uvN();
 
     vec3 p5 = texture2D(channel1, stN).rgb;
-    p5 = p5 == black ? swirl(time/10., stN) : black;
+    if(p5 == black){
+        p5 = swirl(time/10., stN);
+    } else if (p5 == vec3(10./255.)){
+        p5 = 1. - swirl(time/10., stN);;
+    } else if (p5 == vec3(20./255.)){ 
+        p5 = blue;
+    } else if (p5 == vec3(30./255.)){
+        p5 = red;
+    } else {
+        p5 = black;
+    }
     
     
     gl_FragColor = vec4(p5, 1.);

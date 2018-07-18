@@ -97,10 +97,6 @@ function hulldraw(){
 }
 
 
-class Snake {
-    constructor(numPoints, stepFunc, color){}
-}
-
 var xStep = 10;
 var yStep = 10;
 var stepDist = 10;
@@ -143,37 +139,79 @@ function wrapVal(val, low, high){
     return val;
 }
 
+
+class Snake {
+    constructor(numPoints, snakeColor, switchFunc){
+        this.points = arrayOf(numPoints).map(x => [p5w/2, p5h/2]);
+        this.switchFunc = switchFunc;
+        this.xPos = p5w/2;
+        this.yPos = p5h/2;
+        this.stepDist = 10;
+        this.xStep = 10;
+        this.yStep = 10;
+        this.snakeColor = snakeColor;
+        this.numPoints = numPoints;
+    }
+
+    drawSnake(frameCount){
+        if(this.xPos + this.xStep > p5w || this.xPos + xStep < 0) this.xStep *= -1;
+        if(this.yPos + this.yStep > p5h || this.yPos + this.yStep < 0) this.yStep *= -1;
+        this.xPos = wrapVal(this.xPos+this.xStep, 0, p5w);
+        this.yPos = wrapVal(this.yPos+this.yStep, 0, p5h);
+        if(frameCount%60 == 0) {
+            this.xStep = sin(Math.random()*TWO_PI) * this.stepDist;
+            this.yStep = cos(Math.random()*TWO_PI) * this.stepDist;
+        }
+        var curveInd = frameCount%this.numPoints;
+        this.points[curveInd] = [this.xPos, this.yPos];
+        // fill(this.snakeColor);
+        noFill();
+        // strokeWeight(30);
+        stroke(this.snakeColor);
+        // beginShape();
+        for(var i = 0; i < this.numPoints-1; i++){ //indexing 
+            var p = this.points[(curveInd+i+1)%this.numPoints];
+            var p2 = this.points[(curveInd+i+2)%this.numPoints];
+            // ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
+            strokeWeight(4 + sinN((frameCount + i)/20)*50)
+            line(p[0], p[1], p2[0], p2[1]);
+            // curveVertex(p[0], p[1]);
+        }
+        endShape();
+    }
+}
+
+var sneks = arrayOf(4);
 function phialSetup(){
     createCanvas(p5w, p5h);
     background(255);
+    sneks = sneks.map((x, i) => new Snake(200, color(i*10, i*10, i*10)));
 }
 
 function phialDraw(){
     clear();
     background(255);
-    fill(0);
-
-    // strokeWeight(3 + sinN(frameCount/20)*20);
-    // line(xPos, yPos, xPos+xStep, yPos+yStep);
-    // ellipse(xPos, yPos, 30 + sinN(frameCount/20)*20);
-    if(xPos + xStep > p5w || xPos + xStep < 0) xStep *= -1;
-    if(yPos + yStep > p5h || yPos + yStep < 0) yStep *= -1;
-    xPos = wrapVal(xPos+xStep, 0, p5w);
-    yPos = wrapVal(yPos+yStep, 0, p5h);
-    if(frameCount%60 == 0) {
-        xStep = sin(Math.random()*TWO_PI) * stepDist;
-        yStep = cos(Math.random()*TWO_PI) * stepDist;
-    }
-    var curveInd = frameCount%numPoints;
-    curvePoints[curveInd] = [xPos, yPos];
-    if(frameCount > numPoints) {
-        // beginShape();
-        for(var i = 0; i < numPoints; i++){
-            var p = curvePoints[(curveInd+i)%numPoints];
-            // strokeWeight();
-            ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
-        }
-        // endShape();
-    }
+    
+    // fill(0);
+    // if(xPos + xStep > p5w || xPos + xStep < 0) xStep *= -1;
+    // if(yPos + yStep > p5h || yPos + yStep < 0) yStep *= -1;
+    // xPos = wrapVal(xPos+xStep, 0, p5w);
+    // yPos = wrapVal(yPos+yStep, 0, p5h);
+    // if(frameCount%60 == 0) {
+    //     xStep = sin(Math.random()*TWO_PI) * stepDist;
+    //     yStep = cos(Math.random()*TWO_PI) * stepDist;
+    // }
+    // var curveInd = frameCount%numPoints;
+    // curvePoints[curveInd] = [xPos, yPos];
+    // if(frameCount > numPoints) {
+    //     // beginShape();
+    //     for(var i = 0; i < numPoints; i++){
+    //         var p = curvePoints[(curveInd+i)%numPoints];
+    //         // strokeWeight();
+    //         ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
+    //     }
+    //     // endShape();
+    // }
+    sneks.map(snek => snek.drawSnake(frameCount));
     frameCount++;
 }
