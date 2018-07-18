@@ -65,7 +65,7 @@ function createGlContext() {
             gGLContext = mCanvas.getContext(names[i], {
                 alpha: false,
                 depth: false,
-                antialias: false,
+                antialias: true,
                 stencil: false,
                 premultipliedAlpha: false,
                 preserveDrawingBuffer: true

@@ -199,7 +199,7 @@ void main () {
     vec2 stN = uvN();
 
     vec3 p5 = texture2D(channel1, stN).rgb;
-
+    p5 = p5 == black ? swirl(time/10., stN) : black;
     
     
     gl_FragColor = vec4(p5, 1.);

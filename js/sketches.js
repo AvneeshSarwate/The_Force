@@ -97,29 +97,83 @@ function hulldraw(){
 }
 
 
+class Snake {
+    constructor(numPoints, stepFunc, color){}
+}
+
 var xStep = 10;
 var yStep = 10;
+var stepDist = 10;
 var xPos = p5w/2;
 var yPos = p5h/2;
+var mat;
+var r = () => Math.random()*20 - 10;
+var sinN = t => (Math.sin(t)+1)/2
+var numPoints = 200;
+var arrayOf = n => Array.from(new Array(n), () => 0);
+var curvePoints = arrayOf(100);
 function mod(n, m) {
   return ((n % m) + m) % m;
+}
+
+function wrapVal(val, low, high){
+    var range  = high - low;
+    if(val > high){
+        var dif = val-high;
+        var difMod = mod(dif, range);
+        var numWrap = (dif-difMod)/range;
+        // console.log("high", dif, difMod, numWrap)
+        if(mod(numWrap, 2) == 0){
+            return high - difMod;
+        } else {
+            return low + difMod;
+        }
+    }
+    if(val < low){
+        var dif = low-val;
+        var difMod = mod(dif, range);
+        var numWrap = (dif- difMod)/range ;
+        // console.log("low", dif, difMod, numWrap)
+        if(mod(numWrap, 2.) == 0.){
+            return low + difMod;
+        } else {
+            return high - difMod;
+        }
+    }
+    return val;
 }
 
 function phialSetup(){
     createCanvas(p5w, p5h);
     background(255);
-    stroke(color(0,0,0));
 }
 
 function phialDraw(){
-    stroke(color(0,0,0));
-    strokeWeight(10);
-    line(xPos, yPos, xPos+xStep, yPos+yStep);
-    xPos = mod(xPos+xStep, p5w);
-    yPos = mod(yPos+yStep, p5h);
+    clear();
+    background(255);
+    fill(0);
+
+    // strokeWeight(3 + sinN(frameCount/20)*20);
+    // line(xPos, yPos, xPos+xStep, yPos+yStep);
+    // ellipse(xPos, yPos, 30 + sinN(frameCount/20)*20);
+    if(xPos + xStep > p5w || xPos + xStep < 0) xStep *= -1;
+    if(yPos + yStep > p5h || yPos + yStep < 0) yStep *= -1;
+    xPos = wrapVal(xPos+xStep, 0, p5w);
+    yPos = wrapVal(yPos+yStep, 0, p5h);
     if(frameCount%60 == 0) {
-        xStep = sin(Math.random()*TWO_PI) * 10;
-        yStep = cos(Math.random()*TWO_PI) * 10;
+        xStep = sin(Math.random()*TWO_PI) * stepDist;
+        yStep = cos(Math.random()*TWO_PI) * stepDist;
+    }
+    var curveInd = frameCount%numPoints;
+    curvePoints[curveInd] = [xPos, yPos];
+    if(frameCount > numPoints) {
+        // beginShape();
+        for(var i = 0; i < numPoints; i++){
+            var p = curvePoints[(curveInd+i)%numPoints];
+            // strokeWeight();
+            ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
+        }
+        // endShape();
     }
     frameCount++;
 }
