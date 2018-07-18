@@ -159,6 +159,8 @@ vec4 circleSlice(vec2 stN, float t, float randw){
     
 }
 
+
+
 vec3 coordWarp(vec2 stN, float t2){ 
     vec2 warp = stN;
     
@@ -199,6 +201,7 @@ void main () {
     vec2 stN = uvN();
 
     vec3 p5 = texture2D(channel1, stN).rgb;
+    vec3 bb = texture2D(backbuffer, stN).rgb;
     if(p5 == black){
         p5 = swirl(time/10., stN);
     } else if (p5 == vec3(10./255.)){
@@ -207,8 +210,10 @@ void main () {
         p5 = blue;
     } else if (p5 == vec3(30./255.)){
         p5 = red;
-    } else {
-        p5 = black;
+    } else if(p5 == vec3(40./255.)) {
+        p5 = circleSlice(stN, time/2., randWalk/2. + 1500.).rgb;
+    } else if(p5 == vec3(50./255.)) {
+        p5 = mix(bb, circleSlice(stN, time/20., randWalk/2. + 1500.).rgb, 0.1);
     }
     
     

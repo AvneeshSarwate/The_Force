@@ -1,7 +1,7 @@
 //definitions of various p5 sketches to use as textures
 
-var p5w = 1280 * 1.5;
-var p5h = 720 * 1.5;
+var p5w = 1280*1.5;
+var p5h = 720*1.5;
 function testSetup() {
     createCanvas(p5w, p5h);
 }
@@ -173,7 +173,7 @@ class Snake {
             var p = this.points[(curveInd+i+1)%this.numPoints];
             var p2 = this.points[(curveInd+i+2)%this.numPoints];
             // ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
-            strokeWeight(4 + sinN((frameCount + i)/20)*50)
+            strokeWeight((4 + sinN((frameCount + i)/20)*50)*2)
             line(p[0], p[1], p2[0], p2[1]);
             // curveVertex(p[0], p[1]);
         }
@@ -181,8 +181,10 @@ class Snake {
     }
 }
 
-var sneks = arrayOf(4);
+var sneks = arrayOf(6);
 function phialSetup(){
+    p5w = 1280/1.5;
+    p5h = 720/1.5;
     createCanvas(p5w, p5h);
     background(255);
     sneks = sneks.map((x, i) => new Snake(200, color(i*10, i*10, i*10)));
@@ -192,26 +194,6 @@ function phialDraw(){
     clear();
     background(255);
     
-    // fill(0);
-    // if(xPos + xStep > p5w || xPos + xStep < 0) xStep *= -1;
-    // if(yPos + yStep > p5h || yPos + yStep < 0) yStep *= -1;
-    // xPos = wrapVal(xPos+xStep, 0, p5w);
-    // yPos = wrapVal(yPos+yStep, 0, p5h);
-    // if(frameCount%60 == 0) {
-    //     xStep = sin(Math.random()*TWO_PI) * stepDist;
-    //     yStep = cos(Math.random()*TWO_PI) * stepDist;
-    // }
-    // var curveInd = frameCount%numPoints;
-    // curvePoints[curveInd] = [xPos, yPos];
-    // if(frameCount > numPoints) {
-    //     // beginShape();
-    //     for(var i = 0; i < numPoints; i++){
-    //         var p = curvePoints[(curveInd+i)%numPoints];
-    //         // strokeWeight();
-    //         ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
-    //     }
-    //     // endShape();
-    // }
     sneks.map(snek => snek.drawSnake(frameCount));
     frameCount++;
 }
