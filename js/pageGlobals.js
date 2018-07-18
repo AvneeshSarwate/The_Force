@@ -72,6 +72,7 @@ $( document ).ready(function() {
         initialLoaderFunction = p5Sensel;
         shaderToGet = "p5Test";
     }
+    if(shaderToGet === "phial") initialLoaderFunction = phialLoader;
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

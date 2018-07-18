@@ -1,7 +1,7 @@
 //definitions of various p5 sketches to use as textures
 
-var p5w = 1280;
-var p5h = 720;
+var p5w = 1280 * 1.5;
+var p5h = 720 * 1.5;
 function testSetup() {
     createCanvas(p5w, p5h);
 }
@@ -96,3 +96,30 @@ function hulldraw(){
     } 
 }
 
+
+var xStep = 10;
+var yStep = 10;
+var xPos = p5w/2;
+var yPos = p5h/2;
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+function phialSetup(){
+    createCanvas(p5w, p5h);
+    background(255);
+    stroke(color(0,0,0));
+}
+
+function phialDraw(){
+    stroke(color(0,0,0));
+    strokeWeight(10);
+    line(xPos, yPos, xPos+xStep, yPos+yStep);
+    xPos = mod(xPos+xStep, p5w);
+    yPos = mod(yPos+yStep, p5h);
+    if(frameCount%60 == 0) {
+        xStep = sin(Math.random()*TWO_PI) * 10;
+        yStep = cos(Math.random()*TWO_PI) * 10;
+    }
+    frameCount++;
+}

@@ -282,3 +282,8 @@ function p5Sensel(){
     setup = senselSetup;
     draw = sensel;
 }
+
+function phialLoader(){
+    setup = phialSetup;
+    draw = phialDraw;
+}
