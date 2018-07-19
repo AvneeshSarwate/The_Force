@@ -297,17 +297,18 @@ function phialLoader(){
     var everyThingLoaded = () => kickLoaded && leadLoaded && playerLoaded;
     var startEverything = function(){
         Tone.Transport.bpm.value = 124;
-        Tone.Transport.start(Tone.now());
-        kickPart.start(Tone.now());
-        leadPart.start(Tone.now());
-        player.start(Tone.now());
+        Tone.Transport.start(Tone.now()+1);
+        kickPart.start(Tone.now()+1);
+        leadPart.start(Tone.now()+1);
+        player.start(Tone.now()+1);
     };
 
     MidiConvert.load("./phial/phial_kick.mid", function(midi){
         kickMidi = midi;
         kickPart = new Tone.Part(function(time, note){
-            console.log("kick", time, note);
+            // console.log("kick", time, note);
             snakeOrder++;
+            rotateFrame++;
         }, kickMidi.tracks[0].notes);
         kickLoaded = true;
         if(everyThingLoaded()) startEverything();
@@ -321,8 +322,9 @@ function phialLoader(){
             // leadSnakeInd = (leadSnakeInd+1) % numSnakes;
 
             // sneks.map(snek => {{snek.switchScheduled=true}})
-
-            // snakeOrder++;
+            sneks[leadSnakeInd].swellManager.startTime = Date.now()/1000;
+            sneks[leadSnakeInd].swellManager.isActive = true;
+            leadSnakeInd = (leadSnakeInd+1)%numSnakes;
         }, leadMidi.tracks[0].notes);
         leadLoaded = true;
         if(everyThingLoaded()) startEverything();

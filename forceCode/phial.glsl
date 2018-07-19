@@ -202,6 +202,9 @@ void main () {
 
     vec3 p5 = texture2D(channel1, stN).rgb;
     vec3 bb = texture2D(backbuffer, stN).rgb;
+    vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).rgb;
+    vec3 p5cam = texture2D(channel1, mix(stN, cam.xy, max(min(time-5.,50.), 0.) /50.)).rgb;
+    p5 = p5cam;
     if(p5 == black){
         p5 = swirl(time/10., stN);
     } else if (p5 == vec3(10./255.)){
@@ -214,8 +217,10 @@ void main () {
         p5 = circleSlice(stN, time/2., randWalk/2. + 1500.).rgb;
     } else if(p5 == vec3(50./255.)) {
         p5 = mix(bb, circleSlice(stN, time/20., randWalk/2. + 1500.).rgb, 0.1);
+    } else {
+        p5 = vec3(sinN(time/5.));
     }
-    
+    p5 = mix(black, p5, min(time/10., 1.));
     
     gl_FragColor = vec4(p5, 1.);
 }

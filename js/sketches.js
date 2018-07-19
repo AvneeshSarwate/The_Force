@@ -143,29 +143,50 @@ function wrapVal(val, low, high){
 class Snake {
     constructor(numPoints, snakeColor, id){
         this.points = arrayOf(numPoints).map(x => [p5w/2, p5h/2]);
-        this.xPos = p5w/2;
-        this.yPos = p5h/2;
+        this.xPos = p5w/2 + (Math.random()-0.5) * 500;
+        this.yPos = p5h/2 + (Math.random()-0.5) * 300;
         this.stepDist = 10;
         this.xStep = 10;
         this.yStep = 10;
         this.snakeColor = snakeColor;
         this.numPoints = numPoints;
         this.id = id;
-        this.angle = Math.random() * TWO_PI;
+        this.angle = (Math.random()-0.5) * TWO_PI;
         this.strokeWeight = () => (4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2;
         this.switchScheduled = false;
+        this.swellManager = {
+            duration: 0.4,
+            startTime: 0,
+            isActive: false,
+            default: 50,
+            val: 50,
+            updateFunc: function(time){
+                if(!this.isActive) return this.default;
+                var activeDur = time - this.startTime;
+                var growTime = 0.05;
+                var growSize = 150;
+                // console.log("snek", this.id, activeDur);
+                if(activeDur < growTime) return this.default + activeDur/growTime * growSize;
+                else if(growTime <= activeDur && activeDur < this.duration) return growSize + this.default - (activeDur-growTime)/(this.duration-growTime)*growSize;
+                else {
+                    this.isActive = false;
+                    return this.default;
+                } 
+            }
+        };
     }
 
-    drawSnake(frameCount){
-        this.stepSnake(frameCount);
+    drawSnake(frameCount, time){
+        this.swellManager.val = this.swellManager.updateFunc(time);
+        this.stepSnake(frameCount, time);
         // beginShape();
         for(var i = 0; i < this.numPoints-1; i++){ //indexing-1 due to the fact we are drawing lines and don't want to close the loop
-            this.drawSegment(i, frameCount);
+            this.drawSegment(i, frameCount, time);
         }
         // endShape();
     }
 
-    stepSnake(frameCount){
+    stepSnake(frameCount, time){
         if(this.xPos + this.xStep > p5w || this.xPos + xStep < 0) this.xStep *= -1;
         if(this.yPos + this.yStep > p5h || this.yPos + this.yStep < 0) this.yStep *= -1;
         this.xPos = wrapVal(this.xPos+this.xStep, 0, p5w);
@@ -181,7 +202,7 @@ class Snake {
         this.points[curveInd] = [this.xPos, this.yPos];
     }
 
-    drawSegment(i, frameCount, weight){
+    drawSegment(i, frameCount, time, weight){
         // if(!weight) return;
         noFill();
         stroke(this.snakeColor);
@@ -195,7 +216,9 @@ class Snake {
             strokeWeight(weight);
         }
         else {
-            strokeWeight(200);
+            strokeWeight(this.swellManager.val);
+            // strokeWeight(this.swellManager.updateFunc(time));
+
         }
         line(p[0], p[1], p2[0], p2[1]);
         // curveVertex(p[0], p[1]);
@@ -204,7 +227,8 @@ class Snake {
     switchFunc(frameCount){
         this.angle = this.angle + (Math.random()-0.5) * PI/2;
         var switching = this.switchScheduled;
-        var switchData = [frameCount%20 ==0, sin(this.angle) * 10, cos(this.angle) * 10];
+        var dist = 4;
+        var switchData = [frameCount%20 ==0, sin(this.angle) * dist, cos(this.angle) * dist];
         this.switchScheduled = this.switchScheduled && false;
         return switchData;
     }
@@ -214,11 +238,13 @@ var numSnakes = 6;
 var sneks = arrayOf(numSnakes);
 var snekLen = 100;
 var snakeOrder = 0;
+var rotateFrame = false;
 function phialSetup(){
     p5w = 1280/1.5;
     p5h = 720/1.5;
     createCanvas(p5w, p5h);
-    background(255);
+    // background(255);
+    noSmooth();
     sneks = sneks.map((x, i) => new Snake(snekLen, color(i*10, i*10, i*10), i));
 }
 
@@ -230,8 +256,9 @@ function phialDraw(){
     //     sneks.map(snek => snek.drawSegment(i, frameCount));
     // }
     // sneks.map(snek => snek.drawSnake(frameCount))
+    var time = Date.now() / 1000;
     for(var i = 0; i < numSnakes; i++){
-        sneks[(snakeOrder+i)%numSnakes].drawSnake(frameCount);
+        sneks[(snakeOrder+i)%numSnakes].drawSnake(frameCount, time);
     }
     frameCount++;
 }
