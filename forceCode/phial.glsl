@@ -202,8 +202,8 @@ void main () {
 
     vec3 p5 = texture2D(channel1, stN).rgb;
     vec3 bb = texture2D(backbuffer, stN).rgb;
-    vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).rgb;
-    vec3 p5cam = texture2D(channel1, mix(stN, cam.xy, max(min(time-5.,50.), 0.) /50.)).rgb;
+    vec3 phial = texture2D(channel5, stN).rgb;
+    vec3 p5cam = texture2D(channel1, mix(stN, phial.xy, max(min(time-5.,50.), 0.) /50.)).rgb;
     p5 = p5cam;
     if(p5 == black){
         p5 = swirl(time/10., stN);

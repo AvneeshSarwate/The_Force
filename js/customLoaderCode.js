@@ -293,7 +293,7 @@ function phialLoader(){
     var player, playerLoaded = false;
     var kickSnakeInd = 0;
     var leadSnakeInd = 0;
-
+    loadImageToTexture(5, "phial.png");
     var everyThingLoaded = () => kickLoaded && leadLoaded && playerLoaded;
     var startEverything = function(){
         Tone.Transport.bpm.value = 124;
