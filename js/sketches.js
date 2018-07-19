@@ -141,9 +141,8 @@ function wrapVal(val, low, high){
 
 
 class Snake {
-    constructor(numPoints, snakeColor, switchFunc, id){
+    constructor(numPoints, snakeColor, id){
         this.points = arrayOf(numPoints).map(x => [p5w/2, p5h/2]);
-        this.switchFunc = switchFunc;
         this.xPos = p5w/2;
         this.yPos = p5h/2;
         this.stepDist = 10;
@@ -152,6 +151,7 @@ class Snake {
         this.snakeColor = snakeColor;
         this.numPoints = numPoints;
         this.id = id;
+        this.angle = Math.random() * TWO_PI;
     }
 
     drawSnake(frameCount){
@@ -179,7 +179,8 @@ class Snake {
         this.points[curveInd] = [this.xPos, this.yPos];
     }
 
-    drawSegment(i, frameCount){
+    drawSegment(i, frameCount, weight){
+        // if(!weight) return;
         noFill();
         stroke(this.snakeColor);
 
@@ -188,9 +189,19 @@ class Snake {
         var p2 = this.points[(curveInd+i+2)%this.numPoints];
 
         // ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
-        strokeWeight((4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2)
+        if(weight) {
+            strokeWeight(weight);
+        }
+        else {
+            strokeWeight((4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2);
+        }
         line(p[0], p[1], p2[0], p2[1]);
         // curveVertex(p[0], p[1]);
+    }
+
+    switchFunc(frameCount){
+        this.angle = this.angle + (Math.random()-0.5) * PI/2;
+        return [frameCount%20 == 0, sin(this.angle) * 10, cos(this.angle) * 10]
     }
 }
 
@@ -201,14 +212,13 @@ function phialSetup(){
     p5h = 720/1.5;
     createCanvas(p5w, p5h);
     background(255);
-    var switchFunc = fc => [fc%20 == 0, sin(Math.random()*TWO_PI) * 10, cos(Math.random()*TWO_PI) * 10];
-    sneks = sneks.map((x, i) => new Snake(snekLen, color(i*10, i*10, i*10), switchFunc, i));
+    sneks = sneks.map((x, i) => new Snake(snekLen, color(i*10, i*10, i*10), i));
 }
 
 function phialDraw(){
     clear();
     background(255);
-    
+    var fftVals = fft.getValue(); //figure out why these values aren't coming thru properly
     sneks.map(snek => snek.stepSnake(frameCount));
     for(var i = 0; i < snekLen-1; i++){
         sneks.map(snek => snek.drawSegment(i, frameCount));

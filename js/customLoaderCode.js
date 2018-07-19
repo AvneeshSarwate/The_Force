@@ -283,7 +283,22 @@ function p5Sensel(){
     draw = sensel;
 }
 
+var fft;
 function phialLoader(){
     setup = phialSetup;
     draw = phialDraw;
+    fft = new Tone.FFT(32);
+    var kickMidi;
+    var leadMidi;
+    MidiConvert.load("./phial/phial_kick.mid", function(midi){
+        kickMidi = midi;
+    })
+    MidiConvert.load("./phial/phial_lead.mid", function(midi){
+        leadMidi = midi;
+    })
+    // var player = new Tone.Player({
+    //     "url" : "./phial_snip.[mp3|ogg]",
+    //     "loop" : true,
+    //     "autostart": true
+    // }).fan(fft).toMaster();
 }
