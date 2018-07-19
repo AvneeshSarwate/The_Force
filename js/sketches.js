@@ -152,6 +152,8 @@ class Snake {
         this.numPoints = numPoints;
         this.id = id;
         this.angle = Math.random() * TWO_PI;
+        this.strokeWeight = () => (4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2;
+        this.switchScheduled = false;
     }
 
     drawSnake(frameCount){
@@ -193,7 +195,7 @@ class Snake {
             strokeWeight(weight);
         }
         else {
-            strokeWeight((4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2);
+            strokeWeight(200);
         }
         line(p[0], p[1], p2[0], p2[1]);
         // curveVertex(p[0], p[1]);
@@ -201,12 +203,17 @@ class Snake {
 
     switchFunc(frameCount){
         this.angle = this.angle + (Math.random()-0.5) * PI/2;
-        return [frameCount%20 == 0, sin(this.angle) * 10, cos(this.angle) * 10]
+        var switching = this.switchScheduled;
+        var switchData = [frameCount%20 ==0, sin(this.angle) * 10, cos(this.angle) * 10];
+        this.switchScheduled = this.switchScheduled && false;
+        return switchData;
     }
 }
 
-var sneks = arrayOf(6);
+var numSnakes = 6;
+var sneks = arrayOf(numSnakes);
 var snekLen = 100;
+var snakeOrder = 0;
 function phialSetup(){
     p5w = 1280/1.5;
     p5h = 720/1.5;
@@ -219,10 +226,13 @@ function phialDraw(){
     clear();
     background(255);
     var fftVals = fft.getValue(); //figure out why these values aren't coming thru properly
-    sneks.map(snek => snek.stepSnake(frameCount));
-    for(var i = 0; i < snekLen-1; i++){
-        sneks.map(snek => snek.drawSegment(i, frameCount));
-    }
+    // sneks.map(snek => snek.stepSnake(frameCount));
+    // for(var i = 0; i < snekLen-1; i++){
+    //     sneks.map(snek => snek.drawSegment(i, frameCount));
+    // }
     // sneks.map(snek => snek.drawSnake(frameCount))
+    for(var i = 0; i < numSnakes; i++){
+        sneks[(snakeOrder+i)%numSnakes].drawSnake(frameCount);
+    }
     frameCount++;
 }
