@@ -141,7 +141,7 @@ function wrapVal(val, low, high){
 
 
 class Snake {
-    constructor(numPoints, snakeColor, switchFunc){
+    constructor(numPoints, snakeColor, switchFunc, id){
         this.points = arrayOf(numPoints).map(x => [p5w/2, p5h/2]);
         this.switchFunc = switchFunc;
         this.xPos = p5w/2;
@@ -151,49 +151,68 @@ class Snake {
         this.yStep = 10;
         this.snakeColor = snakeColor;
         this.numPoints = numPoints;
+        this.id = id;
     }
 
     drawSnake(frameCount){
+        this.stepSnake(frameCount);
+        // beginShape();
+        for(var i = 0; i < this.numPoints-1; i++){ //indexing-1 due to the fact we are drawing lines and don't want to close the loop
+            this.drawSegment(i, frameCount);
+        }
+        // endShape();
+    }
+
+    stepSnake(frameCount){
         if(this.xPos + this.xStep > p5w || this.xPos + xStep < 0) this.xStep *= -1;
         if(this.yPos + this.yStep > p5h || this.yPos + this.yStep < 0) this.yStep *= -1;
         this.xPos = wrapVal(this.xPos+this.xStep, 0, p5w);
         this.yPos = wrapVal(this.yPos+this.yStep, 0, p5h);
-        if(frameCount%60 == 0) {
-            this.xStep = sin(Math.random()*TWO_PI) * this.stepDist;
-            this.yStep = cos(Math.random()*TWO_PI) * this.stepDist;
+
+        var switchData = this.switchFunc(frameCount);
+        if(switchData[0]){
+            this.xStep = switchData[1];
+            this.yStep = switchData[2];
         }
+
         var curveInd = frameCount%this.numPoints;
         this.points[curveInd] = [this.xPos, this.yPos];
-        // fill(this.snakeColor);
+    }
+
+    drawSegment(i, frameCount){
         noFill();
-        // strokeWeight(30);
         stroke(this.snakeColor);
-        // beginShape();
-        for(var i = 0; i < this.numPoints-1; i++){ //indexing 
-            var p = this.points[(curveInd+i+1)%this.numPoints];
-            var p2 = this.points[(curveInd+i+2)%this.numPoints];
-            // ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
-            strokeWeight((4 + sinN((frameCount + i)/20)*50)*2)
-            line(p[0], p[1], p2[0], p2[1]);
-            // curveVertex(p[0], p[1]);
-        }
-        endShape();
+
+        var curveInd = frameCount%this.numPoints;
+        var p = this.points[(curveInd+i+1)%this.numPoints]; //indexing with +1 here because the next point in the ringbuffer is the oldest one
+        var p2 = this.points[(curveInd+i+2)%this.numPoints];
+
+        // ellipse(p[0], p[1], 4 + sinN((frameCount + i)/20)*30);
+        strokeWeight((4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2)
+        line(p[0], p[1], p2[0], p2[1]);
+        // curveVertex(p[0], p[1]);
     }
 }
 
 var sneks = arrayOf(6);
+var snekLen = 100;
 function phialSetup(){
     p5w = 1280/1.5;
     p5h = 720/1.5;
     createCanvas(p5w, p5h);
     background(255);
-    sneks = sneks.map((x, i) => new Snake(200, color(i*10, i*10, i*10)));
+    var switchFunc = fc => [fc%20 == 0, sin(Math.random()*TWO_PI) * 10, cos(Math.random()*TWO_PI) * 10];
+    sneks = sneks.map((x, i) => new Snake(snekLen, color(i*10, i*10, i*10), switchFunc, i));
 }
 
 function phialDraw(){
     clear();
     background(255);
     
-    sneks.map(snek => snek.drawSnake(frameCount));
+    sneks.map(snek => snek.stepSnake(frameCount));
+    for(var i = 0; i < snekLen-1; i++){
+        sneks.map(snek => snek.drawSegment(i, frameCount));
+    }
+    // sneks.map(snek => snek.drawSnake(frameCount))
     frameCount++;
 }
