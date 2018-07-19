@@ -203,7 +203,8 @@ void main () {
     vec3 p5 = texture2D(channel1, stN).rgb;
     vec3 bb = texture2D(backbuffer, stN).rgb;
     vec3 phial = texture2D(channel5, stN).rgb;
-    vec3 p5cam = texture2D(channel1, mix(stN, phial.xy, max(min(time-5.,50.), 0.) /50.)).rgb;
+    float fadeOffset = 5.;
+    vec3 p5cam = texture2D(channel1, mix(stN, phial.xy, max(min(time-fadeOffset,50.), 0.) /50.)).rgb;
     p5 = p5cam;
     if(p5 == black){
         p5 = swirl(time/10., stN);
@@ -220,7 +221,7 @@ void main () {
     } else {
         p5 = vec3(sinN(time/5.));
     }
-    p5 = mix(black, p5, min(time/10., 1.));
+    p5 = mix(black, p5, max(min((time-fadeOffset)/10., 1.), 0.));
     
     gl_FragColor = vec4(p5, 1.);
 }
