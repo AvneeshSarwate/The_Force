@@ -225,7 +225,6 @@ function phialSetup(){
 function phialDraw(){
     clear();
     background(255);
-    var fftVals = fft.getValue(); //figure out why these values aren't coming thru properly
     // sneks.map(snek => snek.stepSnake(frameCount));
     // for(var i = 0; i < snekLen-1; i++){
     //     sneks.map(snek => snek.drawSegment(i, frameCount));
