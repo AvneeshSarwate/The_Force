@@ -323,7 +323,7 @@ void main () {
 
     //play with all subsets of conditions below
     // c =  pDist < circleBoundary &&  pDist > circleBoundary - 0.0008  && c == black ? black : white;
-    c =  pDist < circleBoundary &&   c == black ? black : white;
+    c =  pDist < circleBoundary && pDist > circleBoundary - 0.003 && c == black ? black : white;
     
     vec3 cc;
     float decay = 0.9;
@@ -332,8 +332,8 @@ void main () {
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
-    vec3 trail = mix(black, white, sinN(time)/2.); // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = mix(black, white, cosN(time)/2. + 0.5);
+    vec3 trail = mix(black, white, sinN(time)/2. + 0.5); // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = mix(black, white, cosN(time)/2.);
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
