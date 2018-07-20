@@ -1,3 +1,7 @@
+float logi(float x){
+    return 1. / (1. + (1./exp(x)));
+}
+
 // quantize and input number [0, 1] to quantLevels levels
 float quant(float num, float quantLevels){
     float roundPart = floor(fract(num*quantLevels)*2.);
@@ -63,7 +67,7 @@ vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
 //iteratively apply the rowWave and columnWave functions repeatedly to 
 //granularly warp the grid
 vec2 rowColWave(vec2 stN, float div, float time2, float power){
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 40; i++) {
         stN = rowWaves3(stN, div, time2, power);
         stN = columnWaves3(stN, div, time2, power);
     }
@@ -190,7 +194,7 @@ vec2 multiBallCondition(vec2 stN, float t2){
 
 vec3 inStripeX(vec2 stN, float rw){
     bool inStripe = false;
-    for(float i = 0.; i < 40.; i++){
+    for(float i = 0.; i < 10.; i++){
         float seed = 1./i;
         float loc = mod(hash(vec3(seed)).x + rw, 1.);
         if(abs(loc - stN.x) < 0.002) inStripe = inStripe || true;
@@ -200,7 +204,7 @@ vec3 inStripeX(vec2 stN, float rw){
 
 vec3 inStripeY(vec2 stN, float t){
     bool inStripe = false;
-    for(float i = 0.; i < 40.; i++){
+    for(float i = 0.; i < 10.; i++){
         float seed = 1./i;
         float loc = mod(hash(vec3(seed)).x + t, 1.);
         if(abs(loc - stN.y) < 0.002) inStripe = inStripe || true;
@@ -269,50 +273,25 @@ vec3 lum(vec3 color){
 
 void main () {
     vec2 stN = uvN();
-    stN = mix(stN, vec2(0.5), sinN(time/5.4)/2.);
+    stN = mix(stN, vec2(0.5), sinN(time/3.2)*0.5 + 0.3);
     vec3 c;
 
-    //take 1
-    // stN = rowColWave(stN, 100., -time, 0.05);
-    // stN = coordWarp(stN, time).xy;
-    // float t2 = time / 4.;
-    // for(int i = 0; i < 2; i++) {
-    //     stN = wrap(rotate(stN, vec2(0.5), t2+0.1) * rotate(stN, vec2(0.5), t2), 0., 1.);
-    // }
-    // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
-    
-    // stN = xLens(stN, time/20.);
-    // stN = yLens(stN, time/30.);
+
+    stN = mix(uvN(), coordWarp(stN, time/3.3).xy, 0.6);
+
     
     
-    bool inStripe = false;
     float dist = distance(stN, vec2(0.5));
     // stN = stN + hash(vec3(stN, time)).xy/200.;
 
-
-    float numStripes = 100.;
-    float d = 1. / numStripes;
-    float stripeWidth =(0.5 - d) / numStripes;
-    for(int i = 0; i < 100; i++){
-        if(d < dist && dist < d + stripeWidth/2.) {
-            inStripe = inStripe || true;
-        } else {
-            inStripe = inStripe || false;
-        }
-        d = d + stripeWidth;
-        if(d > 0.5) break;
-    }
     
-    vec3 col = !inStripe ? white : black;
-    
-    vec3 cam = texture2D(channel0, stN).rgb;
-    // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
     float timeVal = time/20.+3000.;
-    // stN = coordWarp(stN, randWalk/100.).xy;
-    stN = rowColWave(stN, 1000., time/10., 0.1 );
-    stN = rotate(stN, vec2(0.5), randWalk * sin(time/3.) * 0.01);
+    stN = mix(stN, coordWarp(stN, randWalk/100.).xy, 0.3);
+    stN = rowColWave(stN, 1000., time/27.3, 0.1 );
+    // stN = rotate(stN, vec2(0.5), randWalk * sin(time/3.) * 0.01);
+    vec2 stND = rotate(stN, vec2(0.5), randWalk * sin(time/3.) * 0.01);
     vec2 stNR = stN;
     stN = quant(stN, 30.); + 1./60.;
     vec2 stNQ = stN;
@@ -323,17 +302,17 @@ void main () {
 
     //play with all subsets of conditions below
     // c =  pDist < circleBoundary &&  pDist > circleBoundary - 0.0008  && c == black ? black : white;
-    c =  pDist < circleBoundary && pDist > circleBoundary - 0.003 && c == black ? black : white;
-    
+    // c =    c == black ? black : white;
+    dist = distance(stND, vec2(0.5));
     vec3 cc;
-    float decay = 0.9;
+    float decay = 0.96;
     float feedback;
     vec4 bb = texture2D(backbuffer, uvN());
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
-    vec3 trail = mix(black, white, sinN(time)/2. + 0.5); // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = mix(black, white, cosN(time)/2.);
+    vec3 trail = mix(black, white, logi(sin(time/4. + dist)*10.)); // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = mix(black, white, logi(-sin(time/4. + dist)*10.));
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
@@ -356,7 +335,7 @@ void main () {
             cc = foreGround;
         }
     }
-    // cc = mix(cc, bb.rgb, 0.2);
+    cc = mix(cc, bb.rgb, 0.2);
     
     //todo - don't forget to make these lines linear lenses
     
