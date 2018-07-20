@@ -316,7 +316,13 @@ void main () {
     stN = quant(stN, 30.); + 1./60.;
     vec2 stNQ = stN;
     c = inStripeX2(stN, timeVal/10. * (.5 + distance(stN, vec2(0.5)/2.))) * inStripeY2(stN, timeVal/7. * (.5 + distance(stN, vec2(0.5)/2.)));
-    c = distance(stNR, stNQ) < 1./100. * wrap3(time+distance(uvN(), vec2(0.5))*2., 0.,  1.)*2. && c == black ? black : white;
+    
+    float circleBoundary  = 1./100. * wrap3(time/2.3+distance(uvN(), vec2(0.5))*2., 0.,  1.)*2.;
+    float pDist = distance(stNR, stNQ);
+
+    //play with all subsets of conditions below
+    // c =  pDist < circleBoundary &&  pDist > circleBoundary - 0.0008  && c == black ? black : white;
+    c =  pDist < circleBoundary &&  pDist > circleBoundary - 0.0008  && c == black ? black : white;
     
     vec3 cc;
     float decay = 0.94;
@@ -325,8 +331,8 @@ void main () {
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
-    vec3 trail = mix(black, white, sinN(time)); // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = mix(black, white, cosN(time + sin(time/4.)*3.));
+    vec3 trail = mix(black, white, 1.); // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = mix(black, white, 0.);
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
