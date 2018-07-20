@@ -269,6 +269,7 @@ vec3 lum(vec3 color){
 
 void main () {
     vec2 stN = uvN();
+    stN = mix(stN, vec2(0.5), sinN(time/5.4)/2.);
     vec3 c;
 
     //take 1
@@ -311,7 +312,7 @@ void main () {
     float timeVal = time/20.+3000.;
     // stN = coordWarp(stN, randWalk/100.).xy;
     stN = rowColWave(stN, 1000., time/10., 0.1 );
-    stN = rotate(stN, vec2(0.5), randWalk * sin(time) * 0.01);
+    stN = rotate(stN, vec2(0.5), randWalk * sin(time/3.) * 0.01);
     vec2 stNR = stN;
     stN = quant(stN, 30.); + 1./60.;
     vec2 stNQ = stN;
@@ -322,17 +323,17 @@ void main () {
 
     //play with all subsets of conditions below
     // c =  pDist < circleBoundary &&  pDist > circleBoundary - 0.0008  && c == black ? black : white;
-    c =  pDist < circleBoundary &&  pDist > circleBoundary - 0.0008  && c == black ? black : white;
+    c =  pDist < circleBoundary &&   c == black ? black : white;
     
     vec3 cc;
-    float decay = 0.94;
+    float decay = 0.9;
     float feedback;
     vec4 bb = texture2D(backbuffer, uvN());
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
-    vec3 trail = mix(black, white, 1.); // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = mix(black, white, 0.);
+    vec3 trail = mix(black, white, sinN(time)/2.); // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = mix(black, white, cosN(time)/2. + 0.5);
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
@@ -355,7 +356,7 @@ void main () {
             cc = foreGround;
         }
     }
-    // cc = mix(cc, bb.rgb, sinN(time/14.)*0.95);
+    // cc = mix(cc, bb.rgb, 0.2);
     
     //todo - don't forget to make these lines linear lenses
     
