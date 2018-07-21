@@ -56,17 +56,17 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, otherArgs)
         var timeupdate = false;
 
         video.autoplay = true;
-        video.muted = true;
+        video.muted = !playAudio;
         video.loop = true;
 
-        if(playAudio){
-            loadImageToTexture(7, "clicktoplay.png");
-            $("#demogl").click(function(){
-                video.muted = false;
-                video.play();
-                if(otherArgs.videoPlayFunc) otherArgs.videoPlayFunc();
-            });
-        }
+        // if(playAudio){
+        //     loadImageToTexture(7, "clicktoplay.png");
+        //     $("#demogl").click(function(){
+        //         video.muted = false;
+        //         video.play();
+        //         if(otherArgs.videoPlayFunc) otherArgs.videoPlayFunc();
+        //     });
+        // }
 
           // Waiting for these 2 events ensures
           // there is data in the video
@@ -117,7 +117,7 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, otherArgs)
                 blobVideoURLs[videoFileURL] = vid;
 
                 createVideoElement(vid);
-                if(otherArgs.multiPlayheadCacheLoader) otherArgs.multiPlayheadCacheLoader();
+                if(otherArgs.postLoadFunc) otherArgs.postLoadFunc();
             }
         }
         req.onerror = function() {
@@ -211,7 +211,7 @@ function goreLoader(){
         console.log("gore sequencer started");
     }
     loadImageToTexture(7, "black.jpg");
-    blobVideoLoad(1, 6, "gore.mp4", true, {'videoPlayFunc': videoPlayFunc});
+    blobVideoLoad(1, 6, "gore.mp4", true, {'postLoadFunc': videoPlayFunc});
     customLoaderUniformSet = function(time){
         var enoProgU = gl.getUniformLocation(mProgram, "enoProg");
         if(enoProgU) gl.uniform1f(enoProgU, videos[1] ? videos[1].currentTime/100 : 0);
@@ -232,7 +232,7 @@ function movieSpliceLoader(){
         blobVideoLoad(2, 7, movieFiles, false);
         blobVideoLoad(3, 8, movieFiles, false);
     };
-    blobVideoLoad(0, 5, movieFiles, false, {'multiPlayheadCacheLoader': cacheLoader});
+    blobVideoLoad(0, 5, movieFiles, false, {'postLoadFunc': cacheLoader});
 
     customLoaderUniforms = `
 uniform float lastNoteValue;

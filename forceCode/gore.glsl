@@ -78,7 +78,7 @@ void main () {
 
     vec3 c;
     vec3 vid;
-    if(mouse.z > 0.) {
+    if(mouse.z > 0. || true) {
         //define several different timescales for the transformations
         float t0, t1, t2, t3, t4, rw;
         float ep = time + mouse.y / resolution.y * 10.; 10.; enoProg / 200000.;

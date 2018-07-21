@@ -31,6 +31,8 @@ var patterns = [
     [63, 65, 67]
 ];
 
+var midiEventHandlers = {};
+
 function matchPattern(){
     for(var i = 0; i < patterns.length; i++){
         var pattern = patterns[i];
@@ -119,6 +121,9 @@ function onMIDIMessage(event) {
     // var channel = ev.data[0] & 0xf;
     var chan = event.data[0] & 0x0f;
     //console.log("MIDI EVENT", chan, midiNote, midiVel);
+
+    var eventKey; //string determining message type/number for callbacks mapped to midi messages
+
     switch (event.data[0] & 0xf0) {
         case 0x90:
             if (event.data[2] != 0) { // if velocity != 0, this is a note-on message
@@ -138,6 +143,7 @@ function onMIDIMessage(event) {
                 lastNoteValue = midiNote;
                 noteOnEventCount++;
                 lastNoteOnTime[midiNote] = (Date.now() - mTime) * 0.001;
+                eventKey = "on-"+midiNote;
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -151,11 +157,13 @@ function onMIDIMessage(event) {
             lastNoteOffTime[midiNote] = (Date.now() - mTime) * 0.001;
             if(usingVJPad) vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
             noteOffEventCount++
+            eventKey = "off-"+midiNote;
             break;
 
         case 0xb0:
             midiData[event.data[1]] = event.data[2];
             midiCC[midiNote] = midiVel;
+            eventKey = "cc-"+midiNote
             break;
     }
     // console.log(noteOnEventCount, noteOffEventCount);
@@ -166,6 +174,8 @@ function onMIDIMessage(event) {
     {
         $("#MIDIMessages").html(str);
     }
+
+    if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey]();
 }
 
 // function noteOn(noteNumber) {
