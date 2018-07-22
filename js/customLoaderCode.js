@@ -339,3 +339,12 @@ function phialLoader(){
         }
     }).toMaster();
 }
+
+function videoSoundSampler1(){
+    blobVideoLoad(0, 5, movieFiles, true);
+    for(var i = 36; i < 60; i++){
+        midiEventHandlers["on-"+i] = function(note, vel){
+
+        }
+    }
+}

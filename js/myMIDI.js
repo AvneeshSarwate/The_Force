@@ -175,7 +175,7 @@ function onMIDIMessage(event) {
         $("#MIDIMessages").html(str);
     }
 
-    if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey]();
+    if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey](midiNote, midiVel);
 }
 
 // function noteOn(noteNumber) {
