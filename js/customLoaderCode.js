@@ -340,11 +340,20 @@ function phialLoader(){
     }).toMaster();
 }
 
-function videoSoundSampler1(){
-    blobVideoLoad(0, 5, movieFiles, true);
-    for(var i = 36; i < 60; i++){
-        midiEventHandlers["on-"+i] = function(note, vel){
-
-        }
+//a sampler where the keys correspond to jump-points in the video.
+//you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
+function videoSoundSampler1Loader(){
+    blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => 5});
+    var deviations = arrayOf(1000).map((elem, i) => i + Math.random());
+    var baseInd = 0;
+    var moveDownNote = 48;
+    var moveUpNote = 48 + 24;
+    var midiNoteFunction = function(note, vel){
+        if(note == moveDownNote) baseInd = Math.max(baseInd-1, 0);
+        else if(note == moveUpNote) baseInd++;
+        else videos[0].currentTime = deviations[baseInd + (note-37)];
+    }   
+    for(var i = moveDownNote; i <= moveUpNote; i++){
+        midiEventHandlers["on-"+i] = midiNoteFunction;
     }
 }
