@@ -112,7 +112,7 @@ void main () {
     vec3 params1 = vec3(1., 0.005, 0.84);
     vec3 params2 = vec3(4., 0.002, 0.98);
     
-    vec3 params = mix(params1, params2, sigmoid(sin(time/10.)*50.));
+    vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/10.)*50.));
     
     float timeDiv = params.x;
     float distLimit = params.y;
