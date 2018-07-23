@@ -96,6 +96,10 @@ vec2 drops(vec2 stN2, float t2, float numRipples){
     return new ? stN2 : v;
 }
 
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
 
 void main () {
     
@@ -103,9 +107,16 @@ void main () {
     vec2 stN = uvN();
     vec3 c;
     
-    float timeDiv = 4.;
-    float distLimit = 0.002;
-    float fdbk = 0.98;
+    
+    
+    vec3 params1 = vec3(1., 0.005, 0.84);
+    vec3 params2 = vec3(4., 0.002, 0.98);
+    
+    vec3 params = mix(params1, params2, sigmoid(sin(time/10.)*50.));
+    
+    float timeDiv = params.x;
+    float distLimit = params.y;
+    float fdbk = params.z;
     
     
     float tScale = time/timeDiv;
