@@ -199,14 +199,15 @@ void main () {
     vec2 stN = uvN();
     vec2 center = vec2(0.5);
     float tRad = wrap3(time/3., 0., 1.)/2.;
-    float thickness = 0.08;
+    float thickness = 0.15;
     float dist = distance(stN, center);
     vec3 c = tRad - thickness < dist && dist < tRad + thickness ? black : white; 
     float distToCircle = abs(dist-tRad);
-    float thetaFromCenter = asin((stN.y-0.5) / dist);
-    vec2 nearestCirclePoint = vec2(sin(thetaFromCenter)*tRad, cos(thetaFromCenter)*tRad);
-    vec2 stnW = mix(stN, nearestCirclePoint, 1. - distToCircle/thickness);
-    vec3 cam = texture2D(channel0, distToCircle < thickness ? stnW : stN).rgb;
+    float thetaFromCenter = stN.y - 0.5 > 0. ? acos((stN.x-0.5) / dist) : PI2 - acos((stN.x-0.5) / dist);
+    vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
+    vec2 stnW = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
+    vec3 cam = texture2D(channel0, stnW).rgb;
+    c = distance(stN, nearestCirclePoint) < thickness ? black : white;
     
     gl_FragColor = vec4(cam, 1);
 }
