@@ -43,7 +43,7 @@ vec2 drops(vec2 stN2, float t2){
             vec2 center = vec2(0.5) + vec2(sin(time), cos(time))*0.2; 
             float dist = distance(stN0, center);
             float distToCircle = abs(dist-tRad);
-            float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2 - acos((stN0.x-center.x) / dist);
+            float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2*1. - acos((stN0.x-center.x) / dist);
             vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + center;
             stN2 = distToCircle < thickness ? mix(stN2, nearestCirclePoint, 1. - distToCircle/thickness) : stN2;
         }
