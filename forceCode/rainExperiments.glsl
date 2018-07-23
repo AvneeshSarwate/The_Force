@@ -194,10 +194,10 @@ vec2 drops(vec2 stN2, float t2){
     float thickness = 0.15;   
     vec2 v = uvN();
     bool new = false;
-    for (int i = 0; i < 1; i++) {
+    for (float i = 0.; i < 1.; i++) {
         if(new) {
             float tRad = wrap3(t2/3., 0., 1.)/2.;
-            vec2 center = vec2(0.5); hash(vec3(float(i), 0.5, 0.8)).xy;
+            vec2 center = vec2(0.5); 
             float dist = distance(stN0, center);
             float distToCircle = abs(dist-tRad);
             float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2 - acos((stN0.x-center.x) / dist);
