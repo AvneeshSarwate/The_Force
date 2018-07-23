@@ -73,7 +73,7 @@ $( document ).ready(function() {
         shaderToGet = "p5Test";
     }
     if(shaderToGet === "phial") initialLoaderFunction = phialLoader;
-    if(shaderToGet = "videoSoundSampler1") initialLoaderFunction = videoSoundSampler1Loader;
+    if(shaderToGet == "videoSoundSampler1") initialLoaderFunction = videoSoundSampler1Loader;
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
