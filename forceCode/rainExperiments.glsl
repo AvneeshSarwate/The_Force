@@ -188,6 +188,39 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
+vec2 drops(vec2 stN2, float t2){
+    
+    vec2 stN0 = stN2;
+    float thickness = 0.15;   
+    vec2 v = uvN();
+    bool new = false;
+    for (int i = 0; i < 1; i++) {
+        if(new) {
+            float tRad = wrap3(t2/3., 0., 1.)/2.;
+            vec2 center = vec2(0.5); hash(vec3(float(i), 0.5, 0.8)).xy;
+            float dist = distance(stN0, center);
+            float distToCircle = abs(dist-tRad);
+            float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2 - acos((stN0.x-center.x) / dist);
+            vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + center;
+            stN2 = distToCircle < thickness ? mix(stN2, nearestCirclePoint, 1. - distToCircle/thickness) : stN2;
+        }
+        else {
+            vec2 stN = uvN();
+            vec2 center = vec2(0.5);
+            float tRad = wrap3(time/3., 0., 1.)/2.;
+            float thickness = 0.15;
+            float dist = distance(stN, center);
+            vec3 c = tRad - thickness < dist && dist < tRad + thickness ? black : white; 
+            float distToCircle = abs(dist-tRad);
+            float thetaFromCenter = stN.y - 0.5 > 0. ? acos((stN.x-0.5) / dist) : PI2 - acos((stN.x-0.5) / dist);
+            vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
+            v = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
+        }
+    }
+    
+    return new ? stN2 : v;
+}
+
 // calculates the luminance value of a pixel
 // formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
 vec3 lum(vec3 color){
@@ -206,8 +239,12 @@ void main () {
     float thetaFromCenter = stN.y - 0.5 > 0. ? acos((stN.x-0.5) / dist) : PI2 - acos((stN.x-0.5) / dist);
     vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
     vec2 stnW = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
+    
     vec3 cam = texture2D(channel0, stnW).rgb;
-    c = distance(stN, nearestCirclePoint) < thickness ? black : white;
+    // c = distance(stN, nearestCirclePoint) < thickness ? black : white;
+    
+    vec2 dropCoord = drops(stN, time);
+    cam = texture2D(channel0, dropCoord).rgb;
     
     gl_FragColor = vec4(cam, 1);
 }
