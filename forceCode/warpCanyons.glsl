@@ -297,7 +297,7 @@ void main () {
     vec3 cc;
     float decay = 0.84;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(rotate(uvN(), vec2(0.5), sin(randWalk/100.)*0.08), stN, 0.05));
+    vec4 bb = texture2D(backbuffer, mix(rotate(uvN(), vec2(0.5), sin(randWalk/100.)*0.04), stN, 0.05));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition =  c == black; 
