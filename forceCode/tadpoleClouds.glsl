@@ -55,6 +55,27 @@ vec2 quant(vec2 num, float quantLevels){
     return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
+//slice the matrix up into columns and translate the individual columns in a moving wave
+vec2 columnWaves3(vec2 stN, float numColumns, float time2, float power){
+    return vec2(wrap3(stN.x + sin(time2*8.)*0.05 * power, 0., 1.), wrap3(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.));
+}
+
+//slice the matrix up into rows and translate the individual rows in a moving wave
+vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
+    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*0.05 * power, 0., 1.));
+}
+
+
+//iteratively apply the rowWave and columnWave functions repeatedly to 
+//granularly warp the grid
+vec2 rowColWave(vec2 stN, float div, float time2, float power){
+    for (int i = 0; i < 10; i++) {
+        stN = rowWaves3(stN, div, time2, power);
+        stN = columnWaves3(stN, div, time2, power);
+    }
+    return stN;
+}
+
 vec2 drops(vec2 stN2, float t2, float numRipples){
     
     vec2 stN0 = stN2;
@@ -110,10 +131,10 @@ void main () {
     
     
     vec3 params1 = vec3(1., 0.005, 0.84);
-    vec3 params2 = vec3(4., 0.002, 0.98);
+    vec3 params2 = vec3(4., 0.009, 0.98);
+    params2 = params1;
     
     vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/10.)*50.));
-    // params = mix(params1, params2, 0.45 + wrap3(time/5., 0., 1.)/10.); // alternative blend mode
     
     float timeDiv = params.x;
     float distLimit = params.y;
@@ -121,11 +142,12 @@ void main () {
     
     
     float tScale = time/timeDiv;
-    stN = mix(stN, coordWarp(stN, tScale).xy, 0.05);
+    // stN = mix(stN, coordWarp(stN, tScale).xy, 0.05);
+    stN = rowColWave(stN, 1000., time/4., 0.005);
     vec2 dropCoord = drops(stN, tScale/10., 20.);
 
     
-    stN = dropCoord;
+    stN = rowColWave(dropCoord, 1000., time, 0.00);
     // stN = stN + (hash(vec3(stN, 5.)).xy-0.5)*0.00;
     float numLines = 50.;
     float gridThickness = 0.003;
@@ -138,7 +160,7 @@ void main () {
     vec4 bb = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition =  distance(uvN(), stN) < distLimit; c == black;
+    bool condition =  distance(uvN(), quant(stN, 10. + sinN(time/10.)*190.)) < distLimit; c == black;
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
@@ -165,5 +187,5 @@ void main () {
         }
     }
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(feedback);
 }
