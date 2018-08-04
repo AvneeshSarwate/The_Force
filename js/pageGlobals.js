@@ -50,6 +50,8 @@ var swipePart;
 
 var p5Canvas;
 
+var capturer = new CCapture( { format: 'webm' } );
+
 $( document ).ready(function() {
 
 
@@ -1141,6 +1143,7 @@ $( document ).ready(function() {
         interShaderSum += shaderTime - lastShaderTime;
         lastShaderTime = shaderTime;
         paint(shaderTime);
+        capturer.capture(mCanvas);
     }
 
     if(!isMobile && useVideoInput) {

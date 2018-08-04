@@ -56,7 +56,7 @@ void main () {
     
     vec3 vid = texture2D(channel1, stN).xyz; //the original video
 
-    vec3 sw = swirl(time/40., cam.xy); //the original "swirl" texture
+    vec3 sw = swirl(time/30.+10., mix(cam.xy, stN, 0.7)); //the original "swirl" texture
     
     
     gl_FragColor = vec4(vec3(sw), 1);

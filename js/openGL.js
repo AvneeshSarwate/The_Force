@@ -855,7 +855,6 @@ function paint(timeVal) {
     for (var i = 0; i < mInputs.length; i++) {
         var inp = mInputs[i];
 
-
         gl.activeTexture(gl.TEXTURE0 + i);
 
         if (inp === null) {

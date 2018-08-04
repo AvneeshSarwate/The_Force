@@ -3,6 +3,14 @@ var customLoaderUniforms = "";
 function setup(){}
 function draw(){}
 
+
+
+function userUploadVideo(videoFile){
+
+}
+
+
+
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
     var texture = {};
@@ -43,67 +51,66 @@ function empressAlbumArtLoader(){
 }
 
 
+var createVideoElement = function(vid, videoInd, textureInd, playAudio){
+    const video = document.createElement('video');
+
+    var playing = false;
+    var timeupdate = false;
+
+    video.autoplay = true;
+    video.muted = !playAudio;
+    video.loop = true;
+
+    // if(playAudio){
+    //     loadImageToTexture(7, "clicktoplay.png");
+    //     $("#demogl").click(function(){
+    //         video.muted = false;
+    //         video.play();
+    //         if(otherArgs.videoPlayFunc) otherArgs.videoPlayFunc();
+    //     });
+    // }
+
+      // Waiting for these 2 events ensures
+      // there is data in the video
+
+    video.addEventListener('playing', function() {
+        playing = true;
+        checkReady();
+    }, true);
+
+    video.addEventListener('timeupdate', function() {
+        timeupdate = true;
+        checkReady();
+    }, true);
+
+    function checkReady() {
+        if (playing && timeupdate) {
+            videosReady[videoInd] = true;
+        }
+    }
+
+    video.src = vid;
+
+    var textureObj = initVideoTexture(gl, null);
+    texture = {};
+    texture.globject = textureObj;
+    texture.type = "tex_2D";
+    texture.image = {height: video.height, video: video.width};
+    texture.loaded = true; //this is ok to do because the update loop checks videosReady[]
+    videos[videoInd] = video;
+    videoTextures[videoInd] = texture;
+    mInputs[textureInd] = texture;
+    if(!playAudio) video.play();
+}
+
 var blobVideoURLs = {};
 function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, otherArgs){
     var req = new XMLHttpRequest();
     req.open('GET', videoFileURL, true);
     req.responseType = 'blob';
 
-    var createVideoElement = function(vid){
-        const video = document.createElement('video');
-
-        var playing = false;
-        var timeupdate = false;
-
-        video.autoplay = true;
-        video.muted = !playAudio;
-        video.loop = true;
-
-        // if(playAudio){
-        //     loadImageToTexture(7, "clicktoplay.png");
-        //     $("#demogl").click(function(){
-        //         video.muted = false;
-        //         video.play();
-        //         if(otherArgs.videoPlayFunc) otherArgs.videoPlayFunc();
-        //     });
-        // }
-
-          // Waiting for these 2 events ensures
-          // there is data in the video
-
-        video.addEventListener('playing', function() {
-            playing = true;
-            checkReady();
-        }, true);
-
-        video.addEventListener('timeupdate', function() {
-            timeupdate = true;
-            checkReady();
-        }, true);
-
-        function checkReady() {
-            if (playing && timeupdate) {
-                videosReady[videoInd] = true;
-            }
-        }
-
-        video.src = vid;
-
-        var textureObj = initVideoTexture(gl, null);
-        texture = {};
-        texture.globject = textureObj;
-        texture.type = "tex_2D";
-        texture.image = {height: video.height, video: video.width};
-        texture.loaded = true; //this is ok to do because the update loop checks videosReady[]
-        videos[videoInd] = video;
-        videoTextures[videoInd] = texture;
-        mInputs[textureInd] = texture;
-        if(!playAudio) video.play();
-    }
-
-
     if(blobVideoURLs[videoFileURL]){
-        createVideoElement(blobVideoURLs[videoFileURL]);
+        createVideoElement(blobVideoURLs[videoFileURL], videoInd, textureInd, playAudio);
     } else {
 
         req.onload = function() {
@@ -115,9 +122,9 @@ function blobVideoLoad(videoInd, textureInd, videoFileURL, playAudio, otherArgs)
                 // Video is now downloaded
                 // and we can set it as source on the video element
                 blobVideoURLs[videoFileURL] = vid;
-
-                createVideoElement(vid);
-                if(otherArgs.postLoadFunc) otherArgs.postLoadFunc();
+                
+                createVideoElement(vid, videoInd, textureInd, playAudio);
+                if(otherArgs && otherArgs.postLoadFunc) otherArgs.postLoadFunc();
             }
         }
         req.onerror = function() {
@@ -283,7 +290,7 @@ function p5Sensel(){
     draw = sensel;
 }
 
-var fft;
+var fft, waveform; 
 function phialLoader(){
     setup = phialSetup;
     draw = phialDraw;
@@ -330,6 +337,8 @@ function phialLoader(){
         if(everyThingLoaded()) startEverything();
     })
 
+    fft = new Tone.FFT(32);
+    waveform = new Tone.Waveform(1024)
     player = new Tone.Player({
         "url" : "./phial_snip.[mp3|ogg]",
         "loop" : true,
@@ -337,7 +346,7 @@ function phialLoader(){
             playerLoaded = true;
             if(everyThingLoaded()) startEverything();
         }
-    }).toMaster();
+    }).connect(fft).toMaster();
 }
 
 //a sampler where the keys correspond to jump-points in the video.

@@ -177,7 +177,7 @@ void main() {
     if(stripeMod == 0.) c = v0;
     if(stripeMod == 1.) c = v1;
     if(stripeMod == 2.) c = v2;
-    if(stripeMod == 3.) c = v3;
+    // if(stripeMod == 3.) c = v3;
     
     vec2 warpStn = coordWarp(stN, time).xy;
     vec3 cWarp = black;

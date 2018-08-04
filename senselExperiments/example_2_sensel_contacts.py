@@ -31,7 +31,7 @@ import OSC
 import time
 
 oscClient = OSC.OSCClient()
-oscClient.connect(("127.0.0.1", 57120))
+oscClient.connect(("127.0.0.1", 7500))
 
 enter_pressed = False;
 
