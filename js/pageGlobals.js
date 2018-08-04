@@ -761,6 +761,21 @@ $( document ).ready(function() {
             }
         });
 
+    //--------------------- Video/Samples upload panel ------------
+    $("#videoUploadPanel")
+        .dialog({
+            minWidth: 800,
+            autoOpen: false,
+            show: {
+                effect: "clip",
+                duration: 250
+            },
+            hide: {
+                effect: "clip",
+                duration: 250
+            }
+        });
+
     //todo fix input radios for only this panel
     $('input[name="radio"]').click(function() {
         numScreens = $(this).val(); 
@@ -1397,6 +1412,10 @@ $(document)
         {
              $("#footer").fadeToggle('slow', function(){});
              $("#editor").fadeToggle('slow', function(){});
+        }
+        if (event.ctrlKey === true && event.key === 'v')
+        {
+             $("#videoUploadPanel").dialog("open");
         }
     })
     .keyup( function( event )

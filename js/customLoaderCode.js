@@ -5,9 +5,7 @@ function draw(){}
 
 
 
-function userUploadVideo(videoFile){
-
-}
+function videoUploadResponder(){};
 
 
 
@@ -353,6 +351,12 @@ function phialLoader(){
 //you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
 function videoSoundSampler1Loader(){
     blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => 5});
+    videoUploadResponder = function(videoFile){
+        var blobURL = URL.createObjectURL(videoFile);
+        videos[0].pause(); //todo - delete the underlying video element to free memory
+        createVideoElement(blobURL, 0, 5, true);
+
+    }
     var deviations = arrayOf(1000).map((elem, i) => i + Math.random());
     var baseInd = 0;
     var moveDownNote = 48;
