@@ -394,8 +394,8 @@ function videoSoundSampler2Loader(){
     var players = arrayOf(10);
     audioFilesSelected = function(audioFiles){
         console.log(audioFiles);
-        players.forEach(player => player.dispose());
-        for(var i = 0; i < 10; i++){
+        players.forEach(player => player ? player.dispose() : 0);
+        for(var i = 0; i < Math.min(10, audioFiles.length); i++){
             var objUrl = URL.createObjectURL(audioFiles[i]);
             players[i] = new Tone.Player(objUrl).toMaster();
         }
@@ -407,7 +407,9 @@ function videoSoundSampler2Loader(){
     var midiNoteFunction = function(note, vel){
         if(note == moveDownNote) baseInd = Math.max(baseInd-6, 0);
         else if(note == moveUpNote) baseInd+=6;
-        else if(moveUpNote < note && note <= moveDownNote + 12 )videos[0].currentTime = deviations[baseInd + (note-37)];
+        else if(moveDownNote < note && note <= moveDownNote + 12 ){
+            videos[0].currentTime = deviations[baseInd + (note-37)];
+        }
         else if(moveDownNote + 12 < note && note < moveUpNote && vel > 0) players[note % (moveDownNote+13)].start(); //sample on
         else if(moveDownNote + 12 < note && note < moveUpNote && vel == 0) players[note % (moveDownNote+13)].stop(); //sample off
     }   
