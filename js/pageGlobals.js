@@ -75,7 +75,11 @@ $( document ).ready(function() {
         shaderToGet = "p5Test";
     }
     if(shaderToGet === "phial") initialLoaderFunction = phialLoader;
-    if(shaderToGet == "videoSoundSampler1") initialLoaderFunction = videoSoundSampler1Loader;
+    if(shaderToGet.indexOf("videoSoundSampler") > -1){
+        var loaderInd = shaderToGet[shaderToGet.length-1];
+        shaderToGet = "videoSoundSampler1";
+        initialLoaderFunction = loaderInd === "1" ? videoSoundSampler1Loader : videoSoundSampler2Loader  
+    } ;
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

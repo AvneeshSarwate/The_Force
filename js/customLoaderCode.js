@@ -5,7 +5,8 @@ function draw(){}
 
 
 
-function videoUploadResponder(){};
+function videoUploadResponder(){}
+function audioFilesSelected(){}
 
 
 
@@ -353,8 +354,12 @@ function videoSoundSampler1Loader(){
     blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => 5});
     videoUploadResponder = function(videoFile){
         var blobURL = URL.createObjectURL(videoFile);
-        videos[0].pause(); //todo - delete the underlying video element to free memory
+        var oldVid = videos[0];
+        // videos[0].pause(); //todo - delete the underlying video element to free memory
         createVideoElement(blobURL, 0, 5, true);
+        oldVid.pause();
+        oldVid.removeAttribute("src");
+        oldVid.load();
 
     }
     var deviations = arrayOf(1000).map((elem, i) => i + Math.random());
@@ -365,6 +370,46 @@ function videoSoundSampler1Loader(){
         if(note == moveDownNote) baseInd = Math.max(baseInd-1, 0);
         else if(note == moveUpNote) baseInd++;
         else videos[0].currentTime = deviations[baseInd + (note-37)];
+    }   
+    for(var i = moveDownNote; i <= moveUpNote; i++){
+        midiEventHandlers["on-"+i] = midiNoteFunction;
+    }
+}
+
+
+//a sampler where the keys correspond to jump-points in the video.
+//you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
+function videoSoundSampler2Loader(){
+    blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => 5});
+    videoUploadResponder = function(videoFile){
+        var blobURL = URL.createObjectURL(videoFile);
+        var oldVid = videos[0];
+        // videos[0].pause(); //todo - delete the underlying video element to free memory
+        createVideoElement(blobURL, 0, 5, true);
+        oldVid.pause();
+        oldVid.removeAttribute("src");
+        oldVid.load();
+
+    }
+    var players = arrayOf(10);
+    audioFilesSelected = function(audioFiles){
+        console.log(audioFiles);
+        players.forEach(player => player.dispose());
+        for(var i = 0; i < 10; i++){
+            var objUrl = URL.createObjectURL(audioFiles[i]);
+            players[i] = new Tone.Player(objUrl).toMaster();
+        }
+    }
+    var deviations = arrayOf(1000).map((elem, i) => i + Math.random());
+    var baseInd = 0;
+    var moveDownNote = 48;
+    var moveUpNote = 48 + 24; //62
+    var midiNoteFunction = function(note, vel){
+        if(note == moveDownNote) baseInd = Math.max(baseInd-6, 0);
+        else if(note == moveUpNote) baseInd+=6;
+        else if(moveUpNote < note && note <= moveDownNote + 12 )videos[0].currentTime = deviations[baseInd + (note-37)];
+        else if(moveDownNote + 12 < note && note < moveUpNote && vel > 0) players[note % (moveDownNote+13)].start(); //sample on
+        else if(moveDownNote + 12 < note && note < moveUpNote && vel == 0) players[note % (moveDownNote+13)].stop(); //sample off
     }   
     for(var i = moveDownNote; i <= moveUpNote; i++){
         midiEventHandlers["on-"+i] = midiNoteFunction;

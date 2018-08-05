@@ -281,9 +281,11 @@
     <!-- Video upload panel
      =================================================================================== -->
     <div id="videoUploadPanel" title="Video Upload panel">
+        Select a video file: 
         <input type="file" id="videoInput1" onchange="videoUploadResponder(this.files[0])">
         <br>
-        <input type="file" multiple id="audioSamples">
+        Select 10 audio files to load:
+        <input type="file" multiple id="audioSamples" onchange="audioFilesSelected(this.files)">
     </div>
     <!-- Color Correction Panel =================================================================================== -->
     <div id="colorCorrectPanel" title="Color Correction">
