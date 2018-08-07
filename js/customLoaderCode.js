@@ -216,6 +216,16 @@ function goreLoader(){
         goreSequencer.start();
         console.log("gore sequencer started");
     }
+    videoUploadResponder = function(videoFile){
+        var blobURL = URL.createObjectURL(videoFile);
+        var oldVid = videos[1];
+        // videos[0].pause(); //todo - delete the underlying video element to free memory
+        createVideoElement(blobURL, 1, 6, true, {'postLoadFunc': videoPlayFunc});
+        oldVid.pause();
+        oldVid.removeAttribute("src");
+        oldVid.load();
+
+    }
     loadImageToTexture(7, "black.jpg");
     blobVideoLoad(1, 6, "gore.mp4", true, {'postLoadFunc': videoPlayFunc});
     customLoaderUniformSet = function(time){
@@ -376,7 +386,14 @@ function videoSoundSampler1Loader(){
     }
 }
 
-
+function setLowestKeyboardNote(val){ 
+    lowestKeyboardNote = int($("#lowestNote").val());
+    for(var i = lowestKeyboardNote; i <= lowestKeyboardNote+24; i++){
+        midiEventHandlers["on-"+i] = midiNoteFunction;
+    }
+}
+var lowestKeyboardNote = 48;
+var midiNoteFunction;
 //a sampler where the keys correspond to jump-points in the video.
 //you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
 function videoSoundSampler2Loader(){
@@ -402,9 +419,9 @@ function videoSoundSampler2Loader(){
     }
     var deviations = arrayOf(1000).map((elem, i) => i + Math.random());
     var baseInd = 0;
-    var moveDownNote = 48;
-    var moveUpNote = 48 + 24; //62
-    var midiNoteFunction = function(note, vel){
+    midiNoteFunction = function(note, vel){
+        var moveDownNote = lowestKeyboardNote;
+        var moveUpNote = lowestKeyboardNote + 24; //62
         if(note == moveDownNote) baseInd = Math.max(baseInd-6, 0);
         else if(note == moveUpNote) baseInd+=6;
         else if(moveDownNote < note && note <= moveDownNote + 12 ){
@@ -413,7 +430,7 @@ function videoSoundSampler2Loader(){
         else if(moveDownNote + 12 < note && note < moveUpNote && vel > 0) players[note % (moveDownNote+13)].start(); //sample on
         else if(moveDownNote + 12 < note && note < moveUpNote && vel == 0) players[note % (moveDownNote+13)].stop(); //sample off
     }   
-    for(var i = moveDownNote; i <= moveUpNote; i++){
+    for(var i = lowestKeyboardNote; i <= lowestKeyboardNote+24; i++){
         midiEventHandlers["on-"+i] = midiNoteFunction;
     }
 }

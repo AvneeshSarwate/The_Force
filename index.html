@@ -286,6 +286,8 @@
         <br>
         Select up to 11 audio files to load:
         <input type="file" multiple id="audioSamples" onchange="audioFilesSelected(this.files)">
+        <br>
+        The lowest note of your keyboard: <input type="text" id="lowestNote" value="48" onchange="setLowestKeyboardNote()">
     </div>
     <!-- Color Correction Panel =================================================================================== -->
     <div id="colorCorrectPanel" title="Color Correction">
