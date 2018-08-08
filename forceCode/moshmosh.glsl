@@ -200,16 +200,15 @@ void main () {
     vec2 stN = uvN();
     
     float tScale = time/10.;
-    vec2 quantStn = hexCenter2(stN, 10.);
-    stN = mix(stN, coordWarp(quantStn, tScale).xy, 10.);
+    stN = mix(stN, vec2(0.5), 10.);
     // stN = rotate(stN, vec2(0.5)*stN.x, time*(0.2+stN.y/100.));
     stN = rowColWave(stN, 5., time/4., 1.9);
-    vec2 dropCoord = stN; drops(stN, tScale/10., 20.);
+    vec2 dropCoord = stN; 
 
     
     // stN = rowColWave(dropCoord, 1000., time, 0.00);
     // stN = stN + (hash(vec3(stN, 5.)).xy-0.5)*0.00;
 
     float modVal = 0.3 + sinN(time/4.)*0.7;
-    gl_FragColor = vec4(mod(distance(dropCoord, uvN())*1., modVal)/modVal);
+    gl_FragColor = vec4(mod(distance(dropCoord, uvN()), modVal)/modVal);
 }
