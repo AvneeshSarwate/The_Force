@@ -202,10 +202,10 @@ void main () {
     float tScale = time/10. + 500.;
     // vec2 quantStn = quant(rowColWave(stN, 10., time/8. + 450., 0.5), 10.); //"windowed" textures
     // stN = mix(stN, coordWarp(quantStn, tScale).xy, 0.);
-    stN = rotate(stN, vec2(0.5)*stN.x, time*(0.2+stN.y/100.)+50.);
+    vec2 stN2 = rotate(stN, vec2(0.5)*stN.x, time*(0.2+stN.y/100.)+50.);
     // stN = rowColWave(stN, 5., time/4., 1.9);
-    stN = mix(stN, drops(stN, tScale/1., 20.), 100.);
-    vec2 dropCoord = stN; 
+    vec2 dropCoord = mix(stN2, drops(stN2, tScale/1., 20.), 100.);
+
 
     
     // stN = rowColWave(dropCoord, 1000., time, 0.00);
@@ -213,5 +213,6 @@ void main () {
 
     float modVal = 0.3 + sinN(time/4.)*0.7;
     float c = mod(distance(dropCoord, uvN())*1., modVal)/modVal;
-    gl_FragColor = vec4(mix(c, round(c), sinN(time/3.)));
+    float cc = mix(c, round(c), sigmoid((rotate(stN, vec2(0.5), time).x-0.5)*10.));
+    gl_FragColor = vec4(cc);
 }
