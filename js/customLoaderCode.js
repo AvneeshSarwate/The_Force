@@ -222,6 +222,7 @@ function goreLoader(){
         // videos[0].pause(); //todo - delete the underlying video element to free memory
         createVideoElement(blobURL, 1, 6, true, {'postLoadFunc': videoPlayFunc});
         oldVid.pause();
+        URL.revokeObjectURL(oldVid.src);
         oldVid.removeAttribute("src");
         oldVid.load();
 
@@ -368,6 +369,7 @@ function videoSoundSampler1Loader(){
         // videos[0].pause(); //todo - delete the underlying video element to free memory
         createVideoElement(blobURL, 0, 5, true);
         oldVid.pause();
+        URL.revokeObjectURL(oldVid.src);
         oldVid.removeAttribute("src");
         oldVid.load();
 
@@ -404,6 +406,7 @@ function videoSoundSampler2Loader(){
         // videos[0].pause(); //todo - delete the underlying video element to free memory
         createVideoElement(blobURL, 0, 5, true);
         oldVid.pause();
+        URL.revokeObjectURL(oldVid.src);
         oldVid.removeAttribute("src");
         oldVid.load();
 
