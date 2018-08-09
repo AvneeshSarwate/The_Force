@@ -200,15 +200,18 @@ void main () {
     vec2 stN = uvN();
     
     float tScale = time/10.;
-    stN = mix(stN, vec2(0.5), 10.);
+    vec2 stN2 = mix(stN, vec2(0.5), 10.);
     // stN = rotate(stN, vec2(0.5)*stN.x, time*(0.2+stN.y/100.));
-    stN = rowColWave(stN, 5., time/4., 1.9);
-    vec2 dropCoord = stN; 
+    vec2 dropCoord = rowColWave(stN2, 5., time/4., 1.9);
+
 
     
     // stN = rowColWave(dropCoord, 1000., time, 0.00);
     // stN = stN + (hash(vec3(stN, 5.)).xy-0.5)*0.00;
 
     float modVal = 0.3 + sinN(time/4.)*0.7;
-    gl_FragColor = vec4(mod(distance(dropCoord, uvN()), modVal)/modVal);
+    float c = mod(distance(dropCoord, uvN()), modVal)/modVal;
+    float bb = texture2D(backbuffer, uvN()).r;
+    float mixVal = sigmoid((wrap3(uvN().x+time/4., 0., 1.)-0.5)*100.);
+    gl_FragColor = vec4(mix(bb, c, mixVal));
 }
