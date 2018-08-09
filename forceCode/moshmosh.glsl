@@ -212,6 +212,8 @@ void main () {
     float modVal = 0.3 + sinN(time/4.)*0.7;
     float c = mod(distance(dropCoord, uvN()), modVal)/modVal;
     float bb = texture2D(backbuffer, uvN()).r;
-    float mixVal = sigmoid((wrap3(uvN().x+time/4., 0., 1.)-0.5)*100.);
-    gl_FragColor = vec4(mix(bb, c, mixVal));
+    vec2 warpCoord = coordWarp(stN, time/7.4).xy;
+    float mixVal = sigmoid((wrap3(warpCoord.x+randWalk/200., 0., 1.)-0.5)*100.);
+    float cc = mix(bb, c, mixVal);
+    gl_FragColor = vec4(cc);
 }
