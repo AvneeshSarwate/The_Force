@@ -198,11 +198,12 @@ void main () {
     
     //block for calculating one circular "wave"
     vec2 stN = uvN();
-    
-    float tScale = time/10. + 500.;
+    float t2 = time+200.;
+    float tScale = t2/10.55 + 500.;
     // vec2 quantStn = quant(rowColWave(stN, 10., time/8. + 450., 0.5), 10.); //"windowed" textures
     // stN = mix(stN, coordWarp(quantStn, tScale).xy, 0.);
-    vec2 stN2 = rotate(stN, vec2(0.5)*stN.x, time*(0.2+stN.y/100.)+50.);
+    vec2 xy = mix(stN, stN.yx, vec2(sinN(time/3.5), cosN(time/5.5)));
+    vec2 stN2 = rotate(stN, vec2(0.5)*xy.x, t2*(0.23+xy.y/100.)+50.);
     // stN = rowColWave(stN, 5., time/4., 1.9);
     vec2 dropCoord = mix(stN2, drops(stN2, tScale/1., 20.), 100.);
 
