@@ -24,19 +24,6 @@ float wrap3(float val, float low, float high){
     return val;
 }
 
-vec3 coordWarp(vec2 stN, float t2){ 
-    vec2 warp = stN;
-    
-    float rad = .5;
-    
-    for (float i = 0.0; i < 20.; i++) {
-        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
-        warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
-    }
-    
-    return vec3(warp, distance(warp, stN));
-}
-
 // quantize and input number [0, 1] to quantLevels levels
 float quant(float num, float quantLevels){
     float roundPart = floor(fract(num*quantLevels)*2.);
@@ -76,47 +63,6 @@ vec2 rowColWave(vec2 stN, float div, float time2, float power){
     return stN;
 }
 
-vec2 drops(vec2 stN2, float t2, float numRipples){
-    
-    vec2 stN0 = stN2;
-    float thickness = 0.05;   
-    vec2 v = uvN();
-    
-    bool new = true; //whether the sanity check ripple or parameterized ripple calculation is used (see comments in block)
-    
-    //when the loop is commented out, everything works normally, but when the
-    //loop is uncommented and only iterates once, things look wrong
-    float maxRad = 0.5;
-    for (float j = 0.; j < 100.; j++) {
-        if(j == numRipples) break;
-        if(new) {
-            //parameterized wave calculation to render multiple waves at once
-            float tRad = mod(t2 + j/numRipples, 1.)*maxRad;
-            vec2 center = vec2(0.5) + (hash(vec3(0.5, 1.1, 34.1)*j).xy-0.5)/2.; 
-            float dist = distance(stN0, center);
-            float distToCircle = abs(dist-tRad);
-            float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2*1. - acos((stN0.x-center.x) / dist);
-            vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + center;
-            stN2 = distToCircle < thickness ? mix(stN2, nearestCirclePoint, (1. - distToCircle/thickness) *(maxRad- tRad)/maxRad) : stN2;
-        }
-        else {
-            //essentially copy pasting the wave calculation in main() as a sanity check
-            vec2 stN = uvN();
-            vec2 center = vec2(0.5);
-            float tRad = wrap3(time/3., 0., 1.)/2.;
-            float thickness = 0.15;
-            float dist = distance(stN, center);
-            vec3 c = tRad - thickness < dist && dist < tRad + thickness ? black : white; 
-            float distToCircle = abs(dist-tRad);
-            float thetaFromCenter = stN.y - 0.5 > 0. ? acos((stN.x-0.5) / dist) : PI2 - acos((stN.x-0.5) / dist);
-            vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
-            v = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
-        }
-    }
-    
-    return new ? stN2 : v;
-}
-
 float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
@@ -132,9 +78,8 @@ void main () {
     
     vec3 params1 = vec3(1., 0.005, 0.84);
     vec3 params2 = vec3(4., 0.009, 0.98);
-    params2 = params1;
     
-    vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/10.)*50.));
+    vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/10.)*10.));
     
     float timeDiv = params.x;
     float distLimit = params.y;
