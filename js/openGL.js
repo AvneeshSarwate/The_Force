@@ -22,7 +22,8 @@ resos = resos.concat(resos);
 var oscM = [null, null, null, null, null, null, null, null, null, null];
 var gammaValues = [1.0, 1.0, 1.0, 1.0];
 var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU = null;
-var lastNoteOnTimeU, lastNoteOffTimeU; 
+var lastNoteOnTimeU, lastNoteOffTimeU, lastNoteValueU; 
+
 
 var vjNoteUniforms = Array.from(new Array(10), () => null);
 var vjLastNoteUniforms = Array.from(new Array(5), () => null);
@@ -59,7 +60,7 @@ function markovWalk(pChange, state){
 
 function createGlContext() {
     var gGLContext = null;
-    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    var names = ["webgl2", "webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
     for (var i = 0; i < names.length; i++) {
         try {
             gGLContext = mCanvas.getContext(names[i], {
@@ -73,8 +74,10 @@ function createGlContext() {
         } catch (e) {
             gGLContext = null;
         }
-        if (gGLContext)
+        if (gGLContext){
+            console.log("context type used", names[i]);
             break;
+        }
     }
 
     if (gGLContext === null) {
@@ -336,6 +339,7 @@ function newShader(vs, shaderCode) {
 
     lastNoteOnTimeU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
     lastNoteOffTimeU = gl.getUniformLocation(mProgram, "lastNoteOffTime");
+    lastNoteValueU = gl.getUniformLocation(mProgram, "lastNoteValue");
 
     //OSC uniforms
     for (var i = 0; i < oscM.length; i++) {
@@ -596,7 +600,7 @@ function initVideoTexture(gl, url) {
 function createNewVideoTexture(gl, url, ind){
     var textureObj = initVideoTexture(gl, url);
     var video = setupVideo(url, ind);
-    texture = {};
+    var texture = {};
     texture.globject = textureObj;
     texture.type = "tex_2D";
     texture.image = {height: video.height, video: video.width};
@@ -802,6 +806,7 @@ function paint(timeVal) {
     if(lastPatternU !== null) gl.uniform1f(lastPatternU, lastMatchedPattern);
     if(lastNoteOnTimeU !== null) gl.uniform1fv(lastNoteOnTimeU, lastNoteOnTime);
     if(lastNoteOffTimeU !== null) gl.uniform1fv(lastNoteOffTimeU, lastNoteOffTime);
+    if(lastNoteValueU !== null) gl.uniform1f(lastNoteValueU, lastNoteValue);
     if(midiCCU !== null) gl.uniform1fv(midiCCU, midiCC);
 
 

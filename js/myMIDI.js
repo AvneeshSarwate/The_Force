@@ -20,7 +20,7 @@ var lastNoteValue = 0;
 var lastVelocity = 0;
 var lastNoteOffTime = arrayOf(128);
 var midiOnEventFlag = false;
-var midiOffEventFlat = false;
+var midiOffEventFlag = false;
 var midiCC = arrayOf(128);
 
 var pitchSequence = new Array();

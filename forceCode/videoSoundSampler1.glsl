@@ -206,8 +206,21 @@ void main () {
     float thetaFromCenter = stN.y - 0.5 > 0. ? acos((stN.x-0.5) / dist) : PI2 - acos((stN.x-0.5) / dist);
     vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
     vec2 stnW = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
-    vec3 cam = texture2D(channel5, stnW).rgb;
+    
+    vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).rgb;
+    vec3 snap = texture2D(channel3, vec2(1.-stN.x, stN.y)).rgb;
+    float diff = colourDistance(cam, snap);
+    
+    float rad = 0.1;
+    float devT = time;
+    vec2 dev = vec2(sin(devT), cos(devT))*rad * sinN(devT/3.);
+    stnW = mix(stnW, cam.xy, 0.1 * sinN(time));
+    vec3 vid = texture2D(channel5, stnW).rgb;
+    vec3 vid2 = texture2D(channel5, stnW + dev).rgb;
+    vec3 vid3 = texture2D(channel5, stnW + dev.yx).rgb;
+    
+    vec3 col = vec3(vid.r, vid2.g, vid3.b);
     c = distance(stN, nearestCirclePoint) < thickness ? black : white;
     
-    gl_FragColor = vec4(cam, 1);
+    gl_FragColor = vec4(col*(1.-diff), 1);
 }

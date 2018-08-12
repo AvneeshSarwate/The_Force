@@ -286,12 +286,18 @@ void main () {
     
     
     float zoom = 2.;
-    // stN = mix(rotate(stN, vec2(0.5), time/420. * distance(stN, vec2(0.5))  ), vec2(0.5), 0.5);
+    // stN = rowColWave(stN, time, 1000., .1);
+    // stN = mix(rotate(stN, vec2(0.5), time/420. * distance(stN, vec2(0.5)) * 0.  ), vec2(0.5), 4.);
     vec3 cam = texture2D(channel0, stN).rgb;
-    float t2 = 3.* PI;
-    stN = rowColWave(stN, time, 1000., 0.0);
-    stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * cos(time/3.)*2.);
-    stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.y*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time/3.)*2.);
+    float t2 = 3.* PI; 
+    float t3 = time/5.;
+    float t4 = time;
+    float rad = 0.0;
+    vec2 warp1 = vec2(-1., 1.);
+    vec2 warp2 = vec2(0.5, 0.);
+    vec2 warpXY = mix(warp1, warp2, 0.);
+    stN = mix(stN, rotate(stN, vec2(0.5) + sin(t4)*rad, t3), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * warpXY.x*2.);
+    stN = mix(stN, rotate(stN, vec2(0.5) + cos(t4)*rad, t3), sinN(stN.y*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * warpXY.y *2.);
     // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN((distance(stN, vec2(0.5))+0.01)*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time)*2.);
     // t2 = time;
     // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.));

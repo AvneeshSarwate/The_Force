@@ -1,3 +1,4 @@
+
 precision highp float;
 
 uniform vec2      resolution;
@@ -34,6 +35,7 @@ uniform float     enoProg;
 uniform float     lastNoteOnTime[128];
 uniform float     lastNoteOffTime[128];
 uniform float     midiCC[128];
+uniform float     lastNoteValue;
 
 
 float PI = 3.14159;
