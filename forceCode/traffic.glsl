@@ -284,28 +284,15 @@ void main () {
     // stN = yLens(stN, time/30.);
     
     
-    bool inStripe = false;
-    float dist = distance(stN, vec2(0.5));
-
-
-    float numStripes = 100.;
-    float d = 1. / numStripes;
-    float stripeWidth =(0.5 - d) / numStripes;
-    for(int i = 0; i < 100; i++){
-        if(d < dist && dist < d + stripeWidth/2.) {
-            inStripe = inStripe || true;
-        } else {
-            inStripe = inStripe || false;
-        }
-        d = d + stripeWidth;
-        if(d > 0.5) break;
-    }
     
-    vec3 col = !inStripe ? white : black;
-    
+    float zoom = 2.;
+    // stN = mix(rotate(stN, vec2(0.5), time/420. * distance(stN, vec2(0.5))  ), vec2(0.5), 0.5);
     vec3 cam = texture2D(channel0, stN).rgb;
     float t2 = 3.* PI;
-    stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time));
+    stN = rowColWave(stN, time, 1000., 0.0);
+    stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * cos(time/3.)*2.);
+    stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.y*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time/3.)*2.);
+    // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN((distance(stN, vec2(0.5))+0.01)*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time)*2.);
     // t2 = time;
     // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.));
     // stN = rotate(stN, vec2(0.5), abs(stN.x-0.5) * abs(stN.y-0.5));
@@ -313,7 +300,7 @@ void main () {
     
     //take2
     float timeVal = time+3000.;
-    stN = quant(stN, 100.);
+    stN = quant(stN, 200.);
     vec2 stN2 = rotate(stN, vec2(0.5), time/2.);
     c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
     
@@ -323,7 +310,7 @@ void main () {
     vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = c == col && c == black; 
+    bool condition = c == black; 
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
