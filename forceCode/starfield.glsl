@@ -188,30 +188,10 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
-vec3 inStripeX(vec2 stN, float rw){
-    bool inStripe = false;
-    for(float i = 0.; i < 40.; i++){
-        float seed = 1./i;
-        float loc = mod(hash(vec3(seed)).x + rw, 1.);
-        if(abs(loc - stN.x) < 0.002) inStripe = inStripe || true;
-    }
-    return inStripe ? black : white;
-}
-
-vec3 inStripeY(vec2 stN, float t){
-    bool inStripe = false;
-    for(float i = 0.; i < 40.; i++){
-        float seed = 1./i;
-        float loc = mod(hash(vec3(seed)).x + t, 1.);
-        if(abs(loc - stN.y) < 0.002) inStripe = inStripe || true;
-    }
-    return inStripe ? black : white;
-}
-
 vec3 inStripeX2(vec2 stN, float rw){
     bool inStripe = false;
     vec2 stN0 = stN;
-    for(float i = 0.; i < 40.; i++){
+    for(float i = 0.; i < 20.; i++){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(rw+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
@@ -223,7 +203,7 @@ vec3 inStripeX2(vec2 stN, float rw){
 vec3 inStripeY2(vec2 stN, float t){
     bool inStripe = false;
     vec2 stN0 = stN;
-    for(float i = 0.; i < 40.; i++){
+    for(float i = 0.; i < 20.; i++){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(t+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
@@ -271,45 +251,11 @@ void main () {
     vec2 stN = uvN();
     vec3 c;
 
-    //take 1
-    // stN = rowColWave(stN, 100., -time, 0.05);
-    // stN = coordWarp(stN, time).xy;
-    // float t2 = time / 4.;
-    // for(int i = 0; i < 2; i++) {
-    //     stN = wrap(rotate(stN, vec2(0.5), t2+0.1) * rotate(stN, vec2(0.5), t2), 0., 1.);
-    // }
-    // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
-    
-    // stN = xLens(stN, time/20.);
-    // stN = yLens(stN, time/30.);
-    
-    
-    bool inStripe = false;
-    float dist = distance(stN, vec2(0.5));
 
-
-    float numStripes = 100.;
-    float d = 1. / numStripes;
-    float stripeWidth =(0.5 - d) / numStripes;
-    for(int i = 0; i < 100; i++){
-        if(d < dist && dist < d + stripeWidth/2.) {
-            inStripe = inStripe || true;
-        } else {
-            inStripe = inStripe || false;
-        }
-        d = d + stripeWidth;
-        if(d > 0.5) break;
-    }
-    
-    vec3 col = !inStripe ? white : black;
+  
     
     vec3 cam = texture2D(channel0, stN).rgb;
-    float t2 = 3.* PI;
-    stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time));
-    // t2 = time;
-    // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.));
-    // stN = rotate(stN, vec2(0.5), abs(stN.x-0.5) * abs(stN.y-0.5));
-
+    // c = inStripeX(rotate(stN, vec2(0.5), time), randWalk/100.) * inStripeY(stN, time/5.);
     
     //take2
     float timeVal = time+3000.;
@@ -318,12 +264,13 @@ void main () {
     c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
     
     vec3 cc;
-    float decay = 0.97;
+    float decay = 0.9;
     float feedback;
-    vec4 bb = texture2D(backbuffer, vec2(stN.x, stN.y));
+    vec2 feedbackCoord = vec2(sin(time), cos(time))*.07 + stN;
+    vec4 bb = texture2D(backbuffer, rotate(stN, feedbackCoord, .1));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = c == col && c == black; 
+    bool condition =  c == white; 
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
@@ -348,9 +295,9 @@ void main () {
             cc = foreGround;
         }
     }
-    cc = mix(cc, bb.rgb, sinN(time/14.)*0.95);
+    // cc = mix(cc, bb.rgb, sinN(time/14.)*0.95);
     
     //todo - don't forget to make these lines linear lenses
     
-    gl_FragColor = vec4(c, feedback);
+    gl_FragColor = vec4(cc, feedback);
 }
