@@ -54,7 +54,6 @@ var capturer = new CCapture( { format: 'webm' } );
 
 $( document ).ready(function() {
 
-
     var shaderString = window.location.href.split("?")[1].split("&")[0];
     var shaderToGet = shaderString.split("_old")[0];
     if(shaderString.indexOf("_old") > -1) {
@@ -1009,6 +1008,10 @@ $( document ).ready(function() {
 
     createGlContext();
     if(initialLoaderFunction) initialLoaderFunction();
+
+
+    // --- sliders (requires intialLoaderFunction for slider values) ---------------------
+    setUpSliders();
 
     // --- audio context ---------------------
     var contextAvailable = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;

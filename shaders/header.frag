@@ -36,6 +36,7 @@ uniform float     lastNoteOnTime[128];
 uniform float     lastNoteOffTime[128];
 uniform float     midiCC[128];
 uniform float     lastNoteValue;
+uniform float     sliderVals[10];
 
 
 float PI = 3.14159;

@@ -25,9 +25,11 @@ var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU =
 var lastNoteOnTimeU, lastNoteOffTimeU, lastNoteValueU; 
 
 
+
 var vjNoteUniforms = Array.from(new Array(10), () => null);
 var vjLastNoteUniforms = Array.from(new Array(5), () => null);
 var lastPatternU = null;
+var sliderValsU = null;
 
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
@@ -336,6 +338,7 @@ function newShader(vs, shaderCode) {
     noteVelU = gl.getUniformLocation(mProgram, "noteVel");
 
     lastPatternU = gl.getUniformLocation(mProgram, "lastPattern");
+    sliderValsU = gl.getUniformLocation(mProgram, "sliderVals");
 
     lastNoteOnTimeU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
     lastNoteOffTimeU = gl.getUniformLocation(mProgram, "lastNoteOffTime");
@@ -818,6 +821,7 @@ function paint(timeVal) {
     if(lastNoteOffTimeU !== null) gl.uniform1fv(lastNoteOffTimeU, lastNoteOffTime);
     if(lastNoteValueU !== null) gl.uniform1f(lastNoteValueU, lastNoteValue);
     if(midiCCU !== null) gl.uniform1fv(midiCCU, midiCC);
+    if(sliderValsU !== null) gl.uniform1fv(sliderValsU, sliderVals);
 
 
     for(var i = 0; i < 5; i++){
