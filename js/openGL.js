@@ -60,7 +60,7 @@ function markovWalk(pChange, state){
 
 function createGlContext() {
     var gGLContext = null;
-    var names = ["webgl2", "webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
     for (var i = 0; i < names.length; i++) {
         try {
             gGLContext = mCanvas.getContext(names[i], {
@@ -607,6 +607,16 @@ function createNewVideoTexture(gl, url, ind){
     texture.loaded = true; //this is ok to do because the update loop checks videosReady[]
     videos[ind] = video;
     videoTextures[ind] = texture;
+}
+
+function createVideoSnapshotTexture(gl, video){
+    var textureObj = initVideoTexture(gl, null);
+    var texture = {};
+    texture.globject = textureObj;
+    texture.type = "tex_2D";
+    texture.image = {height: video.height, video: video.width};
+    texture.loaded = true; //this is ok to do because the update loop checks videosReady[]
+    return texture;
 }
 
 function updateVideoTexture(gl, texture, video) {

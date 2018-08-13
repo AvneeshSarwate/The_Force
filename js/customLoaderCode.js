@@ -7,7 +7,7 @@ function draw(){}
 
 function videoUploadResponder(){}
 function audioFilesSelected(){}
-
+function videoSnapshot(){}
 
 
 function loadImageToTexture(slotID, imageUrl){
@@ -399,7 +399,15 @@ var midiNoteFunction;
 //a sampler where the keys correspond to jump-points in the video.
 //you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
 function videoSoundSampler2Loader(){
-    blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => 5});
+    var videoSnapshotTexture;
+    blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => {
+        videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
+    }});
+
+    videoSnapshot = function(){
+        updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
+    }
+
     videoUploadResponder = function(videoFile){
         var blobURL = URL.createObjectURL(videoFile);
         var oldVid = videos[0];

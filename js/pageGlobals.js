@@ -1145,6 +1145,7 @@ $( document ).ready(function() {
                     p5Canvas = $("#defaultCanvas0")[0];
                     $("#defaultCanvas0").hide();
                 }
+                videoSnapshot();
                 takeSnapshot = false;
                 createInputStr();
             }
