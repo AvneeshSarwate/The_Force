@@ -211,28 +211,28 @@ void main () {
     //for each param, allow a static position, or a sine-wave that interpolates btw frequency and ranges
     //also allow for a slider to slowdown the video playback speed
 
-    float camVidMix = .5; //param - foreground selection
+    float camVidMix = sliderVals[0]; //param - foreground selection (default 0)
     
     
     vec3 cam = mix(texture2D(channel0, camN).rgb, texture2D(channel5, stN).rgb, camVidMix);
     vec3 snap = mix(texture2D(channel3, camN).rgb, texture2D(channel6, stN).rgb, camVidMix);
     float diff = colourDistance(cam, snap) / colourDistance(black, white); 
-    diff = diff < 0.1 ? 0. : diff; //param - threshold
-    diff = diff * 5.; //param - scale
+    diff = diff < sliderVals[1] ? 0. : diff; //param - difference threshold (default 0.1)
+    diff = diff * 5. * sliderVals[2]; //param - difference scaling scale (default 1)
     
     float feedback;
     if(diff < .3){
-        feedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a * 0.97; //param - trail decay
+        feedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a * sliderVals[3]; //param - trail decay (default 0.97)
         feedback = feedback < 0.3 ? 0. : feedback;
     } 
     else{
         feedback = 1.;
     }
     
-    float rad = 0.03; //param - radius
+    float rad = 0.5 * sliderVals[4]; //param - radius (default 0.1)
     float devT = time;
     vec2 dev = vec2(sin(devT), cos(devT))*rad * sinN(devT/3.);
-    stnW = mix(stnW, cam.xy, feedback * 0.9); //param - cam mix 
+    stnW = mix(stnW, cam.xy, feedback * 2. * sliderVals[5]); //param - cam mix (default 0.5)
     vec2 camnW = vec2(1.-stnW.x, stnW.y);
     vec3 vid = mix(texture2D(channel5, stnW).rgb, texture2D(channel0, camnW).rgb, camVidMix);
     vec3 vid2 = mix(texture2D(channel5, stnW + dev).rgb, texture2D(channel0, camnW + dev).rgb, camVidMix);
@@ -241,7 +241,7 @@ void main () {
     vec3 col = vec3(vid.r, vid2.g, vid3.b);
     c = distance(stN, nearestCirclePoint) < thickness ? black : white;
     
-    vec3 cc = mix(col, 1.-col, diff * 0.5); //param - diff mix
+    vec3 cc = mix(col, 1.-col, diff * 2. * sliderVals[6]); //param - diff mix (default 0.5)
     
     gl_FragColor = vec4(vec3(cc), feedback);
 }

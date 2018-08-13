@@ -408,7 +408,7 @@ function videoSoundSampler2Loader(){
         updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
     }
 
-    // sliderLabels = videoBlendLabels;
+    sliderConfig = videoBlendSliderVals;
 
     videoUploadResponder = function(videoFile){
         var blobURL = URL.createObjectURL(videoFile);
