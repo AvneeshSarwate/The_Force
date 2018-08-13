@@ -197,6 +197,7 @@ vec3 lum(vec3 color){
 
 void main () {
     vec2 stN = uvN();
+    vec2 camN = vec2(1.-stN.x, stN.y);
     vec2 center = vec2(0.5);
     float tRad = wrap3(time/3., 0., 1.)/2.;
     float thickness = 0.15;
@@ -207,20 +208,36 @@ void main () {
     vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
     vec2 stnW = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
     
-    vec3 cam = texture2D(channel5, vec2(1.-stN.x, stN.y)).rgb;
-    vec3 snap = texture2D(channel6, vec2(1.-stN.x, stN.y)).rgb;
-    float diff = colourDistance(cam, snap);
+    float camVidMix = 1.;
     
-    float rad = 0.1;
+    
+    vec3 cam = mix(texture2D(channel0, camN).rgb, texture2D(channel5, stN).rgb, camVidMix);
+    vec3 snap = mix(texture2D(channel3, camN).rgb, texture2D(channel6, stN).rgb, camVidMix);
+    float diff = colourDistance(cam, snap) / colourDistance(black, white); 
+    diff = diff < 0.1 ? 0. : diff; //param - threshold
+    diff = diff * 5.; //param - scale
+    
+    float feedback;
+    if(diff < .3){
+        feedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a * 0.97; //param - trail decay
+        feedback = feedback < 0.3 ? 0. : feedback;
+    } 
+    else{
+        feedback = 1.;
+    }
+    
+    float rad = 0.03; //param - radius
     float devT = time;
     vec2 dev = vec2(sin(devT), cos(devT))*rad * sinN(devT/3.);
-    stnW = mix(stnW, cam.xy, 0.1 * sinN(time));
-    vec3 vid = texture2D(channel0, stnW).rgb;
-    vec3 vid2 = texture2D(channel0, stnW + dev).rgb;
-    vec3 vid3 = texture2D(channel0, stnW + dev.yx).rgb;
+    stnW = mix(stnW, cam.xy, feedback * 0.2); //param - cam mix 
+    vec3 vid = mix(texture2D(channel5, stnW).rgb, texture2D(channel0, camN).rgb, camVidMix);
+    vec3 vid2 = mix(texture2D(channel5, stnW + dev).rgb, texture2D(channel0, camN).rgb, camVidMix);
+    vec3 vid3 = mix(texture2D(channel5, stnW + dev.yx).rgb, texture2D(channel0, camN).rgb, camVidMix);
     
     vec3 col = vec3(vid.r, vid2.g, vid3.b);
     c = distance(stN, nearestCirclePoint) < thickness ? black : white;
     
-    gl_FragColor = vec4(col*(diff)*10., 1);
+    vec3 cc = mix(col, 1.-col, diff * 0.5); //param - diff mix
+    
+    gl_FragColor = vec4(vec3(cc), feedback);
 }
