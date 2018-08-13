@@ -383,19 +383,13 @@ function videoSoundSampler1Loader(){
         else if(note == moveUpNote) baseInd++;
         else videos[0].currentTime = deviations[baseInd + (note-37)];
     }   
-    for(var i = moveDownNote; i <= moveUpNote; i++){
-        midiEventHandlers["on-"+i] = midiNoteFunction;
-    }
+    midiEventHandlers["on"] = midiNoteFunction;
 }
 
 function setLowestKeyboardNote(val){ 
     lowestKeyboardNote = int($("#lowestNote").val());
-    for(var i = lowestKeyboardNote; i <= lowestKeyboardNote+24; i++){
-        midiEventHandlers["on-"+i] = midiNoteFunction;
-    }
 }
 var lowestKeyboardNote = 48;
-var midiNoteFunction;
 //a sampler where the keys correspond to jump-points in the video.
 //you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
 function videoSoundSampler2Loader(){
@@ -432,7 +426,7 @@ function videoSoundSampler2Loader(){
     }
     var deviations = arrayOf(1000).map((elem, i) => i + Math.random());
     var baseInd = 0;
-    midiNoteFunction = function(note, vel){
+    var midiNoteFunction = function(note, vel){
         var moveDownNote = lowestKeyboardNote;
         var moveUpNote = lowestKeyboardNote + 24; //62
         if(note == moveDownNote) baseInd = Math.max(baseInd-6, 0);
@@ -443,7 +437,10 @@ function videoSoundSampler2Loader(){
         else if(moveDownNote + 12 < note && note < moveUpNote && vel > 0) players[note % (moveDownNote+13)].start(); //sample on
         else if(moveDownNote + 12 < note && note < moveUpNote && vel == 0) players[note % (moveDownNote+13)].stop(); //sample off
     }   
-    for(var i = lowestKeyboardNote; i <= lowestKeyboardNote+24; i++){
-        midiEventHandlers["on-"+i] = midiNoteFunction;
+    midiEventHandlers["on"] = midiNoteFunction;
+
+    var midiCCFunction = function(ccNum, val){
+        sliders[ccNum].value = val/128;
     }
+    midiEventHandlers["cc"] = midiCCFunction;
 }

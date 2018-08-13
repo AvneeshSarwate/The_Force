@@ -143,7 +143,7 @@ function onMIDIMessage(event) {
                 lastNoteValue = midiNote;
                 noteOnEventCount++;
                 lastNoteOnTime[midiNote] = (Date.now() - mTime) * 0.001;
-                eventKey = "on-"+midiNote;
+                eventKey = "on";
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -157,13 +157,13 @@ function onMIDIMessage(event) {
             lastNoteOffTime[midiNote] = (Date.now() - mTime) * 0.001;
             if(usingVJPad) vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
             noteOffEventCount++
-            eventKey = "off-"+midiNote;
+            eventKey = "off";
             break;
 
         case 0xb0:
             midiData[event.data[1]] = event.data[2];
             midiCC[midiNote] = midiVel;
-            eventKey = "cc-"+midiNote
+            eventKey = "cc"
             break;
     }
     // console.log(noteOnEventCount, noteOffEventCount);
