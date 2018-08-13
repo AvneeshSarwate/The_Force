@@ -208,7 +208,10 @@ void main () {
     vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + 0.5;
     vec2 stnW = distToCircle < thickness ? mix(stN, nearestCirclePoint, 1. - distToCircle/thickness) : stN;
     
-    float camVidMix = 1.;
+    //for each param, allow a static position, or a sine-wave that interpolates btw frequency and ranges
+    //also allow for a slider to slowdown the video playback speed
+
+    float camVidMix = .5; //param - foreground selection
     
     
     vec3 cam = mix(texture2D(channel0, camN).rgb, texture2D(channel5, stN).rgb, camVidMix);
@@ -229,10 +232,11 @@ void main () {
     float rad = 0.03; //param - radius
     float devT = time;
     vec2 dev = vec2(sin(devT), cos(devT))*rad * sinN(devT/3.);
-    stnW = mix(stnW, cam.xy, feedback * 0.2); //param - cam mix 
-    vec3 vid = mix(texture2D(channel5, stnW).rgb, texture2D(channel0, camN).rgb, camVidMix);
-    vec3 vid2 = mix(texture2D(channel5, stnW + dev).rgb, texture2D(channel0, camN).rgb, camVidMix);
-    vec3 vid3 = mix(texture2D(channel5, stnW + dev.yx).rgb, texture2D(channel0, camN).rgb, camVidMix);
+    stnW = mix(stnW, cam.xy, feedback * 0.9); //param - cam mix 
+    vec2 camnW = vec2(1.-stnW.x, stnW.y);
+    vec3 vid = mix(texture2D(channel5, stnW).rgb, texture2D(channel0, camnW).rgb, camVidMix);
+    vec3 vid2 = mix(texture2D(channel5, stnW + dev).rgb, texture2D(channel0, camnW + dev).rgb, camVidMix);
+    vec3 vid3 = mix(texture2D(channel5, stnW + dev.yx).rgb, texture2D(channel0, camnW + dev.yx).rgb, camVidMix);
     
     vec3 col = vec3(vid.r, vid2.g, vid3.b);
     c = distance(stN, nearestCirclePoint) < thickness ? black : white;
