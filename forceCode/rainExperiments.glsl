@@ -112,8 +112,8 @@ void main () {
     vec3 params1 = vec3(1., 0.005, 0.84);
     vec3 params2 = vec3(4., 0.002, 0.98);
     
-    vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/10.)*50.));
-    // params = mix(params1, params2, 0.45 + wrap3(time/5., 0., 1.)/10.); // alternative blend mode
+    vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/7.)*10.));
+    // params = mix(params1, params2, wrap3(time/4., 0., 1.)/2. + 0.25); //isolating the transitory "earthquake" looking motion
     
     float timeDiv = params.x;
     float distLimit = params.y;
