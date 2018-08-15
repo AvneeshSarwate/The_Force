@@ -313,9 +313,8 @@ void main () {
             cc = foreGround;
         }
     }
-    cc = mix(cc, bb.rgb, 0.99);
+    cc = mix(cc, bb.rgb, distance(stN, quantN)*numCells/2.);
     
-    //todo - don't forget to make these lines linear lenses
     
     gl_FragColor = vec4(cc, feedback);
 }
