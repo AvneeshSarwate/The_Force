@@ -313,7 +313,7 @@ void main () {
             cc = foreGround;
         }
     }
-    // cc = mix(cc, bb.rgb, ÷sinN(time/14.)*0.95);
+    cc = mix(cc, bb.rgb, 0.99);
     
     //todo - don't forget to make these lines linear lenses
     
