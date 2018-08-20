@@ -218,7 +218,12 @@ void main(){
     float waveVal = pow(1.-dist, 1.);
     stN = rotate(stN, vec2(0.5) + vec2(sin(time/3.7), cos(time/2.5)), -time/3.);
     vec4 fdbk = feedback(white, black, mix(uvN(), stN, 0.1), 0.97, waveVal < 0.1 + sinN(time/3. + stN.x*3.)/40.);
+    
+    vec4 bb = texture2D(backbuffer, uvN());
+    stN = rotate(stN, vec2(sin(time/2.5), cos(time/2.5)), PI/2.);
+    fdbk = mix(fdbk, bb, min(mix(stN.x, stN.y, sinN(0.)), 0.1));
+    
     // Rough gamma correction.    
-    gl_FragColor = fdbk;
+    gl_FragColor = vec4(fdbk);
     
 }
