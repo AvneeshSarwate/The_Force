@@ -197,7 +197,7 @@ void main(){
     // stN = rotate(stN, vec2(0.5), time);
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
-    float scaleval = 100.;
+    float scaleval = 1. + sinN(time/3.7+PI/3.)*10.;
     vec2 u = trans(uvN() , scaleval);
     
     float size = 1.;
@@ -224,6 +224,6 @@ void main(){
     fdbk = mix(fdbk, bb, min(mix(stN.x, stN.y, sinN(0.)), 0.1));
     
     // Rough gamma correction.    
-    gl_FragColor = vec4(fdbk);
+    gl_FragColor = vec4(fdbk.x, 1.-fdbk.y, sinN(pow(stN.x, 5.)*30.), fdbk.w);
     
 }
