@@ -147,6 +147,7 @@ float quant(float num, float quantLevels){
 
 void main(){
     vec2 stN = uvN();
+    // stN = rotate(stN, vec2(0.5), time);
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
     float scaleval = 50.;
@@ -160,7 +161,8 @@ void main(){
     
     
     vec2 c = hexCenter2(stN*scaleval,size);
-    float dist = distance(c/scaleval, u/scaleval)*scaleval;
+    stN = rotate(stN, vec2(0.5) + vec2(sin(time/3.7), cos(time/2.5)), time/3.);
+    float dist = distance((c+vec2(sin(time*2. + stN.x*(10. + sinN(time))),cos(time * sin(time/150.) + stN.y*6.)))/scaleval, u/scaleval)*scaleval;
     
     float sampled = inSampleSet(u, c) ? 1. : 0.;
     
