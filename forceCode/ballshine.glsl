@@ -145,8 +145,22 @@ float quant(float num, float quantLevels){
     return (floor(num*quantLevels)+roundPart)/quantLevels;
 }
 
+vec3 coordWarp(vec2 stN, float t2){ 
+    vec2 warp = stN;
+    
+    float rad = .5;
+    
+    for (float i = 0.0; i < 20.; i++) {
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
 void main(){
     vec2 stN = uvN();
+    stN = mix(stN, coordWarp(stN, time).xy, 0.1);
     // stN = rotate(stN, vec2(0.5), time);
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
@@ -163,16 +177,14 @@ void main(){
     vec2 c = hexCenter2(stN*scaleval,size);
     stN = rotate(stN, vec2(0.5) + vec2(sin(time/3.7), cos(time/2.5)), time/3.);
     float dist = distance((c+vec2(sin(time*2. + stN.x*(10. + sinN(time))),cos(time * sin(time/150.) + stN.y*6.)))/scaleval, u/scaleval)*scaleval;
+    float dist2 = distance(c/scaleval, uvN())*scaleval;
     
-    float sampled = inSampleSet(u, c) ? 1. : 0.;
+    vec2 hex = pixel_to_hex(stN*scaleval, 1.);
+    float edge = distance(hex, hex_round(hex)) > 0.3 ? 0. : 1.;
     
-    float radius = dist < .861 ? 1. : 0.;
-    
-    float avgLum = hexDiffAvg(stN, scaleval);
-    avgLum = avgLum > 0.2 ? avgLum-0.3 + rand(vec2(time, quant(stN.y+time/10., 100.)))/1.5 : 0.;
-
+    float waveVal = pow(1.-dist, 0.1 + sinN(time/4.5+PI));
     
     // Rough gamma correction.    
- gl_FragColor = vec4(vec3(pow(1.-dist, 0.1 + sinN(time))), 1);
+    gl_FragColor = vec4(vec3(waveVal), 1);
     
 }
