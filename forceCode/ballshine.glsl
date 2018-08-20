@@ -158,13 +158,46 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+vec4 feedback(vec3 foreGround, vec3 trail, vec2 feedbackStn, float decay, bool condition){
+    vec3 cc;
+    float feedback;
+    vec4 bb = texture2D(backbuffer, feedbackStn);
+    float lastFeedback = bb.a;
+    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+
+    
+    
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < 1.1) {
+            feedback = 1.;
+            cc = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
+    }
+    else {
+        feedback = lastFeedback * decay;
+        if(lastFeedback > 0.4) {
+            cc = mix(foreGround, trail, lastFeedback); 
+        } else {
+            feedback = 0.;
+            cc = foreGround;
+        }
+    }
+    
+    return vec4(cc, feedback);
+}
+
 void main(){
     vec2 stN = uvN();
-    stN = mix(stN, coordWarp(stN, time).xy, 0.1);
+    stN = mix(stN, coordWarp(stN, time).xy, 0.2);
     // stN = rotate(stN, vec2(0.5), time);
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
-    float scaleval = 50.;
+    float scaleval = 100.;
     vec2 u = trans(uvN() , scaleval);
     
     float size = 1.;
@@ -182,9 +215,10 @@ void main(){
     vec2 hex = pixel_to_hex(stN*scaleval, 1.);
     float edge = distance(hex, hex_round(hex)) > 0.3 ? 0. : 1.;
     
-    float waveVal = pow(1.-dist, 0.1 + sinN(time/4.5+PI));
-    
+    float waveVal = pow(1.-dist, 1.);
+    stN = rotate(stN, vec2(0.5) + vec2(sin(time/3.7), cos(time/2.5)), -time/3.);
+    vec4 fdbk = feedback(white, black, mix(uvN(), stN, 0.1), 0.97, waveVal < 0.1 + sinN(time/3. + stN.x*3.)/40.);
     // Rough gamma correction.    
-    gl_FragColor = vec4(vec3(waveVal), 1);
+    gl_FragColor = fdbk;
     
 }
