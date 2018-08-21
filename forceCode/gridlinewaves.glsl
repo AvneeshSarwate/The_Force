@@ -151,7 +151,7 @@ void main () {
     // stN = stN + (hash(vec3(stN, 5.)).xy-0.5)*0.00;
     float numLines = 150.;
     vec2 nn = uvN();
-    vec2 rotN = texture2D(channel0, vec2(1.-nn.x, nn.y)).rg; rotate(stN, vec2(0.5), coordWarp(stN, time).z*30.);
+    vec2 rotN =  rotate(stN, vec2(0.5), coordWarp(stN, time).z*30.); texture2D(channel0, vec2(1.-nn.x, nn.y)).rg;
     float gridThickness = 1./numLines * (0.01 + sinN(time + rotN.x*2.)*0.5);
     if(mod(stN.x, 1./numLines) < gridThickness || mod(stN.y, 1./numLines) < gridThickness) c =black;
     else c = white;
