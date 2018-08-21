@@ -158,12 +158,17 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
+
 vec4 feedback(vec3 foreGround, vec3 trail, vec2 feedbackStn, float decay, bool condition){
     vec3 cc;
     float feedback;
     vec4 bb = texture2D(backbuffer, feedbackStn);
     float lastFeedback = bb.a;
-    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    // bool crazyCond = (circleSlice(stN, time2/6., time2 + sinN(time2*sinN(time2)) *1.8).x - circleSlice(stN, (time2-sinN(time2))/6., time2 + sinN(time2*sinN(time2)) *1.8).x) == 0.;
 
     
     
@@ -192,12 +197,17 @@ vec4 feedback(vec3 foreGround, vec3 trail, vec2 feedbackStn, float decay, bool c
 }
 
 void main(){
+    bool usemouse = false;
+    float colorversion = usemouse ? sinN((mouse.x/resolution.x/2. - 0.5) * 10.) : 0.;
     vec2 stN = uvN();
-    stN = mix(stN, coordWarp(stN, time).xy, 0.2);
-    // stN = rotate(stN, vec2(0.5), time);
+
+    float time2 = usemouse ? time/max(mouse.z/resolution.y /2.*8., 0.5) + mouse.y/resolution.y /2. : time;
+
+    stN = mix(stN, coordWarp(stN, time2).xy, 0.2);
+    // stN = rotate(stN, vec2(0.5), time2);
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
     // Aspect correct screen coordinates.
-    float scaleval = 1. + sinN(time/3.7+PI/3.)*10.;
+    float scaleval = mix(50., 1. + sinN(time2/3.7+PI/3.)*10., colorversion);
     vec2 u = trans(uvN() , scaleval);
     
     float size = 1.;
@@ -208,22 +218,21 @@ void main(){
     
     
     vec2 c = hexCenter2(stN*scaleval,size);
-    stN = rotate(stN, vec2(0.5) + vec2(sin(time/3.7), cos(time/2.5)), time/3.);
-    float dist = distance((c+vec2(sin(time*2. + stN.x*(10. + sinN(time))),cos(time * sin(time/150.) + stN.y*6.)))/scaleval, u/scaleval)*scaleval;
+    stN = rotate(stN, vec2(0.5) + vec2(sin(time2/3.7), cos(time2/2.5)), time2/3.);
+    float dist = distance((c+vec2(sin(time2*2. + stN.x*(10. + sinN(time2))),cos(time2 * sin(time2/150.) + stN.y*6.)))/scaleval, u/scaleval)*scaleval;
     float dist2 = distance(c/scaleval, uvN())*scaleval;
     
     vec2 hex = pixel_to_hex(stN*scaleval, 1.);
     float edge = distance(hex, hex_round(hex)) > 0.3 ? 0. : 1.;
     
     float waveVal = pow(1.-dist, 1.);
-    stN = rotate(stN, vec2(0.5) + vec2(sin(time/3.7), cos(time/2.5)), -time/3.);
-    vec4 fdbk = feedback(white, black, mix(uvN(), stN, 0.1), 0.97, waveVal < 0.1 + sinN(time/3. + stN.x*3.)/40.);
+    stN = rotate(stN, vec2(0.5) + vec2(sin(time2/3.7), cos(time2/2.5)), -time2/3.);
+    vec4 fdbk = feedback(white, black, mix(uvN(), stN, 0.1), 0.97, waveVal < 0.1 + sinN(time2/3. + stN.x*3.)/40.);
     
     vec4 bb = texture2D(backbuffer, uvN());
-    stN = rotate(stN, vec2(sin(time/2.5), cos(time/2.5)), PI/2.);
+    stN = rotate(stN, vec2(sin(time2/2.5), cos(time2/2.5)), PI/2.);
     fdbk = mix(fdbk, bb, min(mix(stN.x, stN.y, sinN(0.)), 0.1));
     
     // Rough gamma correction.    
-    gl_FragColor = vec4(fdbk.x, 1.-fdbk.y, sinN(pow(stN.x, 5.)*30.), fdbk.w);
-    
+    gl_FragColor = mix(fdbk, vec4(fdbk.x, 1.-fdbk.y, sinN(pow(stN.x, 5.)*30.), fdbk.w), colorversion);   
 }
