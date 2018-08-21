@@ -196,16 +196,33 @@ vec4 feedback(vec3 foreGround, vec3 trail, vec2 feedbackStn, float decay, bool c
     return vec4(cc, feedback);
 }
 
+
+
+// same as above but for vectors, applying the quantization to each element
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 void main(){
-    bool usemouse = false;
-    float colorversion = usemouse ? sinN((mouse.x/resolution.x/2. - 0.5) * 10.) : 0.;
+    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    bool usemouse = mouseN.w > 0.;
+    float colorversion = usemouse ? sinN((mouseN.x - 0.5) * 10.) : 0.;
     vec2 stN = uvN();
 
-    float time2 = usemouse ? time/max(mouse.z/resolution.y /2.*8., 0.5) + mouse.y/resolution.y /2. : time;
+    float time2 = usemouse ? time/max(mouseN.z*8., 0.5) + mouseN.y : time;
 
     stN = mix(stN, coordWarp(stN, time2).xy, 0.2);
     // stN = rotate(stN, vec2(0.5), time2);
     vec3 cam = texture2D(channel0, vec2(1. - stN.x, stN.y)).xyz;
+    float camBlend = usemouse ? sinN(mouseN.w*5.): 0.;
+    stN = mix(stN, quant(cam.xy, 10.), camBlend);
     // Aspect correct screen coordinates.
     float scaleval = mix(50., 1. + sinN(time2/3.7+PI/3.)*10., colorversion);
     vec2 u = trans(uvN() , scaleval);
