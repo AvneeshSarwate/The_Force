@@ -79,7 +79,7 @@ $( document ).ready(function() {
         shaderToGet = "videoSoundSampler1";
         initialLoaderFunction = loaderInd === "1" ? videoSoundSampler1Loader : videoSoundSampler2Loader  
     } ;
-    if(shaderToGet.indexOf("yoyoVideoTest") > -1){
+    if(shaderToGet.indexOf("yoyovideotest") > -1){
         var loaderInd = shaderToGet[shaderToGet.length-1];
         initialLoaderFunction = yoyoVideoTest;
     } ;
