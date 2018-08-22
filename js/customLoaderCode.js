@@ -444,3 +444,29 @@ function videoSoundSampler2Loader(){
     }
     midiEventHandlers["cc"] = midiCCFunction;
 }
+
+
+function yoyoVideoTest(){
+    var videoSnapshotTexture;
+    blobVideoLoad(0, 5, "fast_stable.m4v", false, {'postLoadFunc': () => {
+        videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
+    }});
+
+    videoSnapshot = function(){
+        updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
+    }
+
+    sliderConfig = videoBlendSliderVals;
+
+    videoUploadResponder = function(videoFile){
+        var blobURL = URL.createObjectURL(videoFile);
+        var oldVid = videos[0];
+        // videos[0].pause(); //todo - delete the underlying video element to free memory
+        createVideoElement(blobURL, 0, 5, true);
+        oldVid.pause();
+        URL.revokeObjectURL(oldVid.src);
+        oldVid.removeAttribute("src");
+        oldVid.load();
+
+    }
+}
