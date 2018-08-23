@@ -399,7 +399,7 @@ function videoSoundSampler2Loader(){
     }});
 
     videoSnapshot = function(){
-        updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
+        if(videoSnapshotTexture.globject) updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
     }
 
     sliderConfig = videoBlendSliderVals;
@@ -450,10 +450,11 @@ function yoyoVideoTest(){
     var videoSnapshotTexture;
     blobVideoLoad(0, 5, "fast_stable.m4v", false, {'postLoadFunc': () => {
         videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
+        blobVideoLoad(1, 7, "fast_stable.m4v", {'postLoadFunc': () => {videos[1].currentTime = (videos[0].currentTime - 0.05) % videos[0].duration}}) ;
     }});
 
     videoSnapshot = function(){
-        updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
+        if(videoSnapshotTexture.globject) updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
     }
 
     sliderConfig = videoBlendSliderVals;

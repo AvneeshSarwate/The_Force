@@ -1139,13 +1139,15 @@ $( document ).ready(function() {
             }
 
             if(webcamReady && takeSnapshot){
-                updateVideoTexture(gl, webcamSnapshotTexture, webcam);
-                var texture = {};
-                texture.globject = webcamSnapshotTexture;
-                texture.type = "tex_2D";
-                texture.image = {height: webcam.height, width: webcam.width};
-                texture.loaded = webcamReady;
-                mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
+                if(webcamReady) { 
+                    updateVideoTexture(gl, webcamSnapshotTexture, webcam);
+                    var texture = {};
+                    texture.globject = webcamSnapshotTexture;
+                    texture.type = "tex_2D";
+                    texture.image = {height: webcam.height, width: webcam.width};
+                    texture.loaded = webcamReady;
+                    mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
+                }
                 if(p5Canvas) {
                     updateVideoTexture(gl, p5SnapTexture, p5Canvas);
                 } else {
