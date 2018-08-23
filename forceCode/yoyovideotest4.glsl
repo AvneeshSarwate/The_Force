@@ -87,12 +87,12 @@ vec3 lum(vec3 color){
 vec3 ballTwist(vec2 stN, float t2){ 
     vec2 warp = stN;
     
-    float rad = .5;
+    float rad = .1;
     
-    for (float i = 0.0; i < 20.; i++) {
+    for (float i = 0.0; i < 400.; i++) {
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
         // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
-        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 2.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 1.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
     }
     
     return vec3(warp, distance(warp, stN));
@@ -124,6 +124,7 @@ void ex3() {
     
     modN = twist;
     vec3 vidnoise = texture2D(channel5, modN).rgb;
+    vec3 vid = texture2D(channel5, stN).rgb;
     
     vec4 bb = texture2D(backbuffer, stN);
     float feedback; 
@@ -135,6 +136,7 @@ void ex3() {
         feedback = 1.;
     } 
     
+    // vidnoise = dist > 0.6 ? vid : vidnoise;
     
     vec3 final  = feedback > 0.2 ? vidnoise : cam;
     final = mix(cam, vidnoise, dist*sinN(time/5.)*10.);
