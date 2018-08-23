@@ -92,7 +92,7 @@ vec3 ballTwist(vec2 stN, float t2){
     for (float i = 0.0; i < 20.; i++) {
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
         // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
-        warp = length(p - stN) <= rad ? rotate(warp, p, 1.-length(stN - p)/rad) : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 2.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
     }
     
     return vec3(warp, distance(warp, stN));
