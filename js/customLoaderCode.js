@@ -454,7 +454,7 @@ function yoyoVideoTest(){
     }});
 
     videoSnapshot = function(){
-        if(videoSnapshotTexture.globject) updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
+        if(videoSnapshotTexture && videoSnapshotTexture.globject) updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
     }
 
     sliderConfig = videoBlendSliderVals;
