@@ -52,6 +52,8 @@ var p5Canvas;
 
 var capturer = new CCapture( { format: 'webm' } );
 
+mTime = Date.now();
+
 $( document ).ready(function() {
 
     var shaderString = window.location.href.split("?")[1].split("&")[0];
@@ -1210,7 +1212,6 @@ $( document ).ready(function() {
     p5SnapTex.loaded = true;
     mInputs[2] = p5SnapTex;
 
-    mTime = Date.now();
     renderLoop2();
     editor.focus();
 
