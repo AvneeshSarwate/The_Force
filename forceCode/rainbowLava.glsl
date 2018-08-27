@@ -209,7 +209,7 @@ void main () {
     float numCells = 400.;
     vec3 warp = coordWarp(stN, time/2.);
     // vec3 warp2 = coordWarp(stN, time +4.);
-    stN = mix(stN, warp.xy, 0.05);
+    stN = mix(stN, warp.xy, 0.025);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
 
     
