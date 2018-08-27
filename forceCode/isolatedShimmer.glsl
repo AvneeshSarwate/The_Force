@@ -204,7 +204,9 @@ void main () {
 
     vec2 stN = uvN();
     float numCells = 400.;
-    
+    vec3 warp = coordWarp(stN, time/2.);
+    // vec3 warp2 = coordWarp(stN, time +4.);
+    stN = mix(stN, warp.xy, 0.05);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
 
     
@@ -236,12 +238,13 @@ void main () {
     vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
     
     vec3 col = vec3(feedback);
-    vec3 warp = coordWarp(stN, time);
+    
     vec2 cent = vec2(0.5);
+    
     col.xy = rotate(col.xy, cent, warp.x*3.);
     col.yz = rotate(col.yz, cent, warp.y*3.);
     col.zx = rotate(col.zx, cent, warp.z*3.);
-    col = mix(bb.rgb, col, 0.1*sigmoid((sin(time/4.+stN.x*PI)-0.2)*50.));
+    // col = mix(bb.rgb, col, 0.1);
     
     gl_FragColor = vec4(col, feedback);
 }
