@@ -188,6 +188,10 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
 // calculates the luminance value of a pixel
 // formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
 vec3 lum(vec3 color){
@@ -231,5 +235,13 @@ void main () {
     
     vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
     
-    gl_FragColor = vec4(feedback);
+    vec3 col = vec3(feedback);
+    vec3 warp = coordWarp(stN, time);
+    vec2 cent = vec2(0.5);
+    col.xy = rotate(col.xy, cent, warp.x*3.);
+    col.yz = rotate(col.yz, cent, warp.y*3.);
+    col.zx = rotate(col.zx, cent, warp.z*3.);
+    col = mix(bb.rgb, col, 0.1*sigmoid((sin(time/4.+stN.x*PI)-0.2)*50.));
+    
+    gl_FragColor = vec4(col, feedback);
 }
