@@ -208,7 +208,7 @@ bool shouldDraw(vec2 stN, vec2 brushPoint){
 
 void main () {
 
-    float lineTime = 10.;
+    float lineTime = 3.5;
     vec2 brushPos = brushMove(time);
     vec2 erasePos = brushMove(time - lineTime);
     vec2 stN = uvN();
@@ -216,8 +216,8 @@ void main () {
     float lastDrawTime = bb.a;
     vec3 cc;
     bool drawHere = shouldDraw(stN, brushPos);
-    cc = drawHere ? black : bb.rgb;
-    cc = shouldDraw(stN, erasePos) && time - lastDrawTime > lineTime ? white : cc;
+    cc = drawHere ? white : bb.rgb;
+    cc = shouldDraw(stN, erasePos) && (time - lastDrawTime > lineTime) ? red : cc;
     
     gl_FragColor = vec4(cc, drawHere ? time : lastDrawTime);
 }
