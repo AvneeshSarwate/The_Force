@@ -207,8 +207,9 @@ bool shouldDraw(vec2 stN, vec2 brushPoint){
 }
 
 void main () {
-
-    float lineTime = 3.5;
+    float scaleFactor = 6000.; //this scale used because normal textures can't output values > 1.
+    float tScale = time/scaleFactor;
+    float lineTime = .5;
     vec2 brushPos = brushMove(time);
     vec2 erasePos = brushMove(time - lineTime);
     vec2 stN = uvN();
@@ -216,9 +217,15 @@ void main () {
     float lastDrawTime = bb.a;
     vec3 cc;
     bool drawHere = shouldDraw(stN, brushPos);
-    cc = drawHere ? white : bb.rgb;
-    cc = shouldDraw(stN, erasePos) && (time - lastDrawTime > lineTime) ? red : cc;
     
-    gl_FragColor = vec4(cc, drawHere ? time : lastDrawTime);
+    cc = drawHere ? white : bb.rgb;
+
+    bool timeCondition = (tScale - lastDrawTime > lineTime/scaleFactor) && lastDrawTime > 0.;
+
+    cc = shouldDraw(stN, erasePos) && timeCondition ? red : cc;
+    
+    gl_FragColor = vec4(drawHere ? tScale : lastDrawTime);
+    // gl_FragColor = vec4(vec3(lastDrawTime/lineTime), drawHere ? time : lastDrawTime);
+    // gl_FragColor = vec4(drawHere ? 1. : 0.);
 }
 
