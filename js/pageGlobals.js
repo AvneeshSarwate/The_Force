@@ -82,8 +82,9 @@ $( document ).ready(function() {
         initialLoaderFunction = loaderInd === "1" ? videoSoundSampler1Loader : videoSoundSampler2Loader  
     } ;
     if(shaderToGet.indexOf("yoyovideotest") > -1){
-        var loaderInd = shaderToGet[shaderToGet.length-1];
-        initialLoaderFunction = yoyoVideoTest;
+        var loaderInd = parseInt(shaderToGet.slice("yoyovideotest".length))
+        if(loaderInd < 7) initialLoaderFunction = yoyoVideoTest;
+        else initialLoaderFunction = yoyoVideoTestB;
     } ;
     
     if(shaderToGet){
@@ -1013,11 +1014,7 @@ $( document ).ready(function() {
     mCanvas = document.getElementById("demogl");
 
     createGlContext();
-    if(initialLoaderFunction) initialLoaderFunction();
 
-
-    // --- sliders (requires intialLoaderFunction for slider values) ---------------------
-    setUpSliders();
 
     // --- audio context ---------------------
     var contextAvailable = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;
@@ -1211,6 +1208,11 @@ $( document ).ready(function() {
     p5SnapTex.image = {height: webcam.height, width: webcam.width};
     p5SnapTex.loaded = true;
     mInputs[2] = p5SnapTex;
+
+    if(initialLoaderFunction) initialLoaderFunction();
+
+    // --- sliders (requires intialLoaderFunction for slider values) ---------------------
+    setUpSliders();
 
     renderLoop2();
     editor.focus();
