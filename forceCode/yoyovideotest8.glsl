@@ -401,10 +401,10 @@ void ex3() {
     vec3 wobbleLayer = vid*(1.-vidSnap)+vid2*(1.-vidSnap2);
     
     vec3 scrollLayer = black;;
-    for(float i = 0.; i < 10.; i++){
+    for(float i = 0.; i < 6.; i++){
         vec2 loopTwist = mix(stN, twist, i/10./1.5);
-        vec2 loopN = vec2(mod(loopTwist.x +sinN(time*i/5./2.), 1.), loopTwist.y);
-        scrollLayer = scrollLayer + texture2D(channel5, loopN).rgb;
+        vec2 loopN = vec2(mod(loopTwist.x + (time/2.+i*3.)* (1. + rand(i*30.)*3.)/3., 1.), loopTwist.y);
+        scrollLayer = scrollLayer + (mod(i, 2.) == 0.? texture2D(channel5, loopN).rgb : texture2D(channel7, loopN).rgb);
     }
     
     
