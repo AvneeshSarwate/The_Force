@@ -4,7 +4,7 @@ var mQuadVBO = null;
 var mQuadTVBO = null;
 var mProgram = null;
 var screenProgram = null;
-var mInputs = [null, null, null, null, null, null, null, null];
+var mInputs = [null, null, null, null, null, null, null, null, null, null, null];
 var mInputsStr = "";
 var mOSCStr = "";
 var mMIDIStr = "";
@@ -453,6 +453,7 @@ function createInputStr() {
         else
             mInputsStr += "uniform sampler2D channel" + i + ";\n";
     }
+    var db = 5;
     //TODO cam-background - declare uniform for background here
 }
 

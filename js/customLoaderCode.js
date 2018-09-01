@@ -252,9 +252,9 @@ function movieSpliceLoader(){
     };
     blobVideoLoad(0, 5, movieFiles, false, {'postLoadFunc': cacheLoader});
 
-    customLoaderUniforms = `
-uniform float lastNoteValue;
-    `;
+//     customLoaderUniforms = `
+// uniform float lastNoteValue;
+//     `;
     
     //these variables help stop videos from constantly getting start/stopped on every frame 
     //when the global midi event count values stay static
@@ -478,9 +478,9 @@ function yoyoVideoTest(){
 
 function yoyoVideoTestB(){
     var videoSnapshotTexture;
-    blobVideoLoad(0, 5, "LaraDance.m4v", false, {'postLoadFunc': () => {
+    blobVideoLoad(0, 5, "LaraDance.mp4", false, {'postLoadFunc': () => {
         // videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
-        blobVideoLoad(1, 7, "LaraDance.m4v", false, {'postLoadFunc': function(){
+        blobVideoLoad(1, 7, "LaraDance.mp4", false, {'postLoadFunc': function(){
             setTimeout(() => {videos[0].currentTime = videos[0].currentTime + 0.05}, 2000);
             // var setVideoLag = function(){
             //     console.log("lagVidTime", videos[0].currentTime, videos[0].duration, mod((videos[0].currentTime - 0.05), videos[0].duration));
@@ -491,7 +491,7 @@ function yoyoVideoTestB(){
             // videos[0].addEventListener('durationchange', setVideoLag);
             // videos[1].addEventListener('durationchange', setVideoLag);
         }});
-        blobVideoLoad(2, 8, "LaraDance.m4v", false);
+        blobVideoLoad(2, 8, "LaraDance.mp4", false);
     }});
 
     videoSnapshot = function(){

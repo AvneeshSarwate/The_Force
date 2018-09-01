@@ -123,6 +123,24 @@ float wrap3(float val, float low, float high){
     return val;
 }
 
+// quantize and input number [0, 1] to quantLevels levels
+float quant(float num, float quantLevels){
+    float roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 float colormap_red(float x) {
     if (x < 37067.0 / 158860.0) {
         return 0.0;
@@ -188,6 +206,68 @@ float colormap_blue(float x) {
     }
 }
 
+vec3 coordWarp(vec2 stN, float t2){ 
+    vec2 warp = stN;
+    
+    float rad = .5;
+    
+    for (float i = 0.0; i < 40.; i++) {
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
+vec2 drops(vec2 stN2, float t2, float numRipples){
+    
+    vec2 stN0 = stN2;
+    float thickness = 0.05;   
+    vec2 v = uvN();
+    
+    bool new = true; //whether the sanity check ripple or parameterized ripple calculation is used (see comments in block)
+    
+    //when the loop is commented out, everything works normally, but when the
+    //loop is uncommented and only iterates once, things look wrong
+    float maxRad = 0.5;
+    for (float j = 0.; j < 100.; j++) {
+        if(j == numRipples) break;
+        if(new) {
+            //parameterized wave calculation to render multiple waves at once
+            float tRad = mod(t2 + j/numRipples, 1.)*maxRad;
+            vec2 center = vec2(0.5) + (hash(vec3(0.5, 1.1, 34.1)*j).xy-0.5)/2.; 
+            float dist = distance(stN0, center);
+            float distToCircle = abs(dist-tRad);
+            float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2*1. - acos((stN0.x-center.x) / dist);
+            vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + center;
+            stN2 = distToCircle < thickness ? mix(stN2, nearestCirclePoint, (1. - distToCircle/thickness) *(maxRad- tRad)/maxRad) : stN2;
+        }
+    }
+    
+    return new ? stN2 : v;
+}
+
+//slice the matrix up into columns and translate the individual columns in a moving wave
+vec2 columnWaves3(vec2 stN, float numColumns, float time2, float power){
+    return vec2(wrap3(stN.x + sin(time2*8.)*0.05 * power, 0., 1.), wrap3(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.));
+}
+
+//slice the matrix up into rows and translate the individual rows in a moving wave
+vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
+    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.)*0.22 * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*0.05 * power, 0., 1.));
+}
+
+
+//iteratively apply the rowWave and columnWave functions repeatedly to 
+//granularly warp the grid
+vec2 rowColWave(vec2 stN, float div, float time2, float power){
+    for (int i = 0; i < 10; i++) {
+        stN = rowWaves3(stN, div, time2, power);
+        stN = columnWaves3(stN, div, time2, power);
+    }
+    return stN;
+}
+
 vec4 colormap(float x) {
     return vec4(colormap_red(x), colormap_green(x), colormap_blue(x), 1.0);
 }
@@ -196,16 +276,93 @@ float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
 
+float mosh(){
+    
+    //block for calculating one circular "wave"
+    vec2 stN = uvN();
+    
+    float tScale = time/10.;
+    vec2 stN2 = mix(stN, vec2(0.5), 10.);
+    // stN = rotate(stN, vec2(0.5)*stN.x, time*(0.2+stN.y/100.));
+    vec2 dropCoord = rowColWave(stN2, 5., time/4., 1.9);
+
+
+    
+    // stN = rowColWave(dropCoord, 1000., time, 0.00);
+    // stN = stN + (hash(vec3(stN, 5.)).xy-0.5)*0.00;
+
+    float modVal = 0.3 + sinN(time/4.)*0.7;
+    float c = mod(distance(dropCoord, uvN()), modVal)/modVal;
+    float bb = texture2D(backbuffer, uvN()).r;
+    vec2 warpCoord = coordWarp(stN, time/7.4).xy;
+    float mixVal = sigmoid((wrap3(warpCoord.x+randWalk/200., 0., 1.)-0.5)*100.);
+    float cc = mix(bb, c, mixVal);
+    return cc;
+}
+
+vec3 rainbowLava () {
+    float t2 = time/5. + 1000.;
+    
+    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+
+    vec2 stN = uvN();
+    float numCells = 400.;
+    vec3 warp = coordWarp(stN, time/2.);
+    // vec3 warp2 = coordWarp(stN, time +4.);
+    stN = mix(stN, warp.xy, 0.025);
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
+
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.01;
+    float feedback;
+    vec4 bb = texture2D(backbuffer, hashN);
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
+    condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+    vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
+    
+    vec3 col = vec3(feedback);
+    
+    vec2 cent = vec2(0.5);
+    
+    col.xy = rotate(col.xy, cent, warp.x*3.);
+    col.yz = rotate(col.yz, cent, warp.y*3.);
+    col.zx = rotate(col.zx, cent, warp.z*3.);
+    col = mix(bb.rgb, col, 0.01);
+    
+    return col;
+}
+
 void ex3() {
     vec2 stN = uvN();
     vec2 camPos = vec2(1.-stN.x, stN.y);
 
     
     vec2 modN;
-    
-    modN = stN;
+    vec2 twist = ballTwist(stN, time/100.).xy;
+    modN = mix(stN, twist, sinN(time/5.)*0.9);
     vec3 vid = texture2D(channel5, stN).rgb;
-    vec3 vidSnap = texture2D(channel7, stN).rgb;
+    vec3 vidSnap = texture2D(channel7, modN).rgb;
     // modN = mix(stN, modN, sigmoid(sin(time+stN.x*20.*PI)*100.));
     vec3 vidnoise = texture2D(channel5, mix(vid.xy, modN, sinN(time))).rgb;
     
@@ -213,16 +370,20 @@ void ex3() {
     float feedback; 
     float dist = colourDistance(vid, vidSnap)/colourDistance(black, white);
     if(dist < .3 + sinN(time)*0.3){
-        feedback = bb.a * 0.8;
+        feedback = bb.a - 0.04;
     } 
     else{
         feedback = 1.;
     } 
     
     // vidnoise = dist > 0.6 ? vid : vidnoise;
+    float moshVal = mosh();
+    moshVal = mix(0., moshVal, feedback);
     
-  
-    gl_FragColor = vec4(dist*10.);//vec4(c, feedback);
+    vec3 cc = vec3(moshVal);
+    cc = feedback == 1. ? cc : rainbowLava();
+    
+    gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
 }
 
 void main(){
