@@ -198,7 +198,7 @@ vec3 lum(vec3 color){
     vec3 weights = vec3(0.212, 0.7152, 0.0722);
     return vec3(dot(color, weights));
 }
-
+out vec4 fragColor;
 void main () {
     float t2 = time/5. + 1000.;
     
@@ -211,7 +211,7 @@ void main () {
     camPos.x = mod(stN.x + time + rand(quant(stN.y, midiCC[0]/127.*100.)*100.)*midiCC[1]/127., 1.);
     camPos.y = mod(stN.y + time + rand(quant(stN.x, midiCC[2]/127. *100.)*100.)*midiCC[3]/127., 1.);
     
-    vec3 cam = texture2D(channel0, camPos).rgb;
+    vec3 cam = texture(channel0, camPos).rgb;
     
-    gl_FragColor = vec4(cam, 1.);
+    fragColor = vec4(cam, 1.);
 }

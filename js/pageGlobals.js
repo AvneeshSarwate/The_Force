@@ -86,6 +86,9 @@ $( document ).ready(function() {
         if(loaderInd < 7) initialLoaderFunction = yoyoVideoTest;
         else initialLoaderFunction = yoyoVideoTestB;
     } ;
+    if(shaderToGet == "interactiveGridSlice1"){
+        useWebGL2 = true;
+    }
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
@@ -1013,7 +1016,7 @@ $( document ).ready(function() {
     // --- rendering context ---------------------
     mCanvas = document.getElementById("demogl");
 
-    createGlContext();
+    createGlContext(useWebGL2);
 
 
     // --- audio context ---------------------

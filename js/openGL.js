@@ -33,6 +33,13 @@ var sliderValsU = null;
 
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
+var fsNewWGL2 = `
+out vec4 fragColor;
+void main () {
+    fragColor = vec4(black, 1.0);
+}
+`;
+var finalFragShader = '';
 
 var testingImage = false;
 var testTexture;
@@ -60,9 +67,11 @@ function markovWalk(pChange, state){
     return Math.random() < pChange ? !state + 0 : state;
 }
 
-function createGlContext() {
+var useWebGL2 = false;
+function createGlContext(useWGL2) {
     var gGLContext = null;
     var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    if(useWGL2) names.unshift("webgl2");
     for (var i = 0; i < names.length; i++) {
         try {
             gGLContext = mCanvas.getContext(names[i], {
@@ -95,6 +104,8 @@ function createGlContext() {
         $.ajax({ url: "shaders/screen.vert", dataType: "text" }),
         $.ajax({ url: "shaders/screen.frag", dataType: "text" }),
         $.ajax({ url: "shaders/header.frag", dataType: "text" })).done(function(d, v, f, h) {
+
+        if(useWebGL2) h = "#version 300 es\n"+h;
 
         //build screen shader
         var res = createForceShader(v[0], f[0]);
@@ -149,7 +160,7 @@ function createGlContext() {
         vsScreen = v[0];
         mHeader = h[0];
         vsDraw = d[0];
-        var res = newShader(vsDraw, fsNew);
+        var res = newShader(vsDraw, useWebGL2 ? fsNewWGL2 : fsNew);
         if (res.mSuccess === false) {
             console.log(res.mInfo);
             alert("error");
@@ -278,7 +289,9 @@ function parseAndTriggerSequence(patternString){
 }
 
 function newShader(vs, shaderCode) {
-    var res = createForceShader(vs, mHeader + customLoaderUniforms + mInputsStr + mOSCStr + mMIDIStr + shaderCode); //, true);
+    var fragShader = mHeader + customLoaderUniforms + mInputsStr + mOSCStr + mMIDIStr + shaderCode;
+    finalFragShader = fragShader;
+    var res = createForceShader(vs, fragShader); //, true);
 
     if (res.mSuccess === false) {
         return res;
