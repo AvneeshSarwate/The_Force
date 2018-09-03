@@ -1,8 +1,8 @@
 #version 300 es
 precision lowp float;
 
-attribute vec2 position;
-attribute vec2 a_texCoord;
+in vec2 position;
+in vec2 a_texCoord;
 
 out vec2 v_texCoord;
 

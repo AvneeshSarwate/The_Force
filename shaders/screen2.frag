@@ -4,7 +4,7 @@ precision lowp float;
 in vec2 v_texCoord;
 
 uniform vec2 resolution;
-uniform sampler2D texture;
+uniform sampler2D tex;
 uniform vec4 edgeBlend;
 
 uniform vec4 colorCurves;
@@ -14,7 +14,7 @@ out vec4 fragColor;
 void main()
 {
     vec2 uv = gl_FragCoord.xy / resolution;
-    vec4 color = texture2D(texture, v_texCoord);
+    vec4 color = texture(tex, v_texCoord);
 
     float c = smoothstep(edgeBlend.x+edgeBlend.y, edgeBlend.x-edgeBlend.y, uv.x) + 
               smoothstep(edgeBlend.z-edgeBlend.w, edgeBlend.z+edgeBlend.w , uv.x);

@@ -1,7 +1,7 @@
 #version 300 es
 precision lowp float;
 
-attribute vec2 position;
+in vec2 position;
 
 void main()
 {

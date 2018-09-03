@@ -99,13 +99,15 @@ function createGlContext(useWGL2) {
     gl = gGLContext;
     resizeGLCanvas(window.innerWidth, window.innerHeight);
 
+    var wglSuffix = useWGL2 ? "2" : "";
+
     //because I want to load shaders as files. :/
-    $.when($.ajax({ url: "shaders/draw.vert", dataType: "text" }),
-        $.ajax({ url: "shaders/screen.vert", dataType: "text" }),
-        $.ajax({ url: "shaders/screen.frag", dataType: "text" }),
+    $.when($.ajax({ url: "shaders/draw"+wglSuffix+".vert", dataType: "text" }),
+        $.ajax({ url: "shaders/screen"+wglSuffix+".vert", dataType: "text" }),
+        $.ajax({ url: "shaders/screen"+wglSuffix+".frag", dataType: "text" }),
         $.ajax({ url: "shaders/header.frag", dataType: "text" })).done(function(d, v, f, h) {
 
-        if(useWebGL2) h = "#version 300 es\n"+h;
+        if(useWebGL2) h[0] = "#version 300 es\n"+h[0];
 
         //build screen shader
         var res = createForceShader(v[0], f[0]);
