@@ -247,7 +247,7 @@ void main () {
     vec4 bb = texture2D(backbuffer, hashN);
     float lastFeedback = bb.a;
 
-    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    // vec2 multBall = multiBallCondfaition(stN, t2/2.);
     bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
     condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
 
@@ -278,9 +278,10 @@ void main () {
     
     stN = uvN();
     float quantNum = 20.;
-    vec2 quantN = quant(stN, quantNum);
+    vec2 quantN = quant(mix(stN, coordWarp(stN, time).xy, 0.), quantNum);
+    stN = rotate(stN, quantN + 0.5/quantNum, time*3.*(1. + 0.*mix(quantN.x, quantN.y, sinN(time/5.))));
     float quantInd = quantNum * quantNum * quantN.x + quantNum * quantN.y;
-    vec2 scrollN = vec2(wrapVal(stN.x + time/8.*(1. + quantN.y) + quantInd, quantN.x, quantN.x+1./quantNum), wrapVal(stN.y - time/8.*(1. + quantN.x) + quantInd, quantN.y, quantN.y+1./quantNum));
+    vec2 scrollN = vec2(wrapVal(stN.x + time/8.*(1. + rand(quantN.y*30.))*0. + quantInd, quantN.x, quantN.x+1./quantNum), wrapVal(stN.y - time/8.*(1. + rand(quantN.x*30.))*0. + quantInd, quantN.y, quantN.y+1./quantNum));
     
     vec3 cam = texture2D(channel0, vec2(1. - scrollN.x, scrollN.y)).rgb;
     
