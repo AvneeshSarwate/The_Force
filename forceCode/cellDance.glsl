@@ -206,22 +206,22 @@ void main () {
     mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
 
     vec2 stN = uvN();
-    float numCells = 15.;
+    float numCells = 5.;
     vec2 rotN = rotate(stN, vec2(0.5), time);
     vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells/(10. + sinN(rowColN.x*PI+time/1.5)*100.);
-
+    vec2 warpCoord = coordWarp(stN, time).xy;
     
     vec3 cc;
     float decay = 0.999;
     float decay2 = 0.01;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(hashN, rotN, 0.004*rotN.x));
+    vec4 bb = texture2D(backbuffer, mix(hashN, rotN, 0.01*rotN.x));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
     bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
-    condition = distance(quant(hashN, numCells) + vec2(sinN(t2+rowColN.x*PI), cosN(t2+rowColN.y*PI))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.*(0.5+rowColN.y));
+    condition = distance(warpCoord + vec2(sinN(t2+rowColN.x*PI), cosN(t2+rowColN.y*PI))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.*(0.5+rowColN.y));
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
