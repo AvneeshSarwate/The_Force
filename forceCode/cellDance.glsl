@@ -216,7 +216,7 @@ void main () {
     float decay = 0.999;
     float decay2 = 0.01;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(hashN, rotN, 0.01*rotN.x));
+    vec4 bb = texture2D(backbuffer, mix(hashN, rotN, 0.01*pow(rotN.y, .02)));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
