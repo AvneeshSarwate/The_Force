@@ -207,7 +207,7 @@ void main () {
 
     vec2 stN = uvN();
     float numCells = 5.;
-    vec2 rotN = rotate(stN, vec2(0.5), time);
+    vec2 rotN = rotate(stN, vec2(0.5), time/10.);
     vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells/(10. + sinN(rowColN.x*PI+time/1.5)*100.);
     vec2 warpCoord = coordWarp(stN, time).xy;
