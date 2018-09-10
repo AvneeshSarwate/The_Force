@@ -225,7 +225,7 @@ void main () {
     vec2 fdbkMod = (hash(vec3(stN, t2)).xy + -0.5);
     fdbkMod = (ballTwist(stN, time).xy-0.5);
     vec2 hashN = stN + fdbkMod/numCells;
-
+    vec2 cent = vec2(0.5);
     
     vec3 cc;
     float decay = 0.999;
@@ -233,7 +233,8 @@ void main () {
     float feedback;
     vec4 bb = texture2D(backbuffer, hashN);
     float lastFeedback = bb.a;
-
+    
+    hashN = rotate(hashN, cent, time/4.);
     // vec2 multBall = multiBallCondition(stN, t2/2.);
     bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
     condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
@@ -256,14 +257,16 @@ void main () {
     
     vec3 col = vec3(feedback);
     
-    vec2 cent = vec2(0.5);
+    
     
     float numDiv = 100. ;
+    
+    float radDist = pow(mod(distance(stN, cent)*1.5+time/15., 1.), 5.) - pow(mod(distance(stN, cent)+time/15. + 0.01, 1.), 5.);
     
     // vec2 warp = mix(stN, ballTwist(stN, time/5.).xy, 0.03);
     // vec2 q = floor(warp*numDiv);
     // col = mod(q.x, 5.) == 0. ||  mod(q.y, 5.) == 0. ? col : black;
-    col = mix(bb.rgb, col, 0.001 + sigmoid((sin(time/4.)-0.2)*5.)*0.05);
+    col = mix(bb.rgb, col, 0.001 + radDist*0.05);
     
     gl_FragColor = vec4(col, feedback);
 }
