@@ -481,7 +481,7 @@ function yoyoVideoTestB(){
     blobVideoLoad(0, 5, "LaraDance.mp4", false, {'postLoadFunc': () => {
         // videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
         blobVideoLoad(1, 7, "LaraDance.mp4", false, {'postLoadFunc': function(){
-            setTimeout(() => {videos[0].currentTime = videos[0].currentTime + 0.05}, 2000);
+            setTimeout(() => {videos[0].currentTime = videos[1].currentTime + 0.7}, 2000);
             // var setVideoLag = function(){
             //     console.log("lagVidTime", videos[0].currentTime, videos[0].duration, mod((videos[0].currentTime - 0.05), videos[0].duration));
             //     if(videos[0].duration && videos[1].duration) videos[1].currentTime = mod((videos[0].currentTime - 0.05), videos[0].duration);
@@ -498,7 +498,8 @@ function yoyoVideoTestB(){
         if(videoSnapshotTexture && videoSnapshotTexture.globject) updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
     }
 
-    sliderConfig = videoBlendSliderVals;
+    sliderConfig = yoyoSliders;
+    sliderCallbacks[0] = function(sliderVal){videos[0].currentTime = videos[1].currentTime + sliderVal};
 
     videoUploadResponder = function(videoFile){
         replaceVideo(0, 5, videoFile)

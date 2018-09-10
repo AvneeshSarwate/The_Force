@@ -3,7 +3,9 @@ var sliders = arrayOf(numSliders);
 var sliderVals = arrayOf(numSliders);
 var sliderContainer; 
 
+var sliderCallbacks = {};
 var sliderConfig = arrayOf(10).map((id, ind) => ({label: "label", conf: {min: 0, max: 1, value: 0}}));
+
 
 function setUpSliders(){
     sliderContainer = $('#videoUploadPanel');
@@ -25,6 +27,7 @@ function setUpSliders(){
         slider.on('change', function(v){
             $('#sliderVal'+id).val(v);
             sliderVals[id] = v;
+            if(sliderCallbacks[id]) sliderCallbacks[id](v);
         });
         return slider;
     });
@@ -39,6 +42,21 @@ var videoBlendSliderVals = [
     {conf: {min: 0, max: 1, value: 0.5}, label: "bleedthrough outline clarity (default 0.5)"},
     {conf: {min: 0, max: 1, value: 0.5}, label: "bleedthrough color intensity (default 0.5)"},
     {conf: {min: 0, max: 1, value: 0}, label: "label"},
+    {conf: {min: 0, max: 1, value: 0}, label: "label"},
+    {conf: {min: 0, max: 1, value: 0}, label: "label"}
+];
+
+
+
+var yoyoSliders = [
+    {conf: {min: 0, max: 10, value: 0.7}, label: "(type value, slider buggy) lag between playheads in seconds"},
+    {conf: {min: 0, max: 2, value: 0.5}, label: "waviness of playhead 1"},
+    {conf: {min: 0, max: 2, value: 0.5}, label: "waviness of playead 2"},
+    {conf: {min: 0, max: 2, value: 1.2}, label: "white-saturation of color (sensitive betwee 0.95 and 1.2)"},
+    {conf: {min: 0, max: 4, value: 1}, label: "waviness speed"},
+    {conf: {min: 0, max: 1, value: 0.5}, label: "trail decay time (1 is infinite)"},
+    {conf: {min: -2, max: 2, value: 0}, label: "horizontal scrolling speed"},
+    {conf: {min: 0, max: 1, value: 0}, label: "amount of black overlay of non-distorted dancer"},
     {conf: {min: 0, max: 1, value: 0}, label: "label"},
     {conf: {min: 0, max: 1, value: 0}, label: "label"}
 ];
