@@ -202,6 +202,21 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+vec3 ballTwist(vec2 stN, float t2, float numBalls){ 
+    vec2 warp = stN;
+    
+    float rad = .15;
+    
+    for (float i = 0.0; i < 100.; i++) {
+        if(i == numBalls) break;
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 5.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
 void main () {
     float t2 = time/5. + 1000.;
     
@@ -214,6 +229,7 @@ void main () {
     float numCells = 400.;
     vec3 warp = coordWarp(stN, time/2., 20.);
     vec3 warpSink = coordWarp(stN, time/20., 3.);
+    // warpSink = ballTwist(stN, time/2., 30.);
     // vec3 warp2 = coordWarp(stN, time +4.);
     stN = mix(stN, warp.xy, 0.025);
     vec2 texN = vec2(0.);
@@ -252,20 +268,17 @@ void main () {
         feedback = lastFeedback - decay2;
     }
     
-    vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
+
+    float col = sinN((1.-feedback)*PI*5.);
+    col = mix(bb.r, col, 0.1);
+    col = sigmoid((col-0.459)*7.);
+    vec3 c = vec3(feedback < 0.01 ? 0. : col);
     
-    vec3 col = vec3(feedback < 0.01 ? 0. : sinN((1.-feedback)*PI*5.));
+    // c.xy = rotate(c.xy, cent, warp.x*3.);
+    // c.yz = rotate(c.yz, cent, warp.y*3.);
+    // c.zx = rotate(c.zx, cent, warp.z*3.);
+    // c = mix(bb.rgb, col, 0.01);
     
     
-    
-    // col.xy = rotate(col.xy, cent, warp.x*3.);
-    // col.yz = rotate(col.yz, cent, warp.y*3.);
-    // col.zx = rotate(col.zx, cent, warp.z*3.);
-    // col = mix(bb.rgb, col, 0.01);
-    
-    // float height = 0.5;
-    // float thickness = 0.03;
-    // col = abs(warp.y - height) < thickness  ? black : white;
-    
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(c, feedback);
 }
