@@ -579,7 +579,7 @@ function setupWebcam() {
 
   function checkReady() {
     if (playing && timeupdate) {
-      webcamReady = true;
+      webcamReady = hasUserMedia;
     }
   }
 

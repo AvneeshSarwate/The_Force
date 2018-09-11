@@ -1140,7 +1140,7 @@ $( document ).ready(function() {
                 $("#defaultCanvas0").hide();
             }
 
-            if(webcamReady && takeSnapshot){
+            if(takeSnapshot){
                 if(webcamReady) { 
                     updateVideoTexture(gl, webcamSnapshotTexture, webcam);
                     var texture = {};
