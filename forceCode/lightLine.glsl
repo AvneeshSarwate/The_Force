@@ -224,13 +224,14 @@ void main () {
     mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
     vec2 cent = vec2(0.5);
     vec2 sink = vec2(sinN(time), cosN(time));
+    float t = time + 60.;
 
     vec2 stN = uvN();
     float numCells = 400.;
-    vec3 warp = ballTwist(stN, time/2., 20.);
+    vec3 warp = ballTwist(stN, t/20., 20.);
     vec3 warpSink = vec3(0.);
     // warpSink = coordWarp(stN, time/20., 3.);
-    warpSink = ballTwist(coordWarp(stN, time/6., 20.).xy, time/2., 30.);
+    warpSink = ballTwist(coordWarp(stN, t/6., 20.).xy, t/30., 30.);
     // vec3 warp2 = coordWarp(stN, time +4.);
     stN = mix(stN, warp.xy, 0.025);
     vec2 texN = vec2(0.);
@@ -242,13 +243,13 @@ void main () {
     float height = 0.5;
     float thickness = 0.03;
     
-    bool lineCond = abs(coordWarp(warp.xy, time/2., 20.).y - height) < thickness;
+    bool lineCond = abs(coordWarp(warp.xy, t/2., 20.).y - height) < thickness;
     
     vec3 cc;
     float decay = 0.999;
     float decay2 = 0.01;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(hashN, warpSink.xy, -0.05));
+    vec4 bb = texture2D(backbuffer, mix(hashN, warpSink.xy, -0.02));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
