@@ -227,9 +227,10 @@ void main () {
 
     vec2 stN = uvN();
     float numCells = 400.;
-    vec3 warp = coordWarp(stN, time/2., 20.);
-    vec3 warpSink = coordWarp(stN, time/20., 3.);
-    // warpSink = ballTwist(stN, time/2., 30.);
+    vec3 warp = ballTwist(stN, time/2., 20.);
+    vec3 warpSink = vec3(0.);
+    // warpSink = coordWarp(stN, time/20., 3.);
+    warpSink = ballTwist(coordWarp(stN, time/6., 20.).xy, time/2., 30.);
     // vec3 warp2 = coordWarp(stN, time +4.);
     stN = mix(stN, warp.xy, 0.025);
     vec2 texN = vec2(0.);
@@ -240,7 +241,8 @@ void main () {
 
     float height = 0.5;
     float thickness = 0.03;
-    bool lineCond = abs(warp.y - height) < thickness;
+    
+    bool lineCond = abs(coordWarp(warp.xy, time/2., 20.).y - height) < thickness;
     
     vec3 cc;
     float decay = 0.999;
@@ -270,8 +272,9 @@ void main () {
     
 
     float col = sinN((1.-feedback)*PI*5.);
+    
+    // col = sigmoid((col-0.5)*5.);
     col = mix(bb.r, col, 0.1);
-    col = sigmoid((col-0.459)*7.);
     vec3 c = vec3(feedback < 0.01 ? 0. : col);
     
     // c.xy = rotate(c.xy, cent, warp.x*3.);
