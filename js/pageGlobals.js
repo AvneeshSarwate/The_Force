@@ -89,6 +89,7 @@ $( document ).ready(function() {
     if(shaderToGet == "interactiveGridSlice1"){
         useWebGL2 = true;
     }
+    if(shaderToGet == "controllableFeedbackTrails") initialLoaderFunction = sliderTrails;
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

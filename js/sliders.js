@@ -60,3 +60,16 @@ var yoyoSliders = [
     {conf: {min: 0, max: 1, value: 0}, label: "label"},
     {conf: {min: 0, max: 1, value: 0}, label: "label"}
 ];
+
+var trailsSliders = [
+    {conf: {min: 0, max: 1, value: 0.5}, label: "slider trail decay time"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "trail smoothing (higher values also increase trail decay time)"},
+    {conf: {min: 0, max: 1, value: 0.2}, label: "movement detection threshold"},
+    {conf: {min: 0, max: 1, value: 0.3}, label: "hue spread"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "hue rotation speed"},
+    {conf: {min: 0, max: 1, value: 0.5}, label: "hue offset"},
+    {conf: {min: 0, max: 1, value: 1}, label: "saturation"},
+    {conf: {min: 0, max: 1, value: 1}, label: "brightness"},
+    {conf: {min: 0, max: 1, value: 0}, label: "hsv mix"},
+    {conf: {min: 0, max: 1, value: 0}, label: "horizontal scrolling"}
+];

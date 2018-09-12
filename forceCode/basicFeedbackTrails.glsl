@@ -39,7 +39,7 @@ void ex3() {
         feedback = 1.;
     } 
     
-    gl_FragColor = vec4(feedback);//vec4(c, feedback);
+    gl_FragColor = vec4(vec3(1.-feedback), feedback);//vec4(c, feedback);
 }
 
 void main(){

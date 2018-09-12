@@ -505,3 +505,7 @@ function yoyoVideoTestB(){
         replaceVideo(0, 5, videoFile)
     }
 }
+
+function sliderTrails(){
+    sliderConfig = trailsSliders;
+}

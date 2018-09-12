@@ -30,16 +30,22 @@ void ex3() {
     vec3 cam = texture2D(channel0, camPos).rgb; 
     vec3 snap = texture2D(channel3, camPos).rgb;
 
-    vec3 c;
     float feedback; 
-    if(colourDistance(cam, snap) < .5){
-        feedback = texture2D(backbuffer, vec2(stN.x, stN.y)).a * 0.97;
+    vec4 bb = texture2D(backbuffer, vec2(stN.x+0.1*sliderVals[9], stN.y));
+    float maxColorDist = colourDistance(black, white);
+    if(colourDistance(cam, snap)/maxColorDist < sliderVals[2]){
+        feedback = bb.a - 0.2 * (1.-sliderVals[0]);
     } 
     else{
         feedback = 1.;
     } 
     
-    gl_FragColor = vec4(feedback);//vec4(c, feedback);
+    vec3 c = vec3(1.-feedback);
+    c = mix(c, bb.rgb, sliderVals[1]);
+    vec3 col = hsv2rgb(vec3(c.x*sliderVals[3]*4.+time*sliderVals[4]*4. + sliderVals[5], sliderVals[6], sliderVals[7]));
+    vec3 cc = mix(c, col, sliderVals[8]);
+    if(feedback < 0.001) cc = white;
+    gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
 }
 
 void main(){
