@@ -228,7 +228,7 @@ void main () {
 
     vec2 stN = uvN();
     float numCells = 400.;
-    vec3 warp = ballTwist(stN, t/20., 20.);
+    vec3 warp = ballTwist(stN, t/2., 20.);
     vec3 warpSink = vec3(0.);
     // warpSink = coordWarp(stN, time/20., 3.);
     warpSink = ballTwist(coordWarp(stN, t/6., 20.).xy, t/30., 30.);
@@ -243,7 +243,10 @@ void main () {
     float height = 0.5;
     float thickness = 0.03;
     
-    bool lineCond = abs(coordWarp(warp.xy, t/2., 20.).y - height) < thickness;
+    vec3 warp2 = coordWarp(warp.xy, t/2., 20.);
+    bool lineCond = abs(warp2.y - height) < thickness;
+    if(mouseN.z > 0.) cent = mouseN.xy;
+    bool ballCond = distance(warp2.xy, cent) < sinN(t2/2.)*0.3 && distance(warp2.xy, cent) > sinN(t2/2.)*0.2;
     
     vec3 cc;
     float decay = 0.999;
@@ -255,7 +258,7 @@ void main () {
     // vec2 multBall = multiBallCondition(stN, t2/2.);
     bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
     condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
-    condition = lineCond;
+    condition = ballCond;
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
