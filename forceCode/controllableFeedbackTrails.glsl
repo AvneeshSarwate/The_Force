@@ -41,12 +41,13 @@ void ex3() {
         feedback = 1.;
     } 
     
-    vec3 c = vec3(1.-feedback);
+    vec3 c = vec3(feedback);
     c = mix(c, bb.rgb, sliderVals[1]);
     vec3 col = hsv2rgb(vec3(c.x*sliderVals[3]*4.+time*sliderVals[4]*4. + sliderVals[5], sliderVals[6], sliderVals[7]));
     vec3 cc = mix(c, col, sliderVals[8]);
-    if(colourDistance(cam, white) < 0.1) cc = vid;
-    else if(feedback < 0.001) cc = white;
+    bool haveLightShowVideo = false;
+    if(haveLightShowVideo && colourDistance(cam, white) < 0.1) cc = vid;
+    else if(feedback < 0.001) cc = black;
     gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
 }
 
