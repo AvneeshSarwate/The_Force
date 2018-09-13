@@ -508,4 +508,5 @@ function yoyoVideoTestB(){
 
 function sliderTrails(){
     sliderConfig = trailsSliders;
+    blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
 }

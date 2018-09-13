@@ -29,6 +29,7 @@ void ex3() {
     vec2 camPos = vec2(1.-stN.x, stN.y);
     vec3 cam = texture2D(channel0, camPos).rgb; 
     vec3 snap = texture2D(channel3, camPos).rgb;
+    vec3 vid = texture2D(channel5, stN).rgb;
 
     float feedback; 
     vec4 bb = texture2D(backbuffer, vec2(stN.x+0.1*sliderVals[9], stN.y));
@@ -44,7 +45,8 @@ void ex3() {
     c = mix(c, bb.rgb, sliderVals[1]);
     vec3 col = hsv2rgb(vec3(c.x*sliderVals[3]*4.+time*sliderVals[4]*4. + sliderVals[5], sliderVals[6], sliderVals[7]));
     vec3 cc = mix(c, col, sliderVals[8]);
-    if(feedback < 0.001) cc = white;
+    if(colourDistance(cam, white) < 0.1) cc = vid;
+    else if(feedback < 0.001) cc = white;
     gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
 }
 
