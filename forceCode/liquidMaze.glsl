@@ -223,9 +223,9 @@ void main () {
     vec2 stN = uvN();
     float numCells = 400.;
     vec2 cent = vec2(0.5);
-    vec2 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20.).xy;
+    vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20.);
 
-    vec2 hashN = stN + sin(time+warpN*PI)/numCells;
+    vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
 
     
     vec3 cc;
@@ -236,8 +236,7 @@ void main () {
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
-    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
-    condition = mod(warpN.x, 0.1) < 0.05; distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+    bool condition = mod(warpN.x, 0.1) < 0.05;
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -253,11 +252,9 @@ void main () {
         feedback = lastFeedback - decay2;
     }
     
-    vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
     
     vec3 col = vec3(feedback);
     
-
     
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(feedback);
 }
