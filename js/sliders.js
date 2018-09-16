@@ -73,3 +73,16 @@ var trailsSliders = [
     {conf: {min: 0, max: 1, value: 0}, label: "hsv mix"},
     {conf: {min: 0, max: 1, value: 0}, label: "horizontal scrolling"}
 ];
+
+var trailsSliders2 = [
+    {conf: {min: 0, max: 1, value: 0.5}, label: "trail decay time"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "frame smoothing/blur (higher values also increase trail decay time)"},
+    {conf: {min: 0, max: 1, value: 0.2}, label: "movement detection threshold"},
+    {conf: {min: 0, max: 1, value: 0.3}, label: "trail rotation"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "trail color saturation (0.1 is normal color)"},
+    {conf: {min: 0, max: 1, value: 0}, label: ""},
+    {conf: {min: 0, max: 1, value: 1}, label: ""},
+    {conf: {min: 0, max: 1, value: 1}, label: ""},
+    {conf: {min: 0, max: 1, value: 0}, label: ""},
+    {conf: {min: 0, max: 1, value: 0}, label: ""}
+];

@@ -506,7 +506,11 @@ function yoyoVideoTestB(){
     }
 }
 
-function sliderTrails(){
-    sliderConfig = trailsSliders;
-    blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
+function sliderTrails(ind){
+    return function(){
+        if(ind == 0) sliderConfig = trailsSliders;
+        if(ind == 2) sliderConfig = trailsSliders2;
+        blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
+    }
 }
+

@@ -89,7 +89,11 @@ $( document ).ready(function() {
     if(shaderToGet == "interactiveGridSlice1"){
         useWebGL2 = true;
     }
-    if(shaderToGet == "controllableFeedbackTrails") initialLoaderFunction = sliderTrails;
+    if(shaderToGet.indexOf("controllableFeedbackTrails") > -1){
+        var loaderInd = shaderToGet[shaderToGet.length-1];
+        if(!loaderInd) initialLoaderFunction = sliderTrails(0);
+        else initialLoaderFunction = sliderTrails(parseInt(loaderInd));
+    }
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
