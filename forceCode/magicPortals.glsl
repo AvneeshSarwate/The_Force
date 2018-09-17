@@ -211,7 +211,7 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls){
     
     for (float i = 0.0; i < 100.; i++) {
         if(i == numBalls) break;
-        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i))*1.5 - .25;
         // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
         warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 5.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
     }
@@ -229,24 +229,25 @@ void main () {
     float numCells = 400.;
     vec2 cent = vec2(0.5);
     vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 10.);
+    vec3 warpN2 = coordWarp(stN, time/5.);
 
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
     vec2 rotN = rotate(quant(warpN.xy, 10.), cent, time/1.);
-    hashN = mix(mix(quant(stN, 1000. * warpN.z), rotate(stN, cent + movementDeviation(time), rotN.x*1.5), 0.01), cent + movementDeviation(time), 0.01);
+    hashN = mix(mix(quant(stN, 1500. * warpN.z), rotate(stN, cent + movementDeviation(time), rotN.x*1.5), 0.01), cent + movementDeviation(time), 0.01);
     
     vec3 cc;
     float decay = 0.999;
-    float decay2 = 0.01;
+    float decay2 = 0.01 + sigmoid(sin(time/5. + warpN2.x*PI)*10.)*0.3;
     float feedback;
     vec4 bb = texture2D(backbuffer, hashN);
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
-    bool condition = distance(quant(hashN, numCells) + movementDeviation(t2)/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+    bool condition = distance(quant(hashN, numCells) + movementDeviation(t2)/numCells/2. - 1./numCells/4., stN) < 1./(numCells);
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
-        if(lastFeedback < .9) {
+        if(lastFeedback < .3) {
             feedback = 1. ;// * multBall.y;
         } else {
             // feedback = lastFeedback * decay;
@@ -257,9 +258,10 @@ void main () {
         // feedback = lastFeedback * decay;
         feedback = lastFeedback - decay2;
     }
-    
+    vec4 bbN = texture2D(backbuffer, stN);
     vec3 col = vec3(feedback);
-    col = mix(bb.rgb, col, 0.01);
+    if(warpN.z == 0.) col = black; 
+    // col = mix(bbN.rgb, col, 0.05);
 
     
     gl_FragColor = vec4(col, feedback);
