@@ -510,6 +510,20 @@ function sliderTrails(ind){
     return function(){
         if(ind == 0) sliderConfig = trailsSliders;
         if(ind == 2) sliderConfig = trailsSliders2;
+        navigator.mediaDevices.enumerateDevices().then(function(deviceList){
+            var cameras = deviceList.filter(device => device.kind == "videoinput");
+            var camSelector = $("#cameraSelector");
+            for(var i = 0; i < cameras.length; i++){
+                camSelector.append("<option value=\""+i+"\">cameara "+i+"</option>")
+            }
+            camSelector.change(function(event){
+                camcam = camSelector;
+                changeWebcamSelection(parseInt(camSelector.val()));
+                console.log(event);
+            })
+        });
         blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
     }
 }
+
+// 
