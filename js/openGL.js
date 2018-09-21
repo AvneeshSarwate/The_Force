@@ -586,6 +586,22 @@ function setupWebcam() {
   return video;
 }
 
+function changeWebcamSelection(camInd){
+    navigator.mediaDevices.enumerateDevices()
+        .then(function(deviceList){return deviceList.filter(device => device.kind == "videoinput")}) 
+        .catch(function(err) { console.log(err.name + ": " + err.message); })  
+        .then(function(cameras){
+            var constraints = {video: { width: 1280, height: 720,  deviceId: cameras[camInd].deviceId} }; 
+            navigator.mediaDevices.getUserMedia(constraints)
+              .then(function(mediaStream) {
+                webcam.srcObject = mediaStream;
+                webcam.onloadedmetadata = function(e) {
+                  webcam.play();
+                };
+              })
+        })
+}
+
 
 function initVideoTexture(gl, url) {
   const texture = gl.createTexture();

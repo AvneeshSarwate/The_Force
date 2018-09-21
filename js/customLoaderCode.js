@@ -513,4 +513,3 @@ function sliderTrails(ind){
         blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
     }
 }
-
