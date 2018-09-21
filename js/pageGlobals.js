@@ -91,7 +91,7 @@ $( document ).ready(function() {
     }
     if(shaderToGet.indexOf("controllableFeedbackTrails") > -1){
         var loaderInd = shaderToGet[shaderToGet.length-1];
-        if(!loaderInd) initialLoaderFunction = sliderTrails(0);
+        if(!parseInt(loaderInd)) initialLoaderFunction = sliderTrails(0);
         else initialLoaderFunction = sliderTrails(parseInt(loaderInd));
     }
     

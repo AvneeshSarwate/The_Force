@@ -51,7 +51,6 @@ void ex3() {
     vec3 cam = texture2D(channel0, camPos).rgb; 
     vec3 flipCam = texture2D(channel0, stN).rgb; 
     vec3 snap = texture2D(channel3, camPos).rgb;
-    vec3 vid = texture2D(channel5, stN).rgb;
 
     float feedback; 
     vec4 bb = texture2D(backbuffer, vec2(stN.x+0.1*sliderVals[9], stN.y));

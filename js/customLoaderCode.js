@@ -522,7 +522,7 @@ function sliderTrails(ind){
                 console.log(event);
             })
         });
-        blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
+        // blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
     }
 }
 
