@@ -211,53 +211,33 @@ vec3 inStripeY(vec2 stN, float t){
 vec3 inStripeX2(vec2 stN, float rw){
     bool inStripe = false;
     vec2 stN0 = stN;
+    float topInd = -1.;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(rw+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.x) < rand(seed)*0.005 + 0.001) inStripe = inStripe || true;
+        if(abs(loc - stN.x) < rand(seed)*0.005 + 0.001) {
+            inStripe = inStripe || true;
+            topInd = i;
+        }
     }
-    return inStripe ? black : white;
+    return inStripe ? vec3(0., 0., topInd) : vec3(1., 1., topInd);
 }
 
 vec3 inStripeY2(vec2 stN, float t){
     bool inStripe = false;
     vec2 stN0 = stN;
+    float topInd = -1.;
     for(float i = 0.; i < 40.; i++){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(t+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.y) < rand(seed)*0.005  + 0.001) inStripe = inStripe || true;
+        if(abs(loc - stN.y) < rand(seed)*0.005  + 0.001) {
+            inStripe = inStripe || true;
+            topInd = i;
+        }
     }
-    return inStripe ? black : white;
-}
-
-vec2 xLens(vec2 stN, float rw){
-    bool inStripe = false;
-    vec2 stN0 = stN;
-    vec2 coord = stN;
-    float lensSize = 0.5;
-    for(float i = 0.; i < 10.; i++){
-        float seed = 1./i;
-        stN = rotate(stN0, vec2(0.5), 0.3 * sin(rw+ i*50.));
-        float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.x) < lensSize) coord = vec2(mix(loc, coord.x, abs(loc - stN.x)/lensSize), coord.y);
-    }
-    return mix(stN0, coord, 1.9);
-}
-
-vec2 yLens(vec2 stN, float t){
-    bool inStripe = false;
-    vec2 stN0 = stN;
-    vec2 coord = stN;
-    float lensSize = 0.5;
-    for(float i = 0.; i < 10.; i++){
-        float seed = 1./i;
-        stN = rotate(stN0, vec2(0.5), 0.3 * sin(t+ i*50.));
-        float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.y) < lensSize) coord = vec2(coord.x, mix(loc, coord.y, abs(loc - stN.y)/lensSize));
-    }
-    return mix(stN0, coord, 1.9);;
+    return inStripe ? vec3(0., 0., topInd) : vec3(1., 1., topInd);;
 }
 
 // calculates the luminance value of a pixel
@@ -287,24 +267,26 @@ void main () {
     
     
     //take2
-    float timeVal =  1000. + sinN(time/100.)*100.;
+    float timeVal =  300.*PI + sinN(time/40.)*100.;
     vec2 cent = vec2(0.5);
     // stN = quant(stN, distance(stN, cent)* 100.);
     vec2 stN2 = rotate(stN, vec2(0.5), 10./200.);
-    float rad = 0.1;
+    float rad = 0.01;
     cent = vec2(sinN(timeVal * mix(1., stN.x, sinN(time/3.))/10.), cosN(timeVal * mix(1., stN.y, cosN(time/3.3))/10.))*rad + rad/2.;
-    c = inStripeX2(rotate(stN, cent, time/5.5+stN.y), timeVal/10.) * inStripeY2(rotate(stN, cent, time/5.+stN.x), timeVal/7.);
+    
+    //todo - inStripe(...).z is getting fucked up here through the multiplication
+    c = inStripeX2(rotate(stN, cent, time/5.5+stN.y), timeVal/7.) * inStripeY2(rotate(stN, cent, time/5.+stN.x), timeVal/10.3);
 
     
     vec3 cc;
-    float decay = 0.84;
+    float decay = 0.98;
     float feedback;
     vec4 bb = texture2D(backbuffer, mix(rotate(uvN(), vec2(0.5), sin(randWalk/100.)*0.1), stN, 1.));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition =  c == black; 
-    vec3 trail = black; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = white;
+    bool condition =  c.x == 0.; 
+    vec3 trail =  black; c.z > -.1 ? vec3(c.z/40.) : vec3(1.); // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = white - sinN(lastFeedback*PI*(1. + sinN(time/3. +stN.x*PI + PI/4.4)*20.));
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
