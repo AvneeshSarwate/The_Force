@@ -291,9 +291,11 @@ void main () {
     
     vec2 cent = vec2(0.5);
     
-    float blendTime = sinN(bt.x*PI+time);
+    vec2 btr = rotate(bt.xy, cent, time);
+    float blendTime = sinN(btr.y*PI+time);
     col = vec3(sigmoid( (mix(bb.r, col.x, 0.1)-0.5)*40.* blendTime));
-    if(blendTime > 0.5) col = texture2D(backbuffer, mix(stN, vec2(col.x, bb.x), 0.5)).rgb;
+    float glitchTimeSlice =  sinN(time/3.)*0.01;
+    if(glitchTimeSlice + 0.3 > blendTime && blendTime > glitchTimeSlice) col = texture2D(backbuffer, mix(stN, vec2(col.x, bb.x), 0.5)).rgb;
     
     
     gl_FragColor = vec4(vec3(col), feedback);
