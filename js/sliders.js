@@ -9,7 +9,7 @@ var sliderConfig = arrayOf(10).map((id, ind) => ({label: "label", conf: {min: 0,
 
 function setUpSliders(){
     sliderContainer = $('#videoUploadPanel');
-    sliders = sliders.map((elem, ind) => {
+    sliders = sliderConfig.map((elem, ind) => {
         let id = ind;
         var sliderHTMLTemplate = 
         `<br>
@@ -41,9 +41,6 @@ var videoBlendSliderVals = [
     {conf: {min: 0, max: 1, value: 0.1}, label: "rbg layer separation distance (default 0.1)"},
     {conf: {min: 0, max: 1, value: 0.5}, label: "bleedthrough outline clarity (default 0.5)"},
     {conf: {min: 0, max: 1, value: 0.5}, label: "bleedthrough color intensity (default 0.5)"},
-    {conf: {min: 0, max: 1, value: 0}, label: "label"},
-    {conf: {min: 0, max: 1, value: 0}, label: "label"},
-    {conf: {min: 0, max: 1, value: 0}, label: "label"}
 ];
 
 
@@ -57,8 +54,6 @@ var yoyoSliders = [
     {conf: {min: 0, max: 1, value: 0.5}, label: "trail decay time (1 is infinite)"},
     {conf: {min: -2, max: 2, value: 0}, label: "horizontal scrolling speed"},
     {conf: {min: 0, max: 1, value: 0}, label: "amount of black overlay of non-distorted dancer"},
-    {conf: {min: 0, max: 1, value: 0}, label: "label"},
-    {conf: {min: 0, max: 1, value: 0}, label: "label"}
 ];
 
 var trailsSliders = [
@@ -80,9 +75,13 @@ var trailsSliders2 = [
     {conf: {min: 0, max: 1, value: 0.2}, label: "movement detection threshold"},
     {conf: {min: 0, max: 1, value: 0.3}, label: "trail rotation"},
     {conf: {min: 0, max: 1, value: 0.1}, label: "trail color saturation (0.1 is normal color)"},
-    {conf: {min: 0, max: 1, value: 0}, label: ""},
-    {conf: {min: 0, max: 1, value: 1}, label: ""},
-    {conf: {min: 0, max: 1, value: 1}, label: ""},
-    {conf: {min: 0, max: 1, value: 0}, label: ""},
-    {conf: {min: 0, max: 1, value: 0}, label: ""}
+];
+
+var fogShipSliders = [
+    {conf: {min: 0, max: 1, value: 0.5}, label: "feedback noise spread"},
+    {conf: {min: 0, max: 1, value: 0.4}, label: "feedback rotation mix"},
+    {conf: {min: 0, max: 1, value: 0.35}, label: "ball distance threshold"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "backbuffer blend"},
+    {conf: {min: 0, max: 1, value: 0.2}, label: "trail decay speed"},
+    {conf: {min: 0, max: 1, value: 0.5}, label: "feedback rotation angle"},
 ];
