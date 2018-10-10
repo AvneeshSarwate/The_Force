@@ -204,11 +204,13 @@ void main () {
     // col = mod(time/4., 1.) < 0.01 ? col : mix(bb.rgb, col, 0.01);
     
     quantLev = 50.;
-    vec2 preQ = mix(uvN(), warp.xy, 0.6);
-    preQ = mix(preQ, cent, sliderVals[1]);
+    vec2 preQ = mix(uvN(), warp.xy, sliderVals[0]);
+    vec2 zoomCent = vec2(sliderVals[3], sliderVals[4]);
+    vec2 centMove = vec2(0.);
+    preQ = mix(preQ, zoomCent + centMove, sliderVals[2]);
     center = quant(preQ, quantLev);
     rad = 0.5/quantLev;
-    radCond = hash(vec3(center, 0.3)).x < sliderVals[0];
+    radCond = hash(vec3(center, 0.3)).x < sliderVals[1];
     // col = mod(time/4., 1.) < 0.01 ? col : mix(bb.rgb, col, 0.01);
     // col = mix(bb.rgb, col, 0.1);
     

@@ -85,3 +85,11 @@ var fogShipSliders = [
     {conf: {min: 0, max: 1, value: 0.2}, label: "trail decay speed"},
     {conf: {min: 0, max: 1, value: 0.5}, label: "feedback rotation angle"},
 ];
+
+var rainbowHitsSliders = [
+    {conf: {min: 0, max: 1, value: 0.5}, label: "warp amount"},
+    {conf: {min: 0, max: 1, value: 0.4}, label: "ball density"},
+    {conf: {min: 0, max: 1, value: 0.35}, label: "zoom"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "zoom center x position"},
+    {conf: {min: 0, max: 1, value: 0.2}, label: "zoomCenter y position"},
+]
