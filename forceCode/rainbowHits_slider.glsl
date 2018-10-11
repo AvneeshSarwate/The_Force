@@ -184,7 +184,7 @@ void main () {
     float decay = 0.999;
     float decay2 = 0.01;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(hashN, center, sliderVals[7]));
+    vec4 bb = texture2D(backbuffer, quant(mix(hashN, center, sliderVals[7]), 1500. * sliderVals[8]));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
@@ -221,5 +221,7 @@ void main () {
     
     
     col = distance(center, preQ) < rad  && radCond ? col : mix(black, 1.-col, sliderVals[6]);
+    
+    col = mix(bb.rgb, col, pow(sliderVals[9], 5.));
     gl_FragColor = vec4(col, feedback);
 }
