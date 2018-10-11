@@ -22,6 +22,7 @@ var lastNoteOffTime = arrayOf(128);
 var midiOnEventFlag = false;
 var midiOffEventFlag = false;
 var midiCC = arrayOf(128);
+var noteEvents = [];
 
 var pitchSequence = new Array();
 var velocitySequence = new Array();
@@ -131,7 +132,7 @@ function onMIDIMessage(event) {
     //console.log("MIDI EVENT", chan, midiNote, midiVel);
 
     var eventKey; //string determining message type/number for callbacks mapped to midi messages
-
+    var eventTime = (Date.now() - mTime) * 0.001;
     switch (event.data[0] & 0xf0) {
         case 0x90:
             if (event.data[2] != 0) { // if velocity != 0, this is a note-on message
@@ -142,6 +143,7 @@ function onMIDIMessage(event) {
                 noteInfo.velocity[midiNote] = event.data[2];
                 pitchSequence.push(midiNote);
                 velocitySequence.push(midiVel);
+                noteEvents.push({type:'on', note: midiNote, vel: midiVel, chan: chan, time: eventTime});
                 if(usingVJPad){
                     vjPadNoteInfo[chan].last = midiNote
                     vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
@@ -150,7 +152,7 @@ function onMIDIMessage(event) {
                 }
                 lastNoteValue = midiNote;
                 noteOnEventCount++;
-                lastNoteOnTime[midiNote] = (Date.now() - mTime) * 0.001;
+                lastNoteOnTime[midiNote] = eventTime;
                 eventKey = "on";
                 break;
             }
@@ -162,7 +164,8 @@ function onMIDIMessage(event) {
             chroma[midiNote%12] = 0; 
             noteInfo.velocity[midiNote] = 0;
             onNoteSet.delete(midiNote);
-            lastNoteOffTime[midiNote] = (Date.now() - mTime) * 0.001;
+            noteEvents.push({type:'off', note: midiNote, vel: midiVel, chan: chan, time: eventTime});
+            lastNoteOffTime[midiNote] = eventTime;
             if(usingVJPad) vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
             noteOffEventCount++
             eventKey = "off";
