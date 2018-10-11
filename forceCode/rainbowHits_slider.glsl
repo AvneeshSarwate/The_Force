@@ -152,14 +152,39 @@ void main () {
     vec3 warp = coordWarp(stN, time/2.);
     // vec3 warp2 = coordWarp(stN, time +4.);
     stN = mix(stN, warp.xy, 0.025);
-    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells * sliderVals[5];
 
+    
+    
+    float quantLev;
+    vec2 center;
+    float rad;
+    bool radCond;
+    
+    // quantLev = 6.;
+    // center = hash(vec3(qTime, 0.4, 2.5)).xy;
+    // rad = 0.2;
+    // radCond = true;
+    // col = mod(time/4., 1.) < 0.01 ? col : mix(bb.rgb, col, 0.01);
+    
+    quantLev = 50.;
+    vec2 preQ = mix(uvN(), warp.xy, sliderVals[0]);
+    vec2 zoomCent = vec2(sliderVals[3], sliderVals[4]);
+    vec2 centMove = vec2(0.);
+    preQ = mix(preQ, zoomCent + centMove, sliderVals[2]);
+    center = quant(preQ, quantLev);
+    rad = 0.5/quantLev;
+    radCond = hash(vec3(center, 0.3)).x < sliderVals[1];
+    // col = mod(time/4., 1.) < 0.01 ? col : mix(bb.rgb, col, 0.01);
+    // col = mix(bb.rgb, col, 0.1);
+    
+    
     
     vec3 cc;
     float decay = 0.999;
     float decay2 = 0.01;
     float feedback;
-    vec4 bb = texture2D(backbuffer, hashN);
+    vec4 bb = texture2D(backbuffer, mix(hashN, center, sliderVals[7]));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
@@ -192,29 +217,9 @@ void main () {
     col.yz = rotate(col.yz, cent, warp.y*3.);
     col.zx = rotate(col.zx, cent, warp.z*3.);
     
-    float quantLev;
-    vec2 center;
-    float rad;
-    bool radCond;
-    
-    // quantLev = 6.;
-    // center = hash(vec3(qTime, 0.4, 2.5)).xy;
-    // rad = 0.2;
-    // radCond = true;
-    // col = mod(time/4., 1.) < 0.01 ? col : mix(bb.rgb, col, 0.01);
-    
-    quantLev = 50.;
-    vec2 preQ = mix(uvN(), warp.xy, sliderVals[0]);
-    vec2 zoomCent = vec2(sliderVals[3], sliderVals[4]);
-    vec2 centMove = vec2(0.);
-    preQ = mix(preQ, zoomCent + centMove, sliderVals[2]);
-    center = quant(preQ, quantLev);
-    rad = 0.5/quantLev;
-    radCond = hash(vec3(center, 0.3)).x < sliderVals[1];
-    // col = mod(time/4., 1.) < 0.01 ? col : mix(bb.rgb, col, 0.01);
-    // col = mix(bb.rgb, col, 0.1);
     
     
-    col = distance(center, preQ) < rad  && radCond ? col : black;
+    
+    col = distance(center, preQ) < rad  && radCond ? col : mix(black, 1.-col, sliderVals[6]);
     gl_FragColor = vec4(col, feedback);
 }

@@ -92,4 +92,9 @@ var rainbowHitsSliders = [
     {conf: {min: 0, max: 1, value: 0.35}, label: "zoom"},
     {conf: {min: 0, max: 1, value: 0.1}, label: "zoom center x position"},
     {conf: {min: 0, max: 1, value: 0.2}, label: "zoomCenter y position"},
+    {conf: {min: 0, max: 1, value: 1}, label: "shimmer width"},
+    {conf: {min: 0, max: 1, value: 0}, label: "black/inverse color blend"},
+    {conf: {min: 0, max: 1, value: 0}, label: "hyper glitch blend"},
+    {conf: {min: 0, max: 1, value: 0.35}, label: "zoom"},
+    {conf: {min: 0, max: 1, value: 0.35}, label: "zoom"},
 ]
