@@ -107,6 +107,7 @@ void main () {
     vec2 stN = uvN();
     vec3 c;
     
+    vec2 cent = vec2(0.5);
     
     
     vec3 params1 = vec3(1., 0.005, 0.84);
@@ -120,6 +121,7 @@ void main () {
     float distLimit = params.y;
     float fdbk = params.z;
     
+    stN = distance(cent, uvN()) < 0.1 * sinN(time) ? rotate(stN, cent, time/2.) : stN;
     
     float tScale = time/timeDiv * mix(1., sinN(stN.x+time/3.)*cosN(stN.y+time/2.7), 0.0);
     stN = mix(stN, coordWarp(stN, tScale).xy, 0.05);
@@ -171,7 +173,9 @@ void main () {
     vec3 warpCoord = coordWarp(stN, time/10.);
     float dist = distance(warpCoord.xy, vec2(0.5));
     // cc =  mod(dist+time/9., 0.1) < 0.05 ? cc : 1. - cc;
-    cc = mix(cc, bb2, sigmoid((mod(dist+time/20., 0.3)/0.3-0.5)*40.));
+    float numStripes = 0.3; //lower is more stripes
+    float amountDraw = 0.25; 
+    cc = distance(cent, uvN()) < 0.1 ? cc : mix(cc, bb2, sigmoid((mod(dist+time/20., numStripes)/numStripes-amountDraw)*40.));
     
     gl_FragColor = vec4(cc, feedback);
 }
