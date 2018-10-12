@@ -20,6 +20,8 @@ function getSeenPitches(windowedEventList, onNotes){
     return seenNotes;
 }
 
+function hitListToNoteList
+
 function windowEventList(eventList, windowTime){
     var len = eventList.length;
     var offset = 0;
@@ -45,7 +47,18 @@ function splitHands(windowedEventList, onNotes){
 }
 
 function avgSlope(windowedEventList, handNotes){
-
+    var lastNote, nextNote;
+    var slopes = [];
+    for(var i = 0; i < windowedEventList.length-1; i++){
+        var evt = windowedEventList[i];
+        if(evt.type === "off" || !handNotes.has(evt.note)) continue;
+        lastNote = nextNote;
+        nextNote = evt.note;
+        if(lastNote && nextNote) {
+            slopes.push(nextNote > lastNote ? 1 : -1);
+        }
+    }
+    return slopes.reduce((a, b) => a+b, 0)/slopes.length;
 }
 
 function avgNoteLength(windowedEventList, onNotes, onTimes, ignoreThresh){
