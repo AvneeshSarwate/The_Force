@@ -177,7 +177,8 @@ void main () {
     // cc =  mod(dist+time/9., 0.1) < 0.05 ? cc : 1. - cc;
     float numStripes = distance(warpN2.xy, uvN())*.3 + 1.4; //lower is more stripes
     float amountDraw = 0.25; 
-    cc =  mix(cc, bb2, sigmoid((mod(dist+time/20., numStripes)/numStripes-amountDraw)*40.));
+    vec2 cent2 = vec2(sinN(time), cosN(time))/2. + 0.25;
+    cc =  mix(cc, bb2, sigmoid(distance(warpN.xy, cent)*20.));
     
     gl_FragColor = vec4(cc, feedback);
 }
