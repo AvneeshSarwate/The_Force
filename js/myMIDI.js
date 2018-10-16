@@ -33,6 +33,7 @@ var patterns = [
 ];
 
 var midiEventHandlers = {};
+var midiFeatures = {};
 
 function matchPattern(){
     for(var i = 0; i < patterns.length; i++){
@@ -187,6 +188,7 @@ function onMIDIMessage(event) {
         $("#MIDIMessages").html(str);
     }
 
+    midiFeatures = computeFeatures(noteEvents, onNoteSet, lastNoteOnTime)
     if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey](midiNote, midiVel);
 }
 

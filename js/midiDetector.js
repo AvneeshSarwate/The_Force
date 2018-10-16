@@ -9,7 +9,7 @@ time since each note
 
 */
 
-var timeWindow = 20;
+
 
 function getSeenPitches(windowedEventList, onNotes){
     var seenNotes = new Set();
@@ -20,6 +20,7 @@ function getSeenPitches(windowedEventList, onNotes){
     return seenNotes;
 }
 
+var midiTimeWindow = 20;
 function windowEventList(eventList, windowTime){
     var len = eventList.length;
     var offset = 0;
@@ -77,6 +78,7 @@ function hitListToNoteList(windowedEventList){
     return noteObjs.sort(n => n.time);
 }
 
+var jumpThreshold = 1;
 function largeJumpTriggered(windowedEventList, onNotes, thresh){
     var lastEvt = windowedEventList[windowedEventList.length-1];
     if(lastEvt.type !== "on") return false;
@@ -88,6 +90,7 @@ function largeJumpTriggered(windowedEventList, onNotes, thresh){
     return Math.abs(latestPitch - pitchAvg) > pitchStdDev * thresh;
 }
 
+var lengthThreshold = 4;
 function avgNoteLength(windowedEventList, onNotes, onTimes, ignoreThresh){
     var now = (Date.now() - mTime)/1000;
     var sortedNotes = hitListToNoteList(windowedEventList);
@@ -113,4 +116,17 @@ function tonalAvg(windowedEventList, onNotes){
     }
 
     return Math.max(...tonicRatios);
+}
+
+function computeFeatures(noteEvents, onNotes, onNoteTimes, triggerCallbackFunc){
+    var features = {};
+    var windowedEvents = windowEventList(noteEvents, midiTimeWindow);
+
+    features.avgNoteLength = avgNoteLength(windowedEvents, onNotes, onNoteTimes, lengthThreshold);
+    features.avgSlope = avgSlope(windowedEvents);
+    features.tonalAvg = tonalAvg(windowedEvents, onNotes);
+
+    if(largeJumpTriggered(windowedEvents, onNotes, jumpThreshold) && triggerCallbackFunc) triggerCallbackFunc();
+
+    return features;
 }
