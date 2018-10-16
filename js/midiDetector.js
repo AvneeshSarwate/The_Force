@@ -84,8 +84,8 @@ function largeJumpTriggered(windowedEventList, onNotes, thresh){
     var onPitches = windowedEventList.filter(evt => evt.type === "on").map(evt => evt.note).concat(Array.from(onNotes));
     var numPitches = onPitches.length;
     var pitchAvg = sumArr(onPitches)/numPitches;
-    var pitchStdDev = (onPitches.map(n => (n-pitchAvg)**2)/(numPitches-1)) ** 0.5;
-    return Math.abs(lastNote - pitchAvg) > pitchStdDev;
+    var pitchStdDev = sumArr(onPitches.map(n => (n-pitchAvg)**2))/(numPitches-1) ** 0.5;
+    return Math.abs(latestPitch - pitchAvg) > pitchStdDev * thresh;
 }
 
 function avgNoteLength(windowedEventList, onNotes, onTimes, ignoreThresh){
