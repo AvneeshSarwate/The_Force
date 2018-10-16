@@ -24,7 +24,7 @@ function windowEventList(eventList, windowTime){
     var len = eventList.length;
     var offset = 0;
     var currentTime = (Date.now() - mTime) * 0.001;
-    while(eventList[len-offset-1].time >= currentTime - windowTime && len-offset-1 > -1 ){
+    while(len-offset-1 > -1 && eventList[len-offset-1].time >= currentTime - windowTime){
         offset++;
     }
     return eventList.splice(len-offset);
@@ -49,7 +49,8 @@ function avgSlope(windowedEventList, handNotes){
     var slopes = [];
     for(var i = 0; i < windowedEventList.length-1; i++){
         var evt = windowedEventList[i];
-        if(evt.type === "off" || (handNotes ? !handNotes.has(evt.note) : true)) continue;
+        // if(evt.type === "off" || (handNotes ? !handNotes.has(evt.note) : true)) continue;
+        if(evt.type === "off") continue;
         lastNote = nextNote;
         nextNote = evt.note;
         if(lastNote && nextNote) {
@@ -69,7 +70,7 @@ function hitListToNoteList(windowedEventList){
         if(evt.type == "on") noteTracker[evtKey] = [evt.time, evt.vel];
         if(evt.type ==="off" && noteTracker[evtKey]){
             var storedVal = noteTracker[evtKey];
-            noteObjs.add({note: evt.note, vel: storedVal[1], chan: evt.chan, time: storedVal[0], dur: evt.time-storedVal[0] });
+            noteObjs.push({note: evt.note, vel: storedVal[1], chan: evt.chan, time: storedVal[0], dur: evt.time-storedVal[0] });
             delete noteTracker[evtKey];
         } 
     });
@@ -80,12 +81,11 @@ function largeJumpTriggered(windowedEventList, onNotes, thresh){
     var lastEvt = windowedEventList[windowedEventList.length-1];
     if(lastEvt.type !== "on") return false;
     var latestPitch = lastEvt.note;
-    var onPitches = windowedEventList.filter(evt => evt.type === "on").map(evt => evt.note) ++ Array.from(onNotes);
+    var onPitches = windowedEventList.filter(evt => evt.type === "on").map(evt => evt.note).concat(Array.from(onNotes));
     var numPitches = onPitches.length;
     var pitchAvg = sumArr(onPitches)/numPitches;
     var pitchStdDev = (onPitches.map(n => (n-pitchAvg)**2)/(numPitches-1)) ** 0.5;
     return Math.abs(lastNote - pitchAvg) > pitchStdDev;
-    
 }
 
 function avgNoteLength(windowedEventList, onNotes, onTimes, ignoreThresh){
