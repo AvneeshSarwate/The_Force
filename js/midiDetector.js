@@ -12,7 +12,7 @@ time since each note
 var timeWindow = 20;
 
 function getSeenPitches(windowedEventList, onNotes){
-    var seenNotes = Set();
+    var seenNotes = new Set();
     windowedEventList.forEach(function(evt){
         if(evt.type === 'on') seenNotes.add(evt.note);
     });
