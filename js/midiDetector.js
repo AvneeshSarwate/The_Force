@@ -28,7 +28,7 @@ function windowEventList(eventList, windowTime){
     while(len-offset-1 > -1 && eventList[len-offset-1].time >= currentTime - windowTime){
         offset++;
     }
-    return eventList.splice(len-offset);
+    return eventList.slice(len-offset);
 }
 
 function splitHands(windowedEventList, onNotes){
@@ -55,9 +55,10 @@ function avgSlope(windowedEventList, handNotes){
         lastNote = nextNote;
         nextNote = evt.note;
         if(lastNote && nextNote) {
-            slopes.push(nextNote > lastNote ? 1 : -1);
+            slopes.push(Math.sign(nextNote-lastNote));
         }
     }
+    if(slopes.length < 2) return 0;
     return slopes.reduce((a, b) => a+b, 0)/slopes.length;
 }
 
@@ -94,6 +95,7 @@ var lengthThreshold = 4;
 function avgNoteLength(windowedEventList, onNotes, onTimes, ignoreThresh){
     var now = (Date.now() - mTime)/1000;
     var sortedNotes = hitListToNoteList(windowedEventList);
+    if(sortedNotes.length < 1) return 0;
     var onNoteFilteredTimes = Array.from(onNotes).map(n => now - onTimes[n]).filter(t => t < ignoreThresh);
     var sumLen = sumArr(sortedNotes.map(n => n.dur)) + sumArr(onNoteFilteredTimes);
     return sumLen/(sortedNotes.length + onNoteFilteredTimes.length);
@@ -103,7 +105,7 @@ function tonalAvg(windowedEventList, onNotes){
     var diatonic = [0, 2, 4, 5, 7, 9, 11];
     var seenNotes = getSeenPitches(windowedEventList, onNotes);
     var tonicRatios = [];
-
+    if(seenNotes.length < 1) return 0;
     for(var i = 0; i < 12; i++){
         var keyChroma = new Set(diatonic.map(p => (i+p)%12));
         var inKey = 0;
@@ -112,21 +114,23 @@ function tonalAvg(windowedEventList, onNotes){
             if(keyChroma.has(note%12)) inKey++;
             else outKey++;
         });
-        tonicRatios.push(inKey/(inKey+outKey));
+        var denom = inKey+outKey;
+        tonicRatios.push(denom === 0 ? 0 : inKey/(denom));
     }
 
     return Math.max(...tonicRatios);
 }
 
-function computeFeatures(noteEvents, onNotes, onNoteTimes, triggerCallbackFunc){
-    var features = {};
-    var windowedEvents = windowEventList(noteEvents, midiTimeWindow);
+var printFeatures = true;
+function computeFeatures(noteEvts, onNotes, onNoteTimes, triggerCallbackFunc){
+    var features = arrayOf(10);
+    var windowedEvents = windowEventList(noteEvts, midiTimeWindow);
 
-    features.avgNoteLength = avgNoteLength(windowedEvents, onNotes, onNoteTimes, lengthThreshold);
-    features.avgSlope = avgSlope(windowedEvents);
-    features.tonalAvg = tonalAvg(windowedEvents, onNotes);
+    features[0] = avgNoteLength(windowedEvents, onNotes, onNoteTimes, lengthThreshold);
+    features[1] = avgSlope(windowedEvents);
+    features[2] = tonalAvg(windowedEvents, onNotes);
 
     if(largeJumpTriggered(windowedEvents, onNotes, jumpThreshold) && triggerCallbackFunc) triggerCallbackFunc();
-
+    if(printFeatures) console.log(features, windowedEvents);
     return features;
 }

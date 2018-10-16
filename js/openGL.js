@@ -30,6 +30,7 @@ var vjNoteUniforms = Array.from(new Array(10), () => null);
 var vjLastNoteUniforms = Array.from(new Array(5), () => null);
 var lastPatternU = null;
 var sliderValsU = null;
+var midiFeaturesU = null;
 
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
@@ -354,10 +355,11 @@ function newShader(vs, shaderCode) {
 
     lastPatternU = gl.getUniformLocation(mProgram, "lastPattern");
     sliderValsU = gl.getUniformLocation(mProgram, "sliderVals");
+    midiFeaturesU = gl.getUniformLocation(mProgram, "midiFeatures");
 
     lastNoteOnTimeU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
     lastNoteOffTimeU = gl.getUniformLocation(mProgram, "lastNoteOffTime");
-    lastNoteValueU = gl.getUniformLocation(mProgram, "lastNoteValue");
+    lastNoteValueU = gl.getUniformLocation(mProgram, "midiFeaturesU");
 
     //OSC uniforms
     for (var i = 0; i < oscM.length; i++) {
@@ -854,6 +856,7 @@ function paint(timeVal) {
     if(lastNoteValueU !== null) gl.uniform1f(lastNoteValueU, lastNoteValue);
     if(midiCCU !== null) gl.uniform1fv(midiCCU, midiCC);
     if(sliderValsU !== null) gl.uniform1fv(sliderValsU, sliderVals);
+    if(midiFeaturesU !== null) gl.uniform1fv(midiFeaturesU, midiFeatures);
 
 
     for(var i = 0; i < 5; i++){

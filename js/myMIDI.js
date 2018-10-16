@@ -33,7 +33,7 @@ var patterns = [
 ];
 
 var midiEventHandlers = {};
-var midiFeatures = {};
+var midiFeatures = arrayOf(10);
 
 function matchPattern(){
     for(var i = 0; i < patterns.length; i++){
