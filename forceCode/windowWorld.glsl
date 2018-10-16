@@ -240,7 +240,8 @@ void main () {
     float t3 = time/3.;
     float zoomScale = 0.5;
     float numLev = 100.*sinN(time/12.) + 10.; //vs just 10.
-    bool condition = hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3)), numLev), 0.13)).x > hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3-stN.x*PI)), numLev), 0.13)).x;
+    float posLineDif = .01;
+    bool condition = hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3)), numLev), 0.13)).x > hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3-stN.y*PI*posLineDif)), numLev), 0.13)).x;
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -258,9 +259,9 @@ void main () {
     
     
     vec3 col = vec3(feedback);
-    vec3 col2 = vec3(quant(feedback, mod(time/20. + warpN.x, .5)+1.));
+    vec3 col2 = vec3(quant(feedback, sinN(time/2. + warpN.y*PI)*0.5+1.));
     vec4 bb2 = texture2D(backbuffer, stN);
-    col = mix(bb2.rgb, col, 0.3);
+    // col = mix(bb2.rgb, col, 0.3);
     col = col2;
     // col = col2.y > 0.7 ? black : white;
     
