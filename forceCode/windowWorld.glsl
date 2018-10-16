@@ -239,7 +239,7 @@ void main () {
     // vec2 multBall = multiBallCondition(stN, t2/2.);
     float t3 = time/3.;
     float zoomScale = 0.5;
-    float numLev = 100.*sinN(time/12.) + 10.;
+    float numLev = 100.*sinN(time/12.) + 10.; //vs just 10.
     bool condition = hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3)), numLev), 0.13)).x > hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3-stN.x*PI)), numLev), 0.13)).x;
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
@@ -259,8 +259,10 @@ void main () {
     
     vec3 col = vec3(feedback);
     vec3 col2 = vec3(quant(feedback, mod(time/20. + warpN.x, .5)+1.));
-    stN = uvN();
-    // col = .x > 0.3 ? black : white;
+    vec4 bb2 = texture2D(backbuffer, stN);
+    col = mix(bb2.rgb, col, 0.3);
+    col = col2;
+    // col = col2.y > 0.7 ? black : white;
     
     gl_FragColor = vec4(col, feedback);
 }
