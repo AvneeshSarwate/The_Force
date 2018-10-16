@@ -89,8 +89,9 @@ function largeJumpTriggered(windowedEventList, onNotes, thresh){
 }
 
 function avgNoteLength(windowedEventList, onNotes, onTimes, ignoreThresh){
+    var now = (Date.now() - mTime)/1000;
     var sortedNotes = hitListToNoteList(windowedEventList);
-    var onNoteFilteredTimes = Array.from(onNotes).map(n => onTimes[n]).filter(t => t < ignoreThresh);
+    var onNoteFilteredTimes = Array.from(onNotes).map(n => now - onTimes[n]).filter(t => t < ignoreThresh);
     var sumLen = sumArr(sortedNotes.map(n => n.dur)) + sumArr(onNoteFilteredTimes);
     return sumLen/(sortedNotes.length + onNoteFilteredTimes.length);
 }
