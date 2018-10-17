@@ -267,9 +267,16 @@ void main () {
     vec3 col = vec3(feedback);
     vec3 col2 = vec3(quant(feedback, sinN(time/2. + warpN.y*PI)*0.5+1.));
     vec4 bb2 = texture2D(backbuffer, stN);
-    // col = mix(bb2.rgb, col, 0.3);
+    
     col = col2;
     // col = col2.y > 0.7 ? black : white;
-    
-    gl_FragColor = vec4(drips.x < texThresh * 2. ? col : 1.-col, feedback);
+    vec4 out4a = vec4(drips.x < texThresh * 2. ? col : 1.-col, sinN(feedback*3.4));
+    vec4 out4b;
+    float rotSpeed = .01;
+    out4b.x = mix(out4a.x, out4a.y, rotSpeed);
+    out4b.y = mix(out4a.y, out4a.z, rotSpeed);
+    out4b.z = mix(out4a.z, out4a.w, rotSpeed);
+    out4b.w = mix(out4a.w, out4a.x, rotSpeed);
+    out4a.rgb = mix(bb2.rgb, out4a.rgb, 1.5*out4a.w);
+    gl_FragColor = out4a;
 }
