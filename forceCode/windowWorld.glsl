@@ -227,13 +227,19 @@ void main () {
     // vec3 warpN2 = coordWarp(stN, time/4.);
 
     vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
-
+    
+    vec2 acc = vec2(stN.x, stN.y);
+    float xQuant = 20. + 20. * sinN(time+stN.x);
+    float xTimeScale = 0.2 + rand(quant(stN.x, 40.));
+    vec2 drips = hash(vec3(quant(acc.x, 40.), quant(acc.y+time/3.*xTimeScale, 10.), 0.4)).xy;
+    float texThresh = 0.15;
+    float useTex = drips.x < texThresh ? 1. : 0.;
     
     vec3 cc;
     float decay = 0.999;
     float decay2 = 0.05;
     float feedback;
-    vec4 bb = texture2D(backbuffer, hashN);
+    vec4 bb = texture2D(backbuffer, mix(stN, hashN, useTex));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
@@ -265,5 +271,5 @@ void main () {
     col = col2;
     // col = col2.y > 0.7 ? black : white;
     
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(drips.x < texThresh * 2. ? col : 1.-col, feedback);
 }
