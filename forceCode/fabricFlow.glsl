@@ -214,12 +214,36 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls){
     return vec3(warp, distance(warp, stN));
 }
 
-void main () {
-    float t2 = time/5. + 1000.;
+float getColor(vec2 stN){
+    float numCells = 400.;
+    vec2 cent = vec2(0.5);
+    vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20.);
     
-    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
-    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+    vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
+    
+    
+    vec3 warpN2 = coordWarp(hashN, time*5. + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
+    
+    float warpDist = distance(stN, warpN2.xy);
+    float playVal = sigmoid((warpDist-0.3)*100.*warpN2.z);
+    
+    float quantLev = 10.;
+    vec2 quantW = quant(warpN.xy, quantLev);
+    float parity = mod(quantW.x*quantLev, 2.) == mod(quantW.y*quantLev, 2.) ? 1. : 0.;
+    
+    vec3 bb2 = texture2D(backbuffer, stN).rgb;
+    float fdbkFloor = 0.9;
+    
+    //basic texture when parity = 0. and fdbkFloor = 0.;
+    vec2 quantN = quant(stN, quantLev);
+    // fdbkFloor = quantN.x; sinN(time/2.5);
+    // parity = quantN.y; sinN(time/2.1);
+    vec3 col = mix(vec3(playVal), bb2, mix(fdbkFloor,  max(warpDist*10., fdbkFloor), parity));
+    
+    return col.x;
+}
 
+void main () {
     vec2 stN = uvN();
     float numCells = 400.;
     vec2 cent = vec2(0.5);
@@ -229,6 +253,7 @@ void main () {
     
     
     vec3 warpN2 = coordWarp(hashN, time*5. + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
+    vec3 warpN3 = coordWarp(stN, time/3.);
 
     
     float warpDist = distance(stN, warpN2.xy);
@@ -262,20 +287,14 @@ void main () {
         feedback = lastFeedback - decay2;
     }
     
-    float quantLev = 10.;
-    vec2 quantW = quant(warpN.xy, quantLev);
-    float parity = mod(quantW.x*quantLev, 2.) == mod(quantW.y*quantLev, 2.) ? 1. : 0.;
+
     
-    vec3 bb2 = texture2D(backbuffer, stN).rgb;
-    float fdbkFloor = 0.9;
-    
-    //basic texture when parity = 0. and fdbkFloor = 0.;
-    vec2 quantN = quant(stN, quantLev);
-    // fdbkFloor = quantN.x; sinN(time/2.5);
-    // parity = quantN.y; sinN(time/2.1);
-    vec3 col = mix(vec3(playVal), bb2, mix(fdbkFloor,  max(warpDist*10., fdbkFloor), parity));
+    vec2 elipseCoord = rotate(mix(quant(hashN+ vec2(0., sin(time + hashN.x*PI*4.)*0.07), 40.), cent, vec2(-0.3, 0.2)), cent, 0.3);
+    bool focusCond = distance(stN, elipseCoord) > 0.05;
+    float condDist = 0.2;
+    float dist = distance(warpN3.xy, cent);
+    focusCond =  dist > condDist;
     
     
-    
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(focusCond ? vec3(getColor(stN)) : vec3(getColor(mix(stN, cent, pow(1. - dist/0.2, 2.)))), 1.);
 }
