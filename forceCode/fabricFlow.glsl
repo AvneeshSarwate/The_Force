@@ -224,11 +224,15 @@ void main () {
     float numCells = 400.;
     vec2 cent = vec2(0.5);
     vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20.);
-    stN = stN+0.1;
-    vec3 warpN2 = coordWarp(stN, time*5. + time/4.*mix(stN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(stN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
-
+    
     vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
+    
+    
+    vec3 warpN2 = coordWarp(hashN, time*5. + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
 
+    
+    float warpDist = distance(stN, warpN2.xy);
+    float playVal = sigmoid((warpDist-0.3)*100.*warpN2.z);
     
     vec3 cc;
     float decay = 0.999;
@@ -242,7 +246,7 @@ void main () {
     float zoomScale = 0.5;
     float numLev = 100.*sinN(time/12.) + 10.; //vs just 10.
     float posLineDif = .01;
-    bool condition = hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3)), numLev), 0.13)).x > hash(vec3(quant(mix(stN, cent, zoomScale * sinN(t3-stN.y*PI*posLineDif)), numLev), 0.13)).x;
+    bool condition = playVal < 0.5;
 
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
@@ -258,8 +262,20 @@ void main () {
         feedback = lastFeedback - decay2;
     }
     
-    float warpDist = distance(stN, warpN2.xy);
-    float playVal = sigmoid((warpDist-0.3)*100.*warpN2.z);
+    float quantLev = 10.;
+    vec2 quantW = quant(warpN.xy, quantLev);
+    float parity = mod(quantW.x*quantLev, 2.) == mod(quantW.y*quantLev, 2.) ? 1. : 0.;
     
-    gl_FragColor = vec4(vec3(playVal), feedback);
+    vec3 bb2 = texture2D(backbuffer, stN).rgb;
+    float fdbkFloor = 0.9;
+    
+    //basic texture when parity = 0. and fdbkFloor = 0.;
+    vec2 quantN = quant(stN, quantLev);
+    // fdbkFloor = quantN.x; sinN(time/2.5);
+    // parity = quantN.y; sinN(time/2.1);
+    vec3 col = mix(vec3(playVal), bb2, mix(fdbkFloor,  max(warpDist*10., fdbkFloor), parity));
+    
+    
+    
+    gl_FragColor = vec4(col, feedback);
 }
