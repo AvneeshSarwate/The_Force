@@ -221,8 +221,8 @@ float getColor(vec2 stN){
     
     vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
     
-    
-    vec3 warpN2 = coordWarp(hashN, time + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
+    float t = 1500.; //sinN(time+sinN(time)*3.)*10. + 1000.;
+    vec3 warpN2 = coordWarp(hashN, time + t/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(t/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(t/5.)));
     
     float warpDist = distance(stN, warpN2.xy);
     float playVal = sigmoid((warpDist-0.3)*100.*warpN2.z);
