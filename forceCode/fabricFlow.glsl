@@ -199,16 +199,16 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
-vec3 ballTwist(vec2 stN, float t2, float numBalls){ 
+vec3 ballTwist(vec2 stN, float t2, float numBalls, float rad, float twist){ 
     vec2 warp = stN;
     
-    float rad = .35;
+
     
     for (float i = 0.0; i < 100.; i++) {
         if(i == numBalls) break;
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
         // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
-        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 5.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * twist * sinN(1.-length(stN - p)/rad * PI)) : warp;
     }
     
     return vec3(warp, distance(warp, stN));
@@ -217,12 +217,12 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls){
 float getColor(vec2 stN){
     float numCells = 400.;
     vec2 cent = vec2(0.5);
-    vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20.);
+    vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 10., .9, 3.5);
     
     vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
     
     
-    vec3 warpN2 = coordWarp(hashN, time*5. + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
+    vec3 warpN2 = coordWarp(hashN, time + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
     
     float warpDist = distance(stN, warpN2.xy);
     float playVal = sigmoid((warpDist-0.3)*100.*warpN2.z);
@@ -235,6 +235,8 @@ float getColor(vec2 stN){
     float fdbkFloor = 0.9;
     
     //basic texture when parity = 0. and fdbkFloor = 0.;
+    parity = 0.;
+    fdbkFloor = 0.;
     vec2 quantN = quant(stN, quantLev);
     // fdbkFloor = quantN.x; sinN(time/2.5);
     // parity = quantN.y; sinN(time/2.1);
@@ -247,13 +249,13 @@ void main () {
     vec2 stN = uvN();
     float numCells = 400.;
     vec2 cent = vec2(0.5);
-    vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20.);
+    vec3 warpN = ballTwist(rotate(stN, cent, time/5.), time/4. + 120., 20., .35, 5.5);
     
     vec2 hashN = stN + sin(time+warpN.xy*PI)/numCells*5.*warpN.xy;
     
     
     vec3 warpN2 = coordWarp(hashN, time*5. + time/4.*mix(hashN.x-0.5, .5, 0.85+0.05*sinN(time/4.)) * mix(hashN.y-0.5, .5, 0.85+0.05*cosN(time/5.)));
-    vec3 warpN3 = coordWarp(stN, time/3.);
+    vec3 warpN3 = coordWarp(mix(stN, cent, 0.8), time/3.);
 
     
     float warpDist = distance(stN, warpN2.xy);
@@ -291,10 +293,11 @@ void main () {
     
     vec2 elipseCoord = rotate(mix(quant(hashN+ vec2(0., sin(time + hashN.x*PI*4.)*0.07), 40.), cent, vec2(-0.3, 0.2)), cent, 0.3);
     bool focusCond = distance(stN, elipseCoord) > 0.05;
-    float condDist = 0.2;
+    float condDist = 0.0;
     float dist = distance(warpN3.xy, cent);
     focusCond =  dist > condDist;
+    float brightness = 10.*pow(warpN.x, 2.);
+    brightness = pow((1.-distance(mix(warpN3.xy, stN, 0.), cent)), 40.)*5.;
     
-    
-    gl_FragColor = vec4(focusCond ? vec3(getColor(stN)) : vec3(getColor(mix(stN, cent, pow(1. - dist/0.2, 2.)))), 1.);
+    gl_FragColor = vec4(vec3(getColor(stN)*brightness), 1.);
 }
