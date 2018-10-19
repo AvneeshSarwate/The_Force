@@ -799,6 +799,8 @@ function paint(timeVal) {
     if (gl === null) return;
     if (mProgram === null) return;
 
+    matchPattern();
+
     gl.useProgram(mProgram);
 
     var d = new Date();

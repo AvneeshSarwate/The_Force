@@ -34,30 +34,39 @@ var midiEventHandlers = {};
 var midiFeatures = arrayOf(10);
 var pitchSequences = arrayOf(16).map(n => []); //sequence per midi channel 
 var patterns = [
-    {chan:0, paramNum: 0, paramTarget: 0.7, fadeTime: 20, lastMatched: -1, seq: [60, 62, 63]},
-    {chan:0, paramNum: 0, paramTarget: 0.7, fadeTime: 20, lastMatched: -1, seq: [63, 65, 67]}
+    {chan:0, paramNum: 6, paramTarget: 1, fadeTime: 6, lastMatched: -1, seq: [60, 62, 63]},
+    {chan:0, paramNum: 9, paramTarget: 0, fadeTime: 2, lastMatched: -1, seq: [63, 62, 60]},
+    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [92, 91, 89]}
 ];
 
 
 var paramsToPatterns = arrayOf(10).map((elem, ind) => patterns.map((p, i) => [i, p.paramNum]).filter(ip => ip[1] == ind).map(ip => ip[0]));
-var mix = (a, b, m) => a*m + (1-m)*b;
+var mix = (a, b, m) => (1-m)*a + m*b;
+var channelHasNewNotesForAnimation = arrayOf(16).map(n => false); //"dirty checking" for new notes played on a midi channel
 
 function matchPattern(){
     var patternMatches = [];
     var now = Date.now()/1000;
 
     for(var i = 0; i < patterns.length; i++){
-        var pattern = patterns[i].seq;
-        var pitchSequence = pitchSequences[patterns[i].chan];
-        var patternIsMatched = true;
-        var pitchSeqEndInd = pitchSequence.length - 1;
-        var patternEndInd = pattern.length - 1;
-        for(var j = 0; j < pattern.length; j++){
-            var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-i] == pattern[patternEndInd-i]);
+        var pat = patterns[i];
+        if(!channelHasNewNotesForAnimation[pat.chan]) {
+            patternMatches.push(false);
+        } else {
+            var patternSeq = pat.seq;
+            var pitchSequence = pitchSequences[pat.chan];
+            var patternIsMatched = true;
+            var pitchSeqEndInd = pitchSequence.length - 1;
+            var patternEndInd = patternSeq.length - 1;
+            for(var j = 0; j < patternSeq.length; j++){
+                var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-i] == patternSeq[patternEndInd-i]);
+            }
+            patternMatches.push(patternIsMatched);
+            if(patternIsMatched) patterns[i].lastMatched = now;
         }
-        patternMatches.push(patternIsMatched);
-        if(patternIsMatched) patterns[i].lastMatched = now;
     }
+
+    channelHasNewNotesForAnimation = channelHasNewNotesForAnimation.map(elem => false);
 
     patternMatches.forEach(function(isMatched, ind){
         var param = patterns[ind].paramNum;
@@ -72,7 +81,8 @@ function matchPattern(){
                 var lastPat = patterns[latestPatternTriggeredForParam];
                 var rampCompletion = (now - lastPat.lastMatched)/lastPat.fadeTime;
                 if(rampCompletion < 1){
-                    var valInterpolation = mix(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value);
+                    var valInterpolation = mix(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value, rampCompletion);
+                    setSliderVal(param, valInterpolation);
                 }
             }
         }
@@ -180,12 +190,13 @@ function onMIDIMessage(event) {
                     vjPadNoteInfo[chan].last = midiNote
                     vjPadNoteInfo[chan].notes[midiNote].vel = event.data[2];
                     vjPadNoteInfo[chan].notes[midiNote].lastVel = event.data[2];
-                    console.log("vjPad", chan, midiNote, event.data[2]);
+                    // console.log("vjPad", chan, midiNote, event.data[2]);
                 }
                 lastNoteValue = midiNote;
                 noteOnEventCount++;
                 lastNoteOnTime[midiNote] = eventTime;
                 eventKey = "on";
+                channelHasNewNotesForAnimation[chan] = true;
                 break;
             }
             // if velocity == 0, fall thru: it's a note-off.  MIDI's weird, y'all.
@@ -219,7 +230,7 @@ function onMIDIMessage(event) {
         $("#MIDIMessages").html(str);
     }
 
-    midiFeatures = computeFeatures(noteEvents, onNoteSet, lastNoteOnTime)
+    // midiFeatures = computeFeatures(noteEvents, onNoteSet, lastNoteOnTime)
     if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey](midiNote, midiVel);
 }
 
