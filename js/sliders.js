@@ -7,6 +7,11 @@ var sliderCallbacks = {};
 var sliderConfig = arrayOf(10).map((id, ind) => ({label: "label", conf: {min: 0, max: 1, value: 0}}));
 
 
+function setSliderVal(num, value){
+    $("#sliderVal"+(num)).val(value);
+    sliders[num].value = value;
+}
+
 function setUpSliders(){
     sliderContainer = $('#videoUploadPanel');
     sliders = sliderConfig.map((elem, ind) => {

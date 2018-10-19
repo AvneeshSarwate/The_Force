@@ -24,29 +24,60 @@ var midiOffEventFlag = false;
 var midiCC = arrayOf(128);
 var noteEvents = [];
 
-var pitchSequence = new Array();
+
 var velocitySequence = new Array();
 var lastMatchedPattern = -1;
-var patterns = [
-    [60, 62, 63],
-    [63, 65, 67]
-];
+
+
 
 var midiEventHandlers = {};
 var midiFeatures = arrayOf(10);
+var pitchSequences = arrayOf(16).map(n => []); //sequence per midi channel 
+var patterns = [
+    {chan:0, paramNum: 0, paramTarget: 0.7, fadeTime: 20, lastMatched: -1, seq: [60, 62, 63]},
+    {chan:0, paramNum: 0, paramTarget: 0.7, fadeTime: 20, lastMatched: -1, seq: [63, 65, 67]}
+];
+
+
+var paramsToPatterns = arrayOf(10).map((elem, ind) => patterns.map((p, i) => [i, p.paramNum]).filter(ip => ip[1] == ind).map(ip => ip[0]));
+var mix = (a, b, m) => a*m + (1-m)*b;
 
 function matchPattern(){
+    var patternMatches = [];
+    var now = Date.now()/1000;
+
     for(var i = 0; i < patterns.length; i++){
-        var pattern = patterns[i];
+        var pattern = patterns[i].seq;
+        var pitchSequence = pitchSequences[patterns[i].chan];
         var patternIsMatched = true;
         var pitchSeqEndInd = pitchSequence.length - 1;
         var patternEndInd = pattern.length - 1;
         for(var j = 0; j < pattern.length; j++){
             var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-i] == pattern[patternEndInd-i]);
         }
-        if(patternIsMatched) return i;
+        patternMatches.push(patternIsMatched);
+        if(patternIsMatched) patterns[i].lastMatched = now;
     }
-    return -1;
+
+    patternMatches.forEach(function(isMatched, ind){
+        var param = patterns[ind].paramNum;
+        var target = patterns[ind].paramTarget;
+        if(isMatched){
+            setSliderVal(param, target);
+        } else {
+            var latestPatternTriggeredForParam = patterns.map((p, i) => ({p, i})).filter(pat => pat.p.paramNum === param).sort((p1, p2) => -(p1.p.lastMatched-p2.p.lastMatched))[0].i
+            var lastPat = patterns[latestPatternTriggeredForParam];
+
+            if(latestPatternTriggeredForParam === ind && lastPat.lastMatched > 0){
+                var lastPat = patterns[latestPatternTriggeredForParam];
+                var rampCompletion = (now - lastPat.lastMatched)/lastPat.fadeTime;
+                if(rampCompletion < 1){
+                    var valInterpolation = mix(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value);
+                }
+            }
+        }
+    });
+
 }
 
 function onMIDISuccess(midiAccess) {
@@ -142,7 +173,7 @@ function onMIDIMessage(event) {
                 chroma[midiNote%12] = 1; 
                 onNoteSet.add(midiNote);
                 noteInfo.velocity[midiNote] = event.data[2];
-                pitchSequence.push(midiNote);
+                pitchSequences[chan].push(midiNote);
                 velocitySequence.push(midiVel);
                 noteEvents.push({type:'on', note: midiNote, vel: midiVel, chan: chan, time: eventTime});
                 if(usingVJPad){
