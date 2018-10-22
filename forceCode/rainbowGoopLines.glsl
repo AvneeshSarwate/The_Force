@@ -245,13 +245,40 @@ float getColor(vec2 stN){
     return col.x;
 }
 
+
+vec3 inStripeX2(vec2 stN, float rw){
+    bool inStripe = false;
+    vec2 stN0 = stN;
+    for(float i = 0.; i < 10.; i++){
+        float seed = 1./i;
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(rw+ i*50.));
+        float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
+        if(abs(loc - stN.x) <  0.001) inStripe = inStripe || true;
+    }
+    return inStripe ? black : white;
+}
+
+vec3 inStripeY2(vec2 stN, float t){
+    bool inStripe = false;
+    vec2 stN0 = stN;
+    for(float i = 0.; i < 40.; i++){
+        float seed = 1./i;
+        stN = rotate(stN0, vec2(0.5), 0.2 * sin(t+ i*50.));
+        float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
+        if(abs(loc - stN.y) < rand(seed)*0.005  + 0.001) inStripe = inStripe || true;
+    }
+    return inStripe ? black : white;
+}
+
 void main () {
     vec2 stN = uvN();
+    stN.y = stN.y+0.003;
     float numCells = 400.;
     vec2 cent = vec2(0.5);
     float mixN = mix(stN.y, stN.x, sinN(time/2.+stN.x*PI));
     vec3 warpN = ballTwist(stN, (time/4.+1000.)*mix(1., mixN, 0.05) + 120., 20., .35, 5.5);
     vec3 warpN2 = ballTwist(stN, (time/6.2+1000.)*mix(1., mixN, 0.02) + 120., 20., .55, 5.5);
+    vec3 warpN3 = coordWarp(stN, time/7.);
     
 
     vec3 cc;
@@ -295,7 +322,7 @@ void main () {
     
     vec4 bb2 = texture2D(backbuffer, mix(stN, warpN2.xy, 0.005));
     col = mix(bb2.rgb, col, 0.5);
-    col = multiBallCondition(warpN.xy, time/4., 0.015).x == 1.  ? (hash(vec3(stN, 0.3)).x < 0. ?  white : black) : col;
+    col = inStripeX2(warpN3.xy, time/10.).x == 0.  ? (hash(vec3(stN, 0.3)).x < 0. ?  white : black) : col;
     
     gl_FragColor = vec4(col, feedback);
 }
