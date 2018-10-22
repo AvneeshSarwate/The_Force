@@ -250,8 +250,8 @@ void main () {
     float numCells = 400.;
     vec2 cent = vec2(0.5);
     float mixN = mix(stN.y, stN.x, sinN(time/2.+stN.x*PI));
-    vec3 warpN = ballTwist(stN, (time/4.+1000.)*mix(1., mixN, 0.1) + 120., 20., .35, 5.5);
-    vec3 warpN2 = ballTwist(stN, (time/6.2+1000.)*mix(1., mixN, 0.1) + 120., 20., .55, 5.5);
+    vec3 warpN = ballTwist(stN, (time/4.+1000.)*mix(1., mixN, 0.05) + 120., 20., .35, 5.5);
+    vec3 warpN2 = ballTwist(stN, (time/6.2+1000.)*mix(1., mixN, 0.02) + 120., 20., .55, 5.5);
     
 
     vec3 cc;
