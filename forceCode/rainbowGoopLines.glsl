@@ -172,9 +172,9 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
-vec2 multiBallCondition(vec2 stN, float t2){
+vec2 multiBallCondition(vec2 stN, float t2, float rad){
     
-    float rad = .08;
+    
     bool cond = false;
     float ballInd = -1.;
     
@@ -250,8 +250,8 @@ void main () {
     float numCells = 400.;
     vec2 cent = vec2(0.5);
     float mixN = mix(stN.y, stN.x, sinN(time/2.+stN.x*PI));
-    vec3 warpN = ballTwist(stN, time/4.*mix(1., mixN, 0.1) + 120., 20., .35, 5.5);
-    vec3 warpN2 = ballTwist(stN, time/6.2*mix(1., mixN, 0.1) + 120., 20., .55, 5.5);
+    vec3 warpN = ballTwist(stN, (time/4.+1000.)*mix(1., mixN, 0.1) + 120., 20., .35, 5.5);
+    vec3 warpN2 = ballTwist(stN, (time/6.2+1000.)*mix(1., mixN, 0.1) + 120., 20., .55, 5.5);
     
 
     vec3 cc;
@@ -288,10 +288,14 @@ void main () {
     vec3 col = vec3(feedback, warpN.xy);
 
     float refreshLine = sinN(warpN.x*PI + time/10.);
+    
     col = mix(bb.rgb, col, 0.495 < refreshLine && refreshLine < 0.505  ? 1. : 0.01);
+    
+    // col = multiBallCondition(warpN.xy, time/4., 0.015).x == 1.  ? (hash(vec3(stN, 0.3)).x < 0. ?  white : black) : col;
     
     vec4 bb2 = texture2D(backbuffer, mix(stN, warpN2.xy, 0.005));
     col = mix(bb2.rgb, col, 0.5);
+    col = multiBallCondition(warpN.xy, time/4., 0.015).x == 1.  ? (hash(vec3(stN, 0.3)).x < 0. ?  white : black) : col;
     
     gl_FragColor = vec4(col, feedback);
 }
