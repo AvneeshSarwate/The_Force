@@ -38,8 +38,22 @@ var patterns = [
     {chan:0, paramNum: 9, paramTarget: 0, fadeTime: 2, lastMatched: -1, seq: [63, 62, 60]},
     {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [92, 91, 89]}
 ];
-
-
+//single note sequence, (or a particular chord/cadence) for impact shots
+//drum patterns, esp if playing in layers, as one shots for "pulse"
+/*have each note (or each prefix, or segment ending on a target note) of an ascending phrase be mapped to higher and higher
+values of the same parameter, so the speed at which you go thru maps to the animation
+*/
+/*make your animation such that certain patterns/parameters are localized to different areas of the screen,
+or are mapped to different moving objects/areas
+*/
+/*can combine the previous two ideas to have some patterns move an area, and some patterns animate it - a "gesture"*/
+/*think of playing with matematical combinations of some parameters (with different targets and decay times) as
+a single "number" - eg motion via (param1+param2+param3) - could get interesting "dancy" movement if the tirggers are set up right
+*/
+/*
+control uniforms via parameters - different time streams (finally allowing you to properly slow down/speed up time), random walks
+where force is the random variable (for different forces, switch probabilities, etc)
+*/
 var paramsToPatterns = arrayOf(10).map((elem, ind) => patterns.map((p, i) => [i, p.paramNum]).filter(ip => ip[1] == ind).map(ip => ip[0]));
 var mix = (a, b, m) => (1-m)*a + m*b;
 var channelHasNewNotesForAnimation = arrayOf(16).map(n => false); //"dirty checking" for new notes played on a midi channel
