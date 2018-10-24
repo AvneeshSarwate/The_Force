@@ -73,7 +73,7 @@ function matchPattern(){
             var pitchSeqEndInd = pitchSequence.length - 1;
             var patternEndInd = patternSeq.length - 1;
             for(var j = 0; j < patternSeq.length; j++){
-                var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-i] == patternSeq[patternEndInd-i]);
+                var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-j] == patternSeq[patternEndInd-j]);
             }
             patternMatches.push(patternIsMatched);
             if(patternIsMatched) patterns[i].lastMatched = now;
