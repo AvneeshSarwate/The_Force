@@ -39,11 +39,14 @@ var pitchSequences = arrayOf(16).map(n => []); //sequence per midi channel
 var buildRegex = rgx => new RegExp(rgx.toString().slice(1, -1).replace(/-a/g, "(-\\d{1,3})")+"$");
 var br = buildRegex;
 var patterns = [
-    {chan:0, paramNum: 6, paramTarget: 1, fadeTime: 6, lastMatched: -1, seq: [60, 62, 63]},
-    {chan:0, paramNum: 9, paramTarget: 0, fadeTime: 2, lastMatched: -1, seq: [63, 62, 60]},
-    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [92, 91, 89]},
-    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 6, lastMatched: -1, seq: [92, -1, 91, -1, 89]},
-    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, regex: br(/-92-a-91-a-89/)}
+    {chan:0, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [80, 79, 77]},
+    {chan:0, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, regex: br(/-80-a{1,3}-79-a{1,3}-77/)},
+    {chan:0, paramNum: 3, paramTarget: .3, fadeTime: 3, lastMatched: -1, seq: [46]},
+    {chan:0, paramNum: 3, paramTarget: .4, fadeTime: 3, lastMatched: -1, regex: br(/-46-a{1,10}-48/)},
+    {chan:0, paramNum: 3, paramTarget: .5, fadeTime: 3, lastMatched: -1, regex: br(/-46-a{1,3}-48-a{1,3}-48/)},
+    {chan:1, paramNum: 5, paramTarget: .4, fadeTime: 1, lastMatched: -1, regex: br(/-60-a{1,3}-62-a{1,3}-63/)},
+    {chan:1, paramNum: 6, paramTarget: .9, fadeTime: 0.5, lastMatched: -1, regex: br(/-62-a{1,3}-64/)},
+    {chan:1, paramNum: 5, paramTarget: .4, fadeTime: 0.5, lastMatched: -1, regex: br(/-63-a{1,3}-68-a{1,3}-67/)},
 ];
 //single note sequence, (or a particular chord/cadence) for impact shots
 //drum patterns, esp if playing in layers, as one shots for "pulse"
@@ -61,6 +64,33 @@ a single "number" - eg motion via (param1+param2+param3) - could get interesting
 control uniforms via parameters - different time streams (finally allowing you to properly slow down/speed up time), random walks
 where force is the random variable (for different forces, switch probabilities, etc)
 */
+/*if you have a loop and want an animation to start at the "beginning" - rotate the template of the sequence to have the first note
+at the end. 
+*/
+/*watch out for race conditions - eg, two sequences both and during an animation frame, so one of the two doesn't get triggered.*/
+/*you'll need different types of patterns for live melody playing vs stacked loops - might even have to play around with different t
+ypes of match functions (eg, naive sequence match => regex => sequence state machine)
+*/
+/*rather than having a phrase detection jump to a target and then ramp back to the default, could have it trigger a ramp from the current
+value to a target over time - this would work better for when you want a certain animation "texture" to sustain over a musical 
+"texture" i.e set of loops - it only changes when specific other sequences are triggered that distrub the texture*/
+/*
+multiple types of pattern triggers 
+- jump and return (the implemented idea)
+- ramp-to-target (described above) 
+- what else?
+*/
+/*
+copied from phone notes
+Music-visuals -
+- musical sequences that toggle other sequences on and off 
+- Can also procedurally generate sequence-param mappings (can even have them "suggested" to you via light up play on keyboard). 
+- Have a hyper keyboard that generates phrases - the side buttons can be used to play generated phrases or record input to be transformed 
+*/
+/*
+don't forget the bigger picture - responive movement to musical improve that reflects 
+"something deeper" (which used to be narrative but now could be anything deeper - maybe "gesture" in the dance sense)
+*/
 var paramsToPatterns = arrayOf(10).map((elem, ind) => patterns.map((p, i) => [i, p.paramNum]).filter(ip => ip[1] == ind).map(ip => ip[0]));
 var mix = (a, b, m) => (1-m)*a + m*b;
 var channelHasNewNotesForAnimation = arrayOf(16).map(n => false); //"dirty checking" for new notes played on a midi channel
@@ -71,6 +101,10 @@ function matchPattern(){
 
     for(var i = 0; i < patterns.length; i++){
         var pat = patterns[i];
+        if(!pat) {
+            patternMatches.push("noPattern");
+            continue;
+        }
         if(!channelHasNewNotesForAnimation[pat.chan]) {
             patternMatches.push(false);
         } else {
@@ -90,13 +124,14 @@ function matchPattern(){
             }
             
             patternMatches.push(patternIsMatched);
-            if(patternIsMatched) patterns[i].lastMatched = now;
+            if(patternIsMatched) patterns[i].lastMatched = now + i*0.0001; //add epsilon so that later defined patterns in list have priority
         }
     }
 
     channelHasNewNotesForAnimation = channelHasNewNotesForAnimation.map(elem => false);
 
     patternMatches.forEach(function(isMatched, ind){
+        if(isMatched === "noPattern") return;
         var param = patterns[ind].paramNum;
         var target = patterns[ind].paramTarget;
         if(isMatched){
