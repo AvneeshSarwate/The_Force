@@ -33,10 +33,17 @@ var lastMatchedPattern = -1;
 var midiEventHandlers = {};
 var midiFeatures = arrayOf(10);
 var pitchSequences = arrayOf(16).map(n => []); //sequence per midi channel 
+
+//lets you write a regex but use "-a" as a shorthand for a midi-note wildcard.
+//this function recompiles the regex into a standard one
+var buildRegex = rgx => new RegExp(rgx.toString().slice(1, -1).replace(/-a/g, "(-\\d{1,3})")+"$");
+var br = buildRegex;
 var patterns = [
     {chan:0, paramNum: 6, paramTarget: 1, fadeTime: 6, lastMatched: -1, seq: [60, 62, 63]},
     {chan:0, paramNum: 9, paramTarget: 0, fadeTime: 2, lastMatched: -1, seq: [63, 62, 60]},
-    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [92, 91, 89]}
+    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [92, 91, 89]},
+    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 6, lastMatched: -1, seq: [92, -1, 91, -1, 89]},
+    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, regex: br(/-92-a-91-89-a/)}
 ];
 //single note sequence, (or a particular chord/cadence) for impact shots
 //drum patterns, esp if playing in layers, as one shots for "pulse"
@@ -67,14 +74,20 @@ function matchPattern(){
         if(!channelHasNewNotesForAnimation[pat.chan]) {
             patternMatches.push(false);
         } else {
-            var patternSeq = pat.seq;
             var pitchSequence = pitchSequences[pat.chan];
             var patternIsMatched = true;
-            var pitchSeqEndInd = pitchSequence.length - 1;
-            var patternEndInd = patternSeq.length - 1;
-            for(var j = 0; j < patternSeq.length; j++){
-                var patternIsMatched = patternIsMatched && (pitchSequence[pitchSeqEndInd-j] == patternSeq[patternEndInd-j]);
+            if(pat.regex){
+                var pitchSeqString = "-"+pitchSequence.slice(Math.max(0, pitchSequence.length-200)).join("-");
+            } else {
+                var patternSeq = pat.seq;
+                var patternEndInd = patternSeq.length - 1;
+                var pitchSeqEndInd = pitchSequence.length - 1;
+                for(var j = 0; j < patternSeq.length; j++){
+                    var seqSymbol = patternSeq[patternEndInd-j];
+                    var patternIsMatched = patternIsMatched && ((pitchSequence[pitchSeqEndInd-j] == seqSymbol) || seqSymbol == -1);
+                }
             }
+            
             patternMatches.push(patternIsMatched);
             if(patternIsMatched) patterns[i].lastMatched = now;
         }
