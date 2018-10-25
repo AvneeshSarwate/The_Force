@@ -91,6 +91,19 @@ Music-visuals -
 don't forget the bigger picture - responive movement to musical improve that reflects 
 "something deeper" (which used to be narrative but now could be anything deeper - maybe "gesture" in the dance sense)
 */
+/*
+Strategies for having visuals "move" with the music (related how the music itself changes) (not mutually exclusive)
+- sectional - big differences between parts - maybe even no shared "subparts" between sections
+    would need to "cue" this, both visually and musically - eg a "scene" change in the looper, and then
+    switching to a different shader and/or changing the pattern triggers + what parameters they control 
+- thematic - elements of visuals follows some imporant melodies/themes 
+- textural - no easily identifiabe "parts" of the moving image that respond independently to music,
+    e.g., different balls moving with different instruments
+- gestural - following "musical arcs" of some sort on a note by note level - either melodic contours 
+    or something else (like what?)
+
+could have a theme template and 
+*/
 var paramsToPatterns = arrayOf(10).map((elem, ind) => patterns.map((p, i) => [i, p.paramNum]).filter(ip => ip[1] == ind).map(ip => ip[0]));
 var mix = (a, b, m) => (1-m)*a + m*b;
 var channelHasNewNotesForAnimation = arrayOf(16).map(n => false); //"dirty checking" for new notes played on a midi channel
