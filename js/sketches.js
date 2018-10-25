@@ -262,3 +262,103 @@ function phialDraw(){
     }
     frameCount++;
 }
+
+
+
+class MovingCircle {
+    constructor(circleColor, id){
+        var numPoints = 1;
+        this.points = arrayOf(numPoints).map(x => [p5w/2, p5h/2]);
+        this.xPos = p5w/2 + (Math.random()-0.5) * 500;
+        this.yPos = p5h/2 + (Math.random()-0.5) * 300;
+        this.stepDist = 10;
+        this.xStep = 10;
+        this.yStep = 10;
+        this.circleColor = circleColor;
+        this.numPoints = numPoints;
+        this.id = id;
+        this.angle = (Math.random()-0.5) * TWO_PI;
+        this.strokeWeight = () => (4 + sinN((frameCount)/20 + this.id*TWO_PI/6)*50)*2;
+        this.switchScheduled = false;
+        this.swellManager = {
+            duration: 0.4,
+            startTime: 0,
+            isActive: false,
+            default: 10,
+            val: 10,
+            updateFunc: function(time){
+                if(!this.isActive) return this.default;
+                var activeDur = time - this.startTime;
+                var growTime = 0.05;
+                var growSize = 150;
+                // console.log("snek", this.id, activeDur);
+                if(activeDur < growTime) return this.default + activeDur/growTime * growSize;
+                else if(growTime <= activeDur && activeDur < this.duration) return growSize + this.default - (activeDur-growTime)/(this.duration-growTime)*growSize;
+                else {
+                    this.isActive = false;
+                    return this.default;
+                } 
+            }
+        };
+    }
+
+    drawCircle(frameCount, time){
+        this.swellManager.val = this.swellManager.updateFunc(time);
+        this.stepCircle(frameCount, time);
+        this.renderCircle();
+    }
+
+    stepCircle(frameCount, time){
+        if(this.xPos + this.xStep > p5w || this.xPos + xStep < 0) this.xStep *= -1;
+        if(this.yPos + this.yStep > p5h || this.yPos + this.yStep < 0) this.yStep *= -1;
+        this.xPos = wrapVal(this.xPos+this.xStep, 0, p5w);
+        this.yPos = wrapVal(this.yPos+this.yStep, 0, p5h);
+
+        var switchData = this.switchFunc(frameCount);
+        if(switchData[0]){
+            this.xStep = switchData[1];
+            this.yStep = switchData[2];
+        }
+
+        var curveInd = frameCount%this.numPoints;
+        this.points[curveInd] = [this.xPos, this.yPos];
+    }
+
+    renderCircle(){
+        fill(this.circleColor);
+        stroke(this.circleColor);
+
+        var p = this.points[0];
+        var rad = this.swellManager.val;
+
+        ellipse(p[0], p[1], rad, rad);
+    }
+
+    switchFunc(frameCount){
+        this.angle = this.angle + (Math.random()-0.5) * PI/2;
+        var switching = this.switchScheduled;
+        var dist = 4;
+        var switchData = [frameCount%20 ==0, sin(this.angle) * dist, cos(this.angle) * dist];
+        this.switchScheduled = this.switchScheduled && false;
+        return switchData;
+    }
+}
+
+var numCircles = 400;
+var cirlces = arrayOf(numCircles);
+function responsevis1Setup(){
+    p5w = 1280/1.5;
+    p5h = 720/1.5;
+    var gv = n => (n/numCircles) * 255; //converts to greyscale value;
+    cirlces = cirlces.map((x, i) => new MovingCircle(color(gv(i), gv(i), gv(i)), i));
+    createCanvas(p5w, p5h);
+    noSmooth();
+}
+
+function responsevis1Draw(){
+    clear();
+    background(255);
+    var time = Date.now() / 1000;
+    cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
+    frameCount++;
+}

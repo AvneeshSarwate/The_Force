@@ -71,6 +71,7 @@ $( document ).ready(function() {
     if(shaderToGet === "movieSplice") initialLoaderFunction = movieSpliceLoader;
     if(shaderToGet === "p5hull") initialLoaderFunction = p5hullLoader;
     if(shaderToGet === "p5Test") initialLoaderFunction = p5TestLoader;
+    if(shaderToGet === "responsivevis1") initialLoaderFunction = responsivevis1Loader;
     if(shaderToGet === "p5Sensel") {
         initialLoaderFunction = p5Sensel;
         shaderToGet = "p5Test";
