@@ -43,7 +43,7 @@ var patterns = [
     {chan:0, paramNum: 9, paramTarget: 0, fadeTime: 2, lastMatched: -1, seq: [63, 62, 60]},
     {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [92, 91, 89]},
     {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 6, lastMatched: -1, seq: [92, -1, 91, -1, 89]},
-    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, regex: br(/-92-a-91-89-a/)}
+    {chan:1, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, regex: br(/-92-a-91-a-89/)}
 ];
 //single note sequence, (or a particular chord/cadence) for impact shots
 //drum patterns, esp if playing in layers, as one shots for "pulse"
@@ -78,6 +78,7 @@ function matchPattern(){
             var patternIsMatched = true;
             if(pat.regex){
                 var pitchSeqString = "-"+pitchSequence.slice(Math.max(0, pitchSequence.length-200)).join("-");
+                patternIsMatched = pat.regex.test(pitchSeqString);
             } else {
                 var patternSeq = pat.seq;
                 var patternEndInd = patternSeq.length - 1;
