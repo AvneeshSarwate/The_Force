@@ -363,19 +363,38 @@ function rotVec2(x,y, cx, cy, amount){
     return {x: newX*p5w, y: newY*p5h};
 }
 
+var lastTime = Date.now() / 1000;
+var newTime = Date.now() / 1000;
+var time = 0;
+var time2 = 0;
 function responsevis1Draw(){
     clear();
     background(255);
     stroke(0);
     fill(0);
-    var time = Date.now() / 1000;
+    lastTime = newTime;
+    newTime = Date.now() / 1000;
+    var timeDiff = newTime - lastTime;
+    var timeScale = 1;
+    time += timeDiff * timeScale;
+    time2 += timeDiff * (0.3 + sliderVals[1]*3);
     // cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
-    for(var i = 0; i < 10; i++){
-        var ct = rotVec2(p5w*0.5, p5h*0.2, p5w*0.5, p5h*0.5, PI*2*i/10 + time/1.5);
+    var rad1 = 0.3;
+    var rad2 = 0.05;
+    var speed1 = 1/1.5;
+    var speed2 = 5;
+    var size = 10;
+    var numCenters = 40;
+    var circleCounter = 0;
+    for(var i = 0; i < numCenters; i++){
+        var ct = rotVec2(p5w*0.5, p5h*0.5 + rad1*p5h, p5w*0.5, p5h*0.5, PI*2*i/numCenters + time*speed1);
+        ct = {x: ct.x + sin(time*(1+i/20))*p5w*0.2 * sliderVals[2], y: ct.y + cos(time*(1+i/20))*p5h*0.2 * sliderVals[2]};
         // ellipse(pt.x, pt.y, 20, 20);
+        var rd2 = i%5 == 0 ? sliderVals[0] * 0.3 : rad2;
         for(var j = 0; j < 10; j++){
-            pt = rotVec2(ct.x+0.05*p5w, ct.y, ct.x, ct.y, PI*2*j/10 + time*2);
-            ellipse(pt.x, pt.y, 20, 20);
+            pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - time2*speed2);
+            ellipse(pt.x, pt.y, size * (1 + sinN(time*(4+30*sliderVals[3]) + i/numCenters*PI*2)), size*(1 + sinN(time*(4+30*sliderVals[3]) + i/numCenters*PI*2)));
+            circleCounter++;
         }
     }
     frameCount++;
