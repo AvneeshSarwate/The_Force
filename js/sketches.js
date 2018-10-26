@@ -366,7 +366,7 @@ function rotVec2(x,y, cx, cy, amount){
 var lastTime = Date.now() / 1000;
 var newTime = Date.now() / 1000;
 var time = 0;
-var time2 = 0;
+var times = arrayOf(20);
 function responsevis1Draw(){
     clear();
     background(255);
@@ -377,7 +377,8 @@ function responsevis1Draw(){
     var timeDiff = newTime - lastTime;
     var timeScale = 1;
     time += timeDiff * timeScale;
-    time2 += timeDiff * (0.3 + sliderVals[1]*3);
+    times[2] += timeDiff * (0.3 + sliderVals[1]*3);
+    times[3] += timeDiff * (4+30*sliderVals[3]);
     // cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
     var rad1 = 0.3;
     var rad2 = 0.05;
@@ -392,8 +393,9 @@ function responsevis1Draw(){
         // ellipse(pt.x, pt.y, 20, 20);
         var rd2 = i%5 == 0 ? sliderVals[0] * 0.3 : rad2;
         for(var j = 0; j < 10; j++){
-            pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - time2*speed2);
-            ellipse(pt.x, pt.y, size * (1 + sinN(time*(4+30*sliderVals[3]) + i/numCenters*PI*2)), size*(1 + sinN(time*(4+30*sliderVals[3]) + i/numCenters*PI*2)));
+            pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - times[2]*speed2);
+            var sz = size*(1 + sinN(times[3] + (i/numCenters*PI*2))*(1+ sliderVals[4]*4.));
+            ellipse(pt.x, pt.y, sz, sz);
             circleCounter++;
         }
     }
