@@ -201,13 +201,13 @@ void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
     
-    vec2 stR = rotate(stN, cent, time*PI2/3.);
-    vec3 p5 = texture2D(channel1, mix(stN, coordWarp(stN, stR.y *sinN(time)*10.).xy, 0.5)).rgb;
+    vec2 stR = rotate(stN, cent, time*PI2/50.);
+    vec3 p5 = texture2D(channel1, mix(stN, coordWarp(stN, stR.y *sinN(time/.4)*7.).xy, 0.0)).rgb;
     
     vec3 cc;
     float decay = 0.9;
     float feedback;
-    vec4 bb = texture2D(backbuffer, stN.xy);
+    vec4 bb = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = p5.x < 0.7; 
@@ -236,6 +236,8 @@ void main () {
         }
     }
     
+    float mixWeight = 0.3;
+    cc = mix(bb.rgb, cc, pow(stR.y, 4.) *sinN(time/.3)*mixWeight + (1.-mixWeight));
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(p5, feedback);
 }

@@ -344,7 +344,7 @@ class MovingCircle {
     }
 }
 
-var numCircles = 400;
+var numCircles = 100;
 var cirlces = arrayOf(numCircles);
 function responsevis1Setup(){
     p5w = 1280/1.5;
@@ -355,10 +355,28 @@ function responsevis1Setup(){
     noSmooth();
 }
 
+function rotVec2(x,y, cx, cy, amount){
+    var space = {x: x/p5w,  y: y/p5h};
+    var center = {x: cx/p5w,  y: cy/p5h};
+    var newX = cos(amount) * (space.x - center.x) + sin(amount) * (space.y - center.y) + center.x;
+    var newY =cos(amount) * (space.y - center.y) - sin(amount) * (space.x - center.x) + center.y;;
+    return {x: newX*p5w, y: newY*p5h};
+}
+
 function responsevis1Draw(){
     clear();
     background(255);
+    stroke(0);
+    fill(0);
     var time = Date.now() / 1000;
-    cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
+    // cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
+    for(var i = 0; i < 10; i++){
+        var ct = rotVec2(p5w*0.5, p5h*0.2, p5w*0.5, p5h*0.5, PI*2*i/10 + time/1.5);
+        // ellipse(pt.x, pt.y, 20, 20);
+        for(var j = 0; j < 10; j++){
+            pt = rotVec2(ct.x+0.05*p5w, ct.y, ct.x, ct.y, PI*2*j/10 + time*2);
+            ellipse(pt.x, pt.y, 20, 20);
+        }
+    }
     frameCount++;
 }
