@@ -197,17 +197,27 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
 void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
     
-    vec2 stR = rotate(stN, cent, time*PI2/50.);
-    vec3 p5 = texture2D(channel1, mix(stN, coordWarp(stN, stR.y *sinN(time/.4)*7.).xy, 0.0)).rgb;
+    float numCells = 90.;
+    vec2 rotN = rotate(stN, vec2(0.5), PI);
+    vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
+    vec2 hashN = stN + (hash(vec3(stN, time)).xy + -0.5)/numCells;
+    float sweep = sigmoid(sin(rowColN.x*PI)*30.);
+    hashN = mix(stN, hashN, sweep);
+    vec2 stR = rotate(stN, cent, time*PI2/5.);
+    vec3 p5 = texture2D(channel1, mix(stN, hashN, 0.)).rgb;
     
     vec3 cc;
-    float decay = 0.9;
+    float decay = mix(0., sliderVals[8], sweep);
     float feedback;
-    vec4 bb = texture2D(backbuffer, stN);
+    vec4 bb = texture2D(backbuffer, hashN);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = p5.x < 0.7; 
@@ -236,8 +246,8 @@ void main () {
         }
     }
     
-    float mixWeight = 0.3;
-    cc = mix(bb.rgb, cc, pow(stR.y, 4.) *sinN(time/.3)*mixWeight + (1.-mixWeight));
+    float mixWeight = 0.99;
+    cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
-    gl_FragColor = vec4(p5, feedback);
+    gl_FragColor = vec4(mix(p5, cc, sweep), feedback);
 }

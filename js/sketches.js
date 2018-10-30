@@ -374,7 +374,16 @@ var length = v => (v.x**2 + v.y**2)**0.5;
 var fract = v => v - Math.floor(v);
 var randf = v => fract(sin(v*1000));
 
-var vecsub = (v1, v2) => ({x: v1.x-v2.x, y: v1.y - v2.y});
+function vecsub(v1, v2){
+    var isVec = !(typeof v2 == "number");
+    return {x: v1.x - (isVec ? v2.x : v2), y: v1.y - (isVec ? v2.y : v2)}
+};
+function vecadd(v1, v2){
+    var isVec = !(typeof v2 == "number");
+    return {x: v1.x + (isVec ? v2.x : v2), y: v1.y + (isVec ? v2.y : v2)}
+};
+var vecmul = (v, c) => ({x: v.x*c, y: v.y*c});
+var vecdiv = (v, c) => ({x: v.x/c, y: v.y/c});
 
 function coordWarp(stN, t2, rad, numBalls){
     var warp = {x: stN.x, y: stN.y};
@@ -404,6 +413,7 @@ function responsevis1Draw(){
     time += timeDiff * timeScale;
     times[2] += timeDiff * (0.3 + sliderVals[1]*3);
     times[3] += timeDiff * (4+30*sliderVals[3]);
+
     // cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
     var rad1 = 0.3;
     var rad2 = 0.05;
@@ -412,16 +422,19 @@ function responsevis1Draw(){
     var size = 10;
     var numCenters = 40;
     var circleCounter = 0;
+
     for(var i = 0; i < numCenters; i++){
         var ct = rotVec2(p5w*0.5, p5h*0.5 + rad1*p5h, p5w*0.5, p5h*0.5, PI*2*i/numCenters + time*speed1);
         ct = {x: ct.x + sin(time*(1+i/20))*p5w*0.2 * sliderVals[2], y: ct.y + cos(time*(1+i/20))*p5h*0.2 * sliderVals[2]};
         // ellipse(pt.x, pt.y, 20, 20);
         var rd2 = i%5 == 0 ? sliderVals[0] * 0.3 : rad2;
         for(var j = 0; j < 10; j++){
-            var pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - times[2]*speed2);
-            var ptW = normExec(pt, p => coordWarp(p, time/10., 0.4, 20));
+            var tmodT = circleCounter%2 == 0 ? sliderVals[6] * 3 : 0;
+            var pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - (times[2]+tmodT)*speed2);
+            var ptW = normExec(pt, p => coordWarp(p, (time+tmodT)/10., 0.4, 20));
             ptW = mix(pt, ptW, sliderVals[5]);
-            var sz = size*(1 + sinN(times[3] + (i/numCenters*PI*2))*(1+ sliderVals[4]*4.));
+            
+            var sz = size*(1 + sinN((times[3]+tmodT) + (i/numCenters*PI*2))*(1+ sliderVals[4]*4.));
             ellipse(ptW.x, ptW.y, sz, sz);
             circleCounter++;
         }
