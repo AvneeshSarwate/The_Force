@@ -1,4 +1,5 @@
 //definitions of various p5 sketches to use as textures
+"use strict";
 
 var p5w = 1280*1.5;
 var p5h = 720*1.5;
@@ -367,6 +368,30 @@ var lastTime = Date.now() / 1000;
 var newTime = Date.now() / 1000;
 var time = 0;
 var times = arrayOf(20);
+var mix = (v1, v2, a) => ({x: v1.x*(1-a) + v2.x*a, y: v1.y*(1-a) + v2.y*a});
+var length = v => (v.x**2 + v.y**2)**0.5;
+
+var fract = v => v - Math.floor(v);
+var randf = v => fract(sin(v*1000));
+
+var vecsub = (v1, v2) => ({x: v1.x-v2.x, y: v1.y - v2.y});
+
+function coordWarp(stN, t2, rad, numBalls){
+    var warp = {x: stN.x, y: stN.y};
+    for (var i = 0; i < numBalls; i++) {
+        var p = {x: sinN(t2* randf(i+1.) * 1.3 + i), y: cosN(t2 * randf(i+1.) * 1.1 + i)};
+        warp = length(vecsub(stN,p)) <= rad ? mix(warp, p, 1. - length(vecsub(stN,p))/rad)  : warp;
+    }
+    return warp;
+}
+
+//wrap a normalized coordinate mapping function to p5 coordinates 
+function normExec(p5N, transFunc){
+    var inN = {x: p5N.x / p5w, y: p5N.y/p5h};
+    var out = transFunc(inN);
+    return {x: out.x*p5w, y: out.y*p5h};
+}
+
 function responsevis1Draw(){
     clear();
     background(255);
@@ -393,9 +418,11 @@ function responsevis1Draw(){
         // ellipse(pt.x, pt.y, 20, 20);
         var rd2 = i%5 == 0 ? sliderVals[0] * 0.3 : rad2;
         for(var j = 0; j < 10; j++){
-            pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - times[2]*speed2);
+            var pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - times[2]*speed2);
+            var ptW = normExec(pt, p => coordWarp(p, time/10., 0.4, 20));
+            ptW = mix(pt, ptW, sliderVals[5]);
             var sz = size*(1 + sinN(times[3] + (i/numCenters*PI*2))*(1+ sliderVals[4]*4.));
-            ellipse(pt.x, pt.y, sz, sz);
+            ellipse(ptW.x, ptW.y, sz, sz);
             circleCounter++;
         }
     }
