@@ -526,9 +526,9 @@ function sliderTrails(ind){
     }
 }
 
-function responsivevis1Loader(){
-    setup = responsevis1Setup;
-    draw = responsevis1Draw;   
+function responsivevisLoader(i){
+    setup = eval("responsevis"+i+"Setup");
+    draw = eval("responsevis"+i+"Draw");   
 }
 
 // 

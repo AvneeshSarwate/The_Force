@@ -71,7 +71,6 @@ $( document ).ready(function() {
     if(shaderToGet === "movieSplice") initialLoaderFunction = movieSpliceLoader;
     if(shaderToGet === "p5hull") initialLoaderFunction = p5hullLoader;
     if(shaderToGet === "p5Test") initialLoaderFunction = p5TestLoader;
-    if(shaderToGet === "responsivevis1") initialLoaderFunction = responsivevis1Loader;
     if(shaderToGet === "p5Sensel") {
         initialLoaderFunction = p5Sensel;
         shaderToGet = "p5Test";
@@ -86,6 +85,11 @@ $( document ).ready(function() {
         var loaderInd = parseInt(shaderToGet.slice("yoyovideotest".length))
         if(loaderInd < 7) initialLoaderFunction = yoyoVideoTest;
         else initialLoaderFunction = yoyoVideoTestB;
+    } ;
+    if(shaderToGet.indexOf("responsivevis") > -1){
+        var loaderInd = parseInt(shaderToGet.slice("responsivevis".length))
+        initialLoaderFunction = () => responsivevisLoader(loaderInd);
+        shaderToGet = "responsivevis1";
     } ;
     if(shaderToGet == "interactiveGridSlice1"){
         useWebGL2 = true;

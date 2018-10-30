@@ -433,7 +433,7 @@ function responsevis1Draw(){
             var pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - (times[2]+tmodT)*speed2);
             var ptW = normExec(pt, p => coordWarp(p, (time+tmodT)/10., 0.4, 20));
             ptW = mix(pt, ptW, sliderVals[5]);
-            
+
             var sz = size*(1 + sinN((times[3]+tmodT) + (i/numCenters*PI*2))*(1+ sliderVals[4]*4.));
             ellipse(ptW.x, ptW.y, sz, sz);
             circleCounter++;
@@ -441,3 +441,55 @@ function responsevis1Draw(){
     }
     frameCount++;
 }
+
+
+class RasterBlob{
+    constructor(x, y, height, width, numLines, lineThickness, changeFunc){ //x/y denote CENTER of object
+        this.x = x;
+        this.y = y;
+        this.height = height;
+        this.width = width;
+        this.numLines = numLines;
+        this.lineThickness = lineThickness; //denotes how much of a line's allocated thickness is actually filled in;
+        this.changeFunc = changeFunc; //returns a value from 0-1 indicating line width as a function of time + yposition
+        this.funcScale = 3.14159*2; //how many oscilations the changeFunc gives - sinN(time+funcScale*y)
+    }
+
+    render(time){
+        for(var i = 0; i < this.numLines; i++){
+            var yN = i / this.numLines;
+            var lineWidth = this.changeFunc(time+this.funcScale*yN) * this.width;
+            var xStart = this.x + this.width*(1-lineWidth)/2;
+            var calcStroke = this.height/this.numLines * p5h * this.lineThickness;
+            strokeWeight(calcStroke);
+            var y = (yN*this.height + this.y) * p5h;
+            line(xStart*p5w, y, (xStart + lineWidth*this.width)*p5w, y);
+        }
+    }
+}
+
+function responsevis2Setup(){
+    p5w = 1280/1.5;
+    p5h = 720/1.5;
+    var gv = n => (n/numCircles) * 255; //converts to greyscale value;
+    cirlces = cirlces.map((x, i) => new MovingCircle(color(gv(i), gv(i), gv(i)), i));
+    createCanvas(p5w, p5h);
+    noSmooth();
+}
+
+var blob = new RasterBlob(.25, .25, .5, .5, 30, 0.5, sinN);
+function responsevis2Draw(){
+    clear();
+    background(255);
+    stroke(0);
+    fill(0);
+
+    lastTime = newTime;
+    newTime = Date.now() / 1000;
+    var timeDiff = newTime - lastTime;
+    var timeScale = 1;
+    time += timeDiff * timeScale;
+
+    blob.render(time);
+}
+
