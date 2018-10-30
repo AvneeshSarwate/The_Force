@@ -103,3 +103,7 @@ var rainbowHitsSliders = [
     {conf: {min: 0, max: 1, value: 1}, label: "color texture resolution"},
     {conf: {min: 0, max: 1, value: 1}, label: "frame blur"},
 ]
+
+/*
+responsivevis1 sliderVals = [0.475, 0.116, 0.691, 0.016, 0.208, 1, 0, 0, 0, 0]
+*/
