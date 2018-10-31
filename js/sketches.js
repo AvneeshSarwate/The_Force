@@ -504,19 +504,21 @@ class CurveBlob{
         return {x: this.x, y: this.y};
     }
 
-    getCenter(){
-        return {x: this.x + this.width/2, y: this.y + this.height/2};
-    }
 
 
     render(time){
         var points = [];
         noFill();
         beginShape();
-        for(var i = -2; i < this.numPoints+1; i++){
+        for(var i = 0; i < this.numPoints; i++){
             var theta = i/this.numPoints * PI_2;
             var rad = this.radFunc(theta, time);
-            var pt = {x: this.x + cos(theta)*rad*this.radius, y: this.y + sin(theta)*rad*this.radius};
+            var deviation = {x: cos(theta)*rad*this.radius, y: sin(theta)*rad*this.radius};
+            var devLen = length(deviation);
+            if(devLen < 0.1){
+                var fff = 5;
+            }
+            var pt = vecadd(this.getPos(), deviation);
             points.push(pt);
             strokeWeight(this.radius * this.lineThickness * p5h);
             curveVertex(pt.x * p5w, pt.y * p5h);
@@ -532,9 +534,9 @@ class CurveBlob{
             // linePoints = linePoints.map(p => this.warpFunc(p, time));
             // line(linePoints[0].x*p5w, linePoints[0].y*p5h, linePoints[1].x*p5w, linePoints[1].y*p5h);
         }
-        // for(var i = 0; i < 1; i++){
-        //     curveVertex(points[i].x*p5w, points[i].y*p5h);
-        // }
+        for(var i = 0; i < 3; i++){
+            curveVertex(points[i].x*p5w, points[i].y*p5h);
+        }
         endShape();
     }
 }
@@ -579,7 +581,9 @@ var rasterBlobs = arrayOf(numBlobs)
 var cellRad = 1/(blobGrid*2);
 var dancerPos1 = arrayOf(numBlobs).map((e, i) => ({x: ((i%blobGrid)*2+1)*cellRad, y: (Math.floor(i/blobGrid)*2+1)*cellRad}));
 var dancerPos2 = arrayOf(numBlobs).map((e, i) => ({x: cosN(i/numBlobs*PI_2), y: sinN(i/numBlobs*PI_2)}));
-var curveBlobs = dancerPos2.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad, 10, 0.1, (th, t) => sinN(th/4 + time/2 + i))));
+var sett = 1;
+var weirdFunc = (th, t) => (sinN(th*2*(sin(t)) + t/1.2)+cosN(th*2+t))/2;
+var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad, 10, 0.1, ()=> 1 )));
 //
 
 function responsevis2Draw(){
@@ -597,7 +601,7 @@ function responsevis2Draw(){
     // blob.height = sinN(time*5)* 0.4 + 0.1;
     // blob.lineThickness = sinN(time*5)* 0.5 + 0.5;
     // blob.render(time);
-    dancerPos1.map((p, i) => mix(p, dancerPos2[i], sinN(time/4 * PI_2))).map((p, i) => curveBlobs[i].setPos(p));
+    // dancerPos1.map((p, i) => mix(p, dancerPos2[i], sinN(time/8 * PI_2 + i*sinN(time/9)))).map((p, i) => curveBlobs[i].setPos(p));
     curveBlobs.map(blob => blob.render(time));
 }
 
