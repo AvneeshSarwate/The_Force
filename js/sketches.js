@@ -105,7 +105,8 @@ var xPos = p5w/2;
 var yPos = p5h/2;
 var mat;
 var r = () => Math.random()*20 - 10;
-var sinN = t => (Math.sin(t)+1)/2
+var sinN = t => (Math.sin(t)+1)/2;
+var cosN = t => (Math.cos(t)+1)/2;
 var numPoints = 200;
 var arrayOf = n => Array.from(new Array(n), () => 0);
 var curvePoints = arrayOf(100);
@@ -356,7 +357,7 @@ function responsevis1Setup(){
     noSmooth();
 }
 
-function rotVec2(x,y, cx, cy, amount){
+function rotVec2_p5(x,y, cx, cy, amount){
     var space = {x: x/p5w,  y: y/p5h};
     var center = {x: cx/p5w,  y: cy/p5h};
     var newX = cos(amount) * (space.x - center.x) + sin(amount) * (space.y - center.y) + center.x;
@@ -424,13 +425,13 @@ function responsevis1Draw(){
     var circleCounter = 0;
 
     for(var i = 0; i < numCenters; i++){
-        var ct = rotVec2(p5w*0.5, p5h*0.5 + rad1*p5h, p5w*0.5, p5h*0.5, PI*2*i/numCenters + time*speed1);
+        var ct = rotVec2_p5(p5w*0.5, p5h*0.5 + rad1*p5h, p5w*0.5, p5h*0.5, PI*2*i/numCenters + time*speed1);
         ct = {x: ct.x + sin(time*(1+i/20))*p5w*0.2 * sliderVals[2], y: ct.y + cos(time*(1+i/20))*p5h*0.2 * sliderVals[2]};
         // ellipse(pt.x, pt.y, 20, 20);
         var rd2 = i%5 == 0 ? sliderVals[0] * 0.3 : rad2;
         for(var j = 0; j < 10; j++){
             var tmodT = circleCounter%2 == 0 ? sliderVals[6] * 3 : 0;
-            var pt = rotVec2(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - (times[2]+tmodT)*speed2);
+            var pt = rotVec2_p5(ct.x + rd2*p5w, ct.y, ct.x, ct.y, PI*2*j/10 - (times[2]+tmodT)*speed2);
             var ptW = normExec(pt, p => coordWarp(p, (time+tmodT)/10., 0.4, 20));
             ptW = mix(pt, ptW, sliderVals[5]);
 
@@ -453,7 +454,18 @@ class RasterBlob{
         this.lineThickness = lineThickness; //denotes how much of a line's allocated thickness is actually filled in;
         this.changeFunc = changeFunc; //returns a value from 0-1 indicating line width as a function of time + yposition
         this.funcScale = 3.14159*2; //how many oscilations the changeFunc gives - sinN(time+funcScale*y)
+        this.angle = 0;
+        this.warpFunc = (id, time) => id;
     }
+
+    getPos(){
+        return {x: this.x, y: this.y};
+    }
+
+    getCenter(){
+        return {x: this.x + this.width/2, y: this.y + this.height/2};
+    }
+
 
     render(time){
         for(var i = 0; i < this.numLines; i++){
@@ -462,8 +474,10 @@ class RasterBlob{
             var xStart = this.x + this.width*(1-lineWidth)/2;
             var calcStroke = this.height/this.numLines * p5h * this.lineThickness;
             strokeWeight(calcStroke);
-            var y = (yN*this.height + this.y) * p5h;
-            line(xStart*p5w, y, (xStart + lineWidth*this.width)*p5w, y);
+            var y = yN*this.height + this.y;
+            var linePoints = [{x: xStart, y}, {x: xStart + lineWidth*this.width, y}];
+            linePoints = linePoints.map(p => this.warpFunc(p, time));
+            line(linePoints[0].x*p5w, linePoints[0].y*p5h, linePoints[1].x*p5w, linePoints[1].y*p5h);
         }
     }
 }
@@ -477,7 +491,27 @@ function responsevis2Setup(){
     noSmooth();
 }
 
+function rotVec2(space, center, amount){
+    var newX = cos(amount) * (space.x - center.x) + sin(amount) * (space.y - center.y) + center.x;
+    var newY =cos(amount) * (space.y - center.y) - sin(amount) * (space.x - center.x) + center.y;;
+    return {x: newX, y: newY};
+}
+
 var blob = new RasterBlob(.25, .25, .5, .5, 30, 0.5, sinN);
+blob.warpFunc = (p, time) => coordWarp(p, time, 0.4, 20);
+blob.warpFunc = function(p, time){ 
+    return rotVec2(p, this.getCenter(), time);
+}
+var numBlobs = 20;
+var blobs = arrayOf(numBlobs).map(i => (new RasterBlob(.25, .25, .5, .5, 30, 0.5, sinN)));
+var PI_2 = 3.14159 * 2;
+blobs.forEach(function(blob, i){
+    blob.x = sinN(i/numBlobs * PI_2) - blob.width/2;
+    blob.y = cosN(i/numBlobs * PI_2) - blob.height/2;
+    blob.warpFunc = function(p, time){ 
+        return rotVec2(p, this.getCenter(), time * (sinN(i)*3+0.3));
+    }
+});
 function responsevis2Draw(){
     clear();
     background(255);
@@ -489,7 +523,10 @@ function responsevis2Draw(){
     var timeDiff = newTime - lastTime;
     var timeScale = 1;
     time += timeDiff * timeScale;
-
-    blob.render(time);
+    
+    // blob.height = sinN(time*5)* 0.4 + 0.1;
+    // blob.lineThickness = sinN(time*5)* 0.5 + 0.5;
+    // blob.render(time);
+    blobs.map(blob => blob.render(time));
 }
 
