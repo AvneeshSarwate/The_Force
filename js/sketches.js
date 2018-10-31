@@ -582,8 +582,9 @@ var cellRad = 1/(blobGrid*2);
 var dancerPos1 = arrayOf(numBlobs).map((e, i) => ({x: ((i%blobGrid)*2+1)*cellRad, y: (Math.floor(i/blobGrid)*2+1)*cellRad}));
 var dancerPos2 = arrayOf(numBlobs).map((e, i) => ({x: cosN(i/numBlobs*PI_2), y: sinN(i/numBlobs*PI_2)}));
 var sett = 1;
-var weirdFunc = (th, t) => (sinN(th*2*(sin(t)) + t/1.2)+cosN(th*2+t))/2;
-var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad, 10, 0.1, ()=> 1 )));
+var weirdFunc = (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t/3.1))/2;
+var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad*3, 10, 0.1, 
+    (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t/3.1*i/10))/2)));
 //
 
 function responsevis2Draw(){
