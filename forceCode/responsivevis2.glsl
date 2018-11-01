@@ -243,5 +243,5 @@ void main () {
     // cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(p5, feedback);
 }
