@@ -498,6 +498,12 @@ class CurveBlob{
     setPos(p){
         this.x = p.x;
         this.y = p.y;
+        return this;
+    }
+
+    setRad(rad){
+        this.radius = rad;
+        return this;
     }
 
     getPos(){
@@ -587,7 +593,7 @@ var sett = 1;
 var weirdFunc = (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t/3.1))/2;
 
 var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad*3, 10, 0.1, 
-    (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t/3.1*(1+i*sinN(time/5)) ))/2)));
+    (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t+20/3.1*(1+i*sinN(time/5)) ))/2)));
 //
 var cent = {x:0.5, y: 0.5};
 function responsevis2Draw(){
@@ -608,7 +614,7 @@ function responsevis2Draw(){
     // dancerPos1.map((p, i) => mix(p, dancerPos2[i], sinN(time/8 * PI_2 + i*sinN(time/9)))).map((p, i) => curveBlobs[i].setPos(p));
 
     var radPos = arrayOf(numBlobs).map((e, i) => (mix({x: cosN(i/numBlobs*PI_2), y: sinN(i/numBlobs*PI_2)}, cent, sinN(i/numPoints*PI_2 + time)) ));
-    radPos.map((p, i) => curveBlobs[i].setPos(p))
+    radPos.map((p, i) => curveBlobs[i].setPos(rotVec2(p, cent, -time))).map((blob, i) => blob.setRad(cellRad*(.1 + sinN(i/numBlobs*PI_2+time*3)*2.9)));
 
     curveBlobs.map(blob => blob.render(time));
 }
