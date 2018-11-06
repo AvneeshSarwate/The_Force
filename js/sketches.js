@@ -442,6 +442,7 @@ function responsevis1Draw(){
             circleCounter++;
         }
     }
+
     frameCount++;
 }
 

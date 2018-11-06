@@ -102,6 +102,8 @@ $( document ).ready(function() {
     if(shaderToGet.indexOf("_slider") > -1){
         sliderConfig = eval(shaderToGet.slice(0, shaderToGet.indexOf("_slider")) + "Sliders");
     }
+
+    if(customLoaderMap[shaderToGet]) initialLoaderFunction = customLoaderMap[shaderToGet];
     
     if(shaderToGet){
         $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){

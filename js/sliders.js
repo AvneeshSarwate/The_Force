@@ -4,12 +4,13 @@ var sliderVals = arrayOf(numSliders);
 var sliderContainer; 
 
 var sliderCallbacks = {};
-var sliderConfig = arrayOf(10).map((id, ind) => ({label: "slider "+ind, conf: {min: 0, max: 1, value: 0}}));
+var sliderConfig = arrayOf(numSliders).map((id, ind) => ({label: "slider "+ind, conf: {min: 0, max: 1, value: 0}}));
 
 
 function setSliderVal(num, value){
     $("#sliderVal"+(num)).val(value);
     sliders[num].value = value;
+    sliderVals[num] = value;
 }
 
 function setUpSliders(){

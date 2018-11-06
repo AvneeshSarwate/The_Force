@@ -4,6 +4,8 @@ function setup(){}
 function draw(){}
 
 
+var customLoaderMap = {};
+
 
 function videoUploadResponder(){}
 function audioFilesSelected(){}
@@ -528,7 +530,16 @@ function sliderTrails(ind){
 
 function responsivevisLoader(i){
     setup = eval("responsevis"+i+"Setup");
-    draw = eval("responsevis"+i+"Draw");   
+    draw = eval("responsevis"+i+"Draw");  
+    patterns = midiPatternMap["responsivevis"+i]; 
+}
+
+customLoaderMap["solidCoating"] = function(){
+    setup = eval("responsevis1Setup");
+    draw = eval("responsevis1Draw");  
+    sliderConfig[0].conf.value = .55;
+    sliderConfig[7].conf.value = 1;
+    sliderConfig[8].conf.value = 1;   
 }
 
 // 
