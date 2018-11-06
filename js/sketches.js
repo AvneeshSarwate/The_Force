@@ -368,8 +368,10 @@ function rotVec2_p5(x,y, cx, cy, amount){
 var lastTime = Date.now() / 1000;
 var newTime = Date.now() / 1000;
 var time = 0;
-var times = arrayOf(20);
+var times = arrayOf(1000);
+var timeDiffs = arrayOf(1000).map(e => 1);
 var mix = (v1, v2, a) => ({x: v1.x*(1-a) + v2.x*a, y: v1.y*(1-a) + v2.y*a});
+var mixn = (n1, n2, a) => n1*(1-a) + n2*a;
 var length = v => (v.x**2 + v.y**2)**0.5;
 
 var fract = v => v - Math.floor(v);
@@ -512,7 +514,7 @@ class CurveBlob{
 
 
 
-    render(time){
+    render(time, n){
         var points = [];
         noFill();
         beginShape();
@@ -527,6 +529,7 @@ class CurveBlob{
             var pt = vecadd(this.getPos(), deviation);
             points.push(pt);
             strokeWeight(this.radius * this.lineThickness * p5h);
+            stroke((n/numBlobs)%1 * 255);
             curveVertex(pt.x * p5w, pt.y * p5h);
 
 
@@ -588,14 +591,21 @@ var cellRad = 1/(blobGrid*2);
 
 var dancerPos1 = arrayOf(numBlobs).map((e, i) => ({x: ((i%blobGrid)*2+1)*cellRad, y: (Math.floor(i/blobGrid)*2+1)*cellRad}));
 var dancerPos2 = arrayOf(numBlobs).map((e, i) => ({x: cosN(i/numBlobs*PI_2), y: sinN(i/numBlobs*PI_2)}));
+var dancerPos3 = arrayOf(numBlobs).map(e => ({x: 0.5, y: 0.5}) );
 
 var sett = 1;
 var weirdFunc = (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t/3.1))/2;
 
-var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad*3, 10, 0.1, 
-    (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t+20/3.1*(1+i*sinN(time/5)) ))/2)));
-//
+// var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(pos.x, pos.y, cellRad*3, 10, 0.1, 
+    // (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t+ mixn(3.1, 0, sliderVals[0])*(1+i*sinN(time/5)) ))/2)));
+
+var curveBlobs = dancerPos1.map((pos, i) => (new CurveBlob(0.5, 0.5, 0.5/(i+1), 10, 0.1, 
+    (th, t) => (sinN(th*2*(sin(t/4.4)) + t/1.2)+cosN(th*2+t+ mixn(3.1, 0, sliderVals[0])*(1+(1+sliderVals[1]*i)*sinN(time/5)) ))/2)));
+
+var initRadii = curveBlobs.map(b => b.radius);
+
 var cent = {x:0.5, y: 0.5};
+frameCount = 0;
 function responsevis2Draw(){
     clear();
     background(255);
@@ -607,6 +617,12 @@ function responsevis2Draw(){
     var timeDiff = newTime - lastTime;
     var timeScale = 1;
     time += timeDiff * timeScale;
+
+
+    var colorPhaseTimeInd = numBlobs+1;
+    timeDiffs[colorPhaseTimeInd] = sliderVals[4]*120;
+
+    times = times.map((t, i) => t + timeDiff * timeDiffs[i]);
     
     // blob.height = sinN(time*5)* 0.4 + 0.1;
     // blob.lineThickness = sinN(time*5)* 0.5 + 0.5;
@@ -614,8 +630,10 @@ function responsevis2Draw(){
     // dancerPos1.map((p, i) => mix(p, dancerPos2[i], sinN(time/8 * PI_2 + i*sinN(time/9)))).map((p, i) => curveBlobs[i].setPos(p));
 
     var radPos = arrayOf(numBlobs).map((e, i) => (mix({x: cosN(i/numBlobs*PI_2), y: sinN(i/numBlobs*PI_2)}, cent, sinN(i/numPoints*PI_2 + time)) ));
-    radPos.map((p, i) => curveBlobs[i].setPos(rotVec2(p, cent, -time))).map((blob, i) => blob.setRad(cellRad*(.1 + sinN(i/numBlobs*PI_2+time*3)*2.9)));
+    radPos = radPos.map(p => mix(cent, p, sliderVals[2]));
+    radPos.map((p, i) => curveBlobs[i].setPos(rotVec2(p, cent, -time))).map((blob, i) => blob.setRad(mixn(initRadii[i], cellRad*(.1 + sinN(i/numBlobs*PI_2+time*3)*2.9), sliderVals[3])));
 
-    curveBlobs.map(blob => blob.render(time));
+    curveBlobs.map((blob, i) => blob.render(times[i], times[colorPhaseTimeInd]+i));
+    frameCount++;
 }
 
