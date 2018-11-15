@@ -245,6 +245,20 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+vec3 ballTwist(vec2 stN, float t2){ 
+    vec2 warp = stN;
+    
+    float rad = .35;
+    
+    for (float i = 0.0; i < 20.; i++) {
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 2.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
 vec2 multiBallCondition(vec2 stN, float t2){
     
     float rad = .08;
@@ -272,16 +286,13 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
-void main () {
+float getShimmer(){
     float t2 = time/5. + 1000.;
-    
-    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
-    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
-
     vec2 stN = uvN();
     stN.y += 0.001;
-    vec2 fallN = vec2(stN.x, mod(stN.y+time/4., 1.));
-    vec3 warpN = coordWarp(fallN, time/3.);
+    // stN.x += 0.001;
+    vec2 fallN = vec2( mod(stN.x+sinN(time/4.+stN.y/5.)/4. - time/5., 1.), mod(stN.y+time/4., 1.));
+    vec3 warpN = ballTwist(fallN, time/4.);
     float numCells = 400.;
 
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
@@ -312,23 +323,48 @@ void main () {
         feedback = lastFeedback - decay2;
     }
     
-    vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
-    
-    vec3 col = vec3(feedback);
-    
-    vec2 cent = vec2(0.5);
-    
-    float scaleval = 230. ; //+ sinN(time*3.) * 80.;
-    // stN = uv();
-    vec2 u = fallN * scaleval;
+    return feedback;
+}
+
+vec2 getHexR(vec2 stN, float scaleval){
+    vec2 u = stN * scaleval;
     
     float size = 1.;
     vec2 codec = hex_to_pixel(pixel_to_hex(u, size), size);
     vec2 hexV = pixel_to_hex(u, size);
     vec2 hexR = hex_round(hexV);
+    return hexR;
+}
+
+void main () {
+    float t2 = time/5. + 1000.;
+    
+    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+
+    vec2 stN = uvN();
+    stN.y += 0.001;
+    // stN.x += 0.001;
+    vec2 fallN = vec2( mod(stN.x+sinN(time/4.+stN.y/5.)/4. - time/5., 1.), mod(stN.y+time/4., 1.));
+    vec3 warpN = ballTwist(fallN, time/4.);
+    float numCells = 400.;
+
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
+
+    
+
+    float feedback = getShimmer();    
+    vec3 col = vec3(feedback);
+    vec3 shimmer = col;
+    
+    vec2 cent = vec2(0.5);
+    
+    
+
+    vec2 hexR = getHexR(fallN, 250.);
     
     vec2 mildWarp = mix(fallN, warpN.xy, 0.9);
-    col = rand(hexR+quant(mildWarp.y, 100.)) > 0.2 ? black : col;
+    col = rand(hexR+quant(mildWarp.y, 100.)) > 0.02 ? black : shimmer;
     
     gl_FragColor = vec4(col, feedback);
 }
