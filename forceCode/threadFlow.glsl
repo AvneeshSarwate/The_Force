@@ -188,6 +188,20 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
+vec3 ballTwist(vec2 stN, float t2){ 
+    vec2 warp = stN;
+    
+    float rad = .35;
+    
+    for (float i = 0.0; i < 20.; i++) {
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 2.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
 vec3 inStripeX(vec2 stN, float rw){
     bool inStripe = false;
     for(float i = 0.; i < 40.; i++){
@@ -216,7 +230,7 @@ vec3 inStripeX2(vec2 stN, float rw){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(rw+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(rw*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.x) < rand(seed)*0.005 + 0.001) {
+        if(abs(loc - stN.x) < .01) {
             inStripe = inStripe || true;
             topInd = i;
         }
@@ -232,7 +246,7 @@ vec3 inStripeY2(vec2 stN, float t){
         float seed = 1./i;
         stN = rotate(stN0, vec2(0.5), 0.2 * sin(t+ i*50.));
         float loc = mod(hash(vec3(seed)).x + sinN(t*seed*5. + seed) * i/5., 1.);
-        if(abs(loc - stN.y) < rand(seed)*0.005  + 0.001) {
+        if(abs(loc - stN.y) < .01) {
             inStripe = inStripe || true;
             topInd = i;
         }
@@ -245,6 +259,49 @@ vec3 inStripeY2(vec2 stN, float t){
 vec3 lum(vec3 color){
     vec3 weights = vec3(0.212, 0.7152, 0.0722);
     return vec3(dot(color, weights));
+}
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
+float getShimmer(){
+    float t2 = time/5. + 1000.;
+    vec2 stN = uvN();
+    stN.y += 0.001;
+    // stN.x += 0.001;
+    vec2 fallN = vec2( mod(stN.x+sinN(time/4.+stN.y/5.)/4. - time/5., 1.), mod(stN.y+time/4., 1.));
+    vec3 warpN = ballTwist(fallN, time/4.);
+    float numCells = 400.;
+
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
+
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.01;
+    float feedback;
+    vec4 bb = texture2D(backbuffer, hashN);
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
+    condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+    return feedback;
 }
 
 void main () {
@@ -310,12 +367,16 @@ void main () {
             cc = foreGround;
         }
     }
-    // vec3 warpCoord = coordWarp(stN, time/4.);
+    vec3 warpCoord = coordWarp(stN, time/4.);
     // vec4 bb2 = texture2D(backbuffer, mix(1.-stN, stN, sinN(time/5. + stN.x*PI)));
-    cc = mix(cc, bb.rgb, 0.9);
+    float mixVal = sigmoid(warpCoord.z*40. - 5.);
+    mixVal = 1.-getShimmer();
+    cc = mixVal < 0.05 ? 1.-cc : cc;
+    cc = mix(bb.rgb, cc, mixVal);
+    
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(vec3(cc), feedback);
 }
