@@ -345,8 +345,10 @@ void main () {
     vec2 stN = uvN();
     stN.y += 0.001;
     // stN.x += 0.001;
-    vec2 fallN = vec2( mod(stN.x+sinN(time/4.+stN.y/5.)/4. - time/5., 1.), mod(stN.y+time/4., 1.));
+    vec2 fallN = vec2( mod(stN.x+sinN(time/4.+stN.y/5.)/4. - time/4., 1.), mod(stN.y+time/4., 1.));
+    vec2 fallN2 = vec2( mod(stN.x+sinN(time/4.3+stN.y/5.)/4. - time/7.1, 1.), mod(stN.y+time/4.3, 1.));
     vec3 warpN = ballTwist(fallN, time/4.);
+    vec3 warpN2 = ballTwist(fallN, time/4.);
     float numCells = 400.;
 
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
@@ -362,9 +364,16 @@ void main () {
     
 
     vec2 hexR = getHexR(fallN, 250.);
+    vec2 hexR2 = getHexR(fallN2, 150.);
     
     vec2 mildWarp = mix(fallN, warpN.xy, 0.9);
     col = rand(hexR+quant(mildWarp.y, 100.)) > 0.02 ? black : shimmer;
+    
+    vec2 mildWarp2 = mix(fallN2, warpN2.xy, 0.9);
+    col = rand(hexR2+quant(mildWarp2.y, 100.)) > 0.02 ? col : shimmer;
+    
+    vec4 bb2 = texture2D(backbuffer, stN);
+    col = mix(bb2.rgb, col, 0.1 + 0.5 * warpN.z*warpN2.y);
     
     gl_FragColor = vec4(col, feedback);
 }

@@ -278,5 +278,12 @@ void main () {
     out4b.z = mix(out4a.z, out4a.w, rotSpeed);
     out4b.w = mix(out4a.w, out4a.x, rotSpeed);
     out4a.rgb = mix(bb2.rgb, out4a.rgb, 1.5*out4a.w);
+    
+    float mixVal = mix(stN.x, warpN.x, sinN(time/10.)) < 0.5 ? (rand(time) <  0.2 * warpN.x ? 1. : 0.) : 1.;
+    float split = 1.;
+    // mixVal = rand(time) <  pow(quant(stN.x, split)+1./split, 8.) * warpN.x ? 1. : 0.;
+    
+    out4a.rgb = mix(bb2.rgb, out4a.rgb, mixVal);
+    
     gl_FragColor = out4a;
 }
