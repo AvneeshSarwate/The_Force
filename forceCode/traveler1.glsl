@@ -272,6 +272,10 @@ vec2 traveler(float t){ //argument time
                      cosN( (sinN(t/1.52)* 20. + cosN(t/1.32)*250.)/60.) );
 }
 
+bool travelerCondition(vec2 stN, float t, float size){
+    return distance(stN, traveler(t)) < (0.025 + sinN(t)*0.025) * size;
+}
+
 void main () {
     vec2 stN = uvN();
     stN = stN; + hash(vec3(stN, time)).xy/200.;
@@ -300,32 +304,40 @@ void main () {
     c =  c;
     
     vec2 trav1 = traveler(time);
+    vec2 trav2 = traveler(time + 10.);
     
     vec3 cc;
-    float decay = 0.99;
+    float decay = 0.01;
     float feedback;
     vec4 bb = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
+    
+    bool multiTravCond = false;
+    for(float i = 0.; i < 5.; i++){
+        multiTravCond = multiTravCond || travelerCondition(stN, time + i*40., 0.4);
+    }
+    
+    vec2 cent = vec2(0.5);
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition =  distance(stN, trav1) < 0.025 + sinN(time)*0.025;; 
+    bool condition = travelerCondition(stN, time, 1. + sinN(time)*0.); 
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
-    float trailThresh = 0.3;
+    float trailThresh = 0.01;
     if(condition){
         if(lastFeedback < 1.1) {
             feedback = 1.;
             cc = trail; 
         } 
         else {
-            feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay;
             cc = mix(foreGround, bb.rgb, lastFeedback);
         }
     }
     else {
-        feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay;
         if(lastFeedback > trailThresh) {
             cc = mix(foreGround, trail, lastFeedback); 
         } else {
@@ -334,11 +346,10 @@ void main () {
         }
     }
     
-    vec2 cent = vec2(0.5);
     vec3 warpN = coordWarp(stN, time/5.);
     cc = c;
-    vec4 bb2 = texture2D(backbuffer, stN);
-    cc = mix(bb2.rgb, c, feedback > trailThresh ? 1. : .04);
+    vec4 bb2 = texture2D(backbuffer, mix(stN, warpN.xy, pow(sinN(time/10. + sinN(time)), 6.)));
+    cc = mix(bb2.rgb, c, feedback > trailThresh*3. ? 1. : (feedback  > trailThresh*2. ? 0. :.04));
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
