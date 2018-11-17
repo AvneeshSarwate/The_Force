@@ -372,7 +372,7 @@ void main () {
     float mixVal = sigmoid(warpCoord.z*40. - 5.);
     mixVal = 1.-getShimmer();
     cc = mixVal < 0.05 ? 1.-cc : cc;
-    cc = mix(bb.rgb, cc, mixVal);
+    cc = mix(bb.rgb, cc, mixVal < 0.9 ? mixVal : 0.);
     
     // c = mix(c, bb.rgb, 0.1);
     
