@@ -348,11 +348,13 @@ void main () {
     
     vec3 warpN = coordWarp(stN, time/5.);
     cc = c;
-    vec4 bb2 = texture2D(backbuffer, mix(stN, warpN.xy, pow(sinN(time/10. + sinN(time)), 6.)));
+    float fadeTime = 20.;
+    float mixVal = mix(0., pow(sinN(time/10. + sinN(time)), 6.), time/fadeTime < 1. ? pow(time/fadeTime, 5.) : 1. );
+    vec4 bb2 = texture2D(backbuffer, mix(stN, warpN.xy,  mixVal));
     cc = mix(bb2.rgb, c, feedback > trailThresh*3. ? 1. : (feedback  > trailThresh*2. ? 0. :.04));
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(vec3(cc), feedback);
 }
