@@ -310,6 +310,7 @@ float splits(vec2 stN){
     
     float xHigh = 1.;
     float xLow = 0.;
+    float seed = 1.; quant(time/4., 1.);
     
     float yHigh = 1.;
     float yLow = 0.;
@@ -317,9 +318,10 @@ float splits(vec2 stN){
     bool xSplit = false;
     bool ySplit = false;
     bool dark = false;
-    for(int i = 0; i < 5; i++){
+    vec2 rotN = rotate(stN, vec2(0.5), time/5.);
+    for(int i = 0; i < 8; i++){
         float phase = dark ? 0. : 1.;
-        float randSplit= 0.3 + rand(float(i)+phase)*0.4 * sinN(time + float(i)*PI/5.);
+        float randSplit= 0.3 + rand(float(i)+phase + seed)*0.4 * sinN(time*mix(1., rotN.x, sinN(time+stN.y*PI)/100.) + float(i)*PI2/8.);
         if(mod(float(i), 2.) == 0.) {
             float xPos = mix(xLow, xHigh, randSplit);
             if(stN.x <= xPos){
@@ -341,7 +343,7 @@ float splits(vec2 stN){
     }
     
     
-    float line = 0.002;
+    float line = 0.001;
     bool nearLine = abs(stN.x - xLow) < line || abs(stN.x - xHigh) < line || abs(stN.y - yLow) < line || abs(stN.y - yHigh) < line;
     return (dark  || nearLine) ? 0. : 1. ;
 }
