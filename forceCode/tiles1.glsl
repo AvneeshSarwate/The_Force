@@ -321,7 +321,7 @@ float splits(vec2 stN){
     vec2 rotN = rotate(stN, vec2(0.5), time/5.);
     for(int i = 0; i < 8; i++){
         float phase = dark ? 0. : 1.;
-        float randSplit= 0.3 + rand(float(i)+phase + seed)*0.4 * sinN(time*mix(1., rotN.x, sinN(time+stN.y*PI)/100.) + float(i)*PI2/8.);
+        float randSplit= 0.3 + rand(float(i)+phase + seed)*0.4 * sinN(time*mix(1., rotN.x, sinN(time+stN.y*PI)/300.) + float(i)*PI2/8.);
         if(mod(float(i), 2.) == 0.) {
             float xPos = mix(xLow, xHigh, randSplit);
             if(stN.x <= xPos){
@@ -350,10 +350,15 @@ float splits(vec2 stN){
 
 void main () {
     vec2 stN = uvN();
+    vec2 warpN = coordWarp(stN, time).xy;
    
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
+    float split = splits(stN);
+    float shimmer = getShimmer();
+    float c = split == 1. ? shimmer : 1. - shimmer;
+    // c = pow(c+0.4, .2 + sinN(time+warpN.x.)*10.);
     
-    gl_FragColor = vec4(vec3(splits(stN)), 1.);
+    gl_FragColor = vec4(vec3(split), shimmer);
 }
