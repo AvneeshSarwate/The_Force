@@ -28,6 +28,19 @@ midiPatternMap["responsivevis1"] = [
     {chan:0, paramNum: 4, paramTarget: .4, fadeTime: 2, lastMatched: -1, regex: br(/-a.{1,4}\1/)},
 ];
 
+midiPatternMap['rainbowHits_slider'] = [
+    {chan:0, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, seq: [68, 67, 65]},
+    {chan:0, paramNum: 1, paramTarget: 0, fadeTime: 3, lastMatched: -1, regex: br(/-68-a{1,3}-67-a{1,3}-65/)},
+    {chan:0, paramNum: 3, paramTarget: .3, fadeTime: 3, lastMatched: -1, seq: [48]},
+    {chan:0, paramNum: 3, paramTarget: .4, fadeTime: 3, lastMatched: -1, regex: br(/-48-a{1,10}-50/)},
+    {chan:0, paramNum: 3, paramTarget: .5, fadeTime: 3, lastMatched: -1, regex: br(/-48-a{1,3}-50-a{1,3}-48/)},
+    {chan:0, paramNum: 5, paramTarget: .4, fadeTime: 1, lastMatched: -1, regex: br(/-60-a{1,3}-62-a{1,3}-63/)},
+    {chan:0, paramNum: 6, paramTarget: .9, fadeTime: 0.5, lastMatched: -1, regex: br(/-62-a{1,3}-64/)},
+    {chan:0, paramNum: 5, paramTarget: .4, fadeTime: 0.5, lastMatched: -1, regex: br(/-63-a{1,3}-68-a{1,3}-67/)},
+
+    {chan:0, paramNum: 0, paramTarget: .8, fadeTime: .8, lastMatched: -1, regex: br(/-50/)},
+]
+
 
 
 

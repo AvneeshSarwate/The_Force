@@ -638,3 +638,33 @@ function responsevis2Draw(){
     frameCount++;
 }
 
+
+function responsevis3Setup(){
+    p5w = 1280;
+    p5h = 720;
+    createCanvas(p5w, p5h);
+    numTiles = {x: 128/4, y: 72/4};
+    tileSize = {x: p5w/numTiles.x, y: p5h/numTiles.y};
+    noSmooth();
+}
+
+var numTiles;
+var tileSize;
+
+function responsevis3Draw(){
+    clear();
+    for(let i = 0; i < numTiles.x; i++){
+        for(let j = 0; j < numTiles.y; j++){
+            rect(i* tileSize.x, j* tileSize.y, tileSize.x/2, tileSize.y/2);
+        }
+    }
+
+    times = times.map((t, i) => t + timeDiff * timeDiffs[i]);
+
+    lastTime = newTime;
+    newTime = Date.now() / 1000;
+    var timeDiff = newTime - lastTime;
+    var timeScale = 1;
+    time += timeDiff * timeScale;
+}
+

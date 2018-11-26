@@ -89,7 +89,7 @@ $( document ).ready(function() {
     if(shaderToGet.indexOf("responsivevis") > -1){
         var loaderInd = parseInt(shaderToGet.slice("responsivevis".length))
         initialLoaderFunction = () => responsivevisLoader(loaderInd);
-        // shaderToGet = "responsivevis1";
+        shaderToGet = "responsivevis2";
     } ;
     if(shaderToGet == "interactiveGridSlice1"){
         useWebGL2 = true;

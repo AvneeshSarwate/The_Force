@@ -91,7 +91,10 @@ function matchPattern(){
                 var lastPat = patterns[latestPatternTriggeredForParam];
                 var rampCompletion = (now - lastPat.lastMatched)/lastPat.fadeTime;
                 if(rampCompletion < 1){
-                    var valInterpolation = mix(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value, rampCompletion);
+                    var valInterpolation = mixn(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value, rampCompletion);
+                    if(isNaN(valInterpolation)){
+                        console.log("nan val", param);
+                    }
                     setSliderVal(param, valInterpolation);
                 }
             }

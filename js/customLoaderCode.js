@@ -531,7 +531,8 @@ function sliderTrails(ind){
 function responsivevisLoader(i){
     setup = eval("responsevis"+i+"Setup");
     draw = eval("responsevis"+i+"Draw");  
-    patterns = midiPatternMap["responsivevis"+i]; 
+    var patternList = midiPatternMap["responsivevis"+i];
+    patterns = patternList ? patternList : []; 
 }
 
 customLoaderMap["solidCoating"] = function(){
@@ -540,6 +541,10 @@ customLoaderMap["solidCoating"] = function(){
     sliderConfig[0].conf.value = .55;
     sliderConfig[7].conf.value = 1;
     sliderConfig[8].conf.value = 1;   
+}
+
+customLoaderMap['rainbowHits_slider'] = function(){
+    patterns = midiPatternMap['rainbowHits_slider'];
 }
 
 // 

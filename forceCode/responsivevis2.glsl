@@ -207,41 +207,9 @@ void main () {
 
     vec3 p5 = texture2D(channel1, stN).rgb;
     
-     vec3 cc;
-    float decay = 0.95 + mod((0.5-distance(stN, cent))/4.+time/40., 0.4*sinN(time));
-    float feedback;
-    vec4 bb = texture2D(backbuffer, stN);
-    float lastFeedback = bb.a;
-    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = p5.x < 0.7; 
-    vec3 trail = black; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = p5;
+
+
     
     
-    //   implement the trailing effectm using the alpha channel to track the state of decay 
-    if(condition){
-        if(lastFeedback < 1.1) {
-            feedback = 1.;
-            cc = trail; 
-        } 
-        // else {
-        //     feedback = lastFeedback * decay;
-        //     c = mix(snap, bb, lastFeedback);
-        // }
-    }
-    else {
-        feedback = lastFeedback * decay;
-        if(lastFeedback > 0.4) {
-            cc = mix(foreGround, trail, lastFeedback); 
-        } else {
-            feedback = 0.;
-            cc = foreGround;
-        }
-    }
-    
-    float mixWeight = 0.99;
-    // cc = mix(bb.rgb, cc, mix(1., .03, sweep));
-    
-    
-    gl_FragColor = vec4(p5, feedback);
+    gl_FragColor = vec4(p5, 1.);
 }
