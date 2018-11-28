@@ -193,7 +193,7 @@ vec2 multiBallCondition(vec2 stN, float t2){
 vec3 ballTwist(vec2 stN, float t2){ 
     vec2 warp = stN;
     
-    float rad = .35;
+    float rad = .55;
     
     for (float i = 0.0; i < 20.; i++) {
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
@@ -348,17 +348,33 @@ float splits(vec2 stN){
     return (dark  || nearLine) ? 0. : 1. ;
 }
 
+
 void main () {
     vec2 stN = uvN();
-    vec2 warpN = coordWarp(stN, time).xy;
+    vec2 cent = vec2(0.5);
+    vec3 warpN = ballTwist(stN, time);
+    
    
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
-    float split = splits(stN);
+    float split = splits(mix(stN, warpN.xy, warpN.z));
     float shimmer = getShimmer();
     float c = split == 1. ? shimmer : 1. - shimmer;
-    // c = pow(c+0.4, .2 + sinN(time+warpN.x.)*10.);
+    c = pow(c+0.4, .2 + sinN(time+warpN.x)*10.);
+    
+    vec4 bb = texture2D(backbuffer, stN);
+    stN = mix(stN, cent, sinN(time/3.));
+    float xMix = quant(mod(time/5. +stN.x + sinN(time), 1.), 1.);
+    float yMix = quant(mod(time/5.5 +stN.y + sinN(time * 0.9), 1.), 1.);
+    split = mix(split, bb.x, xMix);
+    split = mix(split, bb.x, yMix);
+    
+    stN = uvN();
+    stN = rotate(stN, cent, 0.01*sin(time + sinN(time/1.15)*0.5 ));
+    
+    if(xMix + yMix != 0.) split = texture2D(backbuffer, vec2(stN.x, stN.y+0.01)).x;
+    
     
     gl_FragColor = vec4(vec3(split), shimmer);
 }
