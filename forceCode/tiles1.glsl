@@ -373,7 +373,7 @@ void main () {
     stN = uvN();
     stN = rotate(stN, cent, 0.01*sin(time + sinN(time/1.15)*0.5 ));
     
-    if(xMix + yMix != 0.) split = texture2D(backbuffer, vec2(stN.x, stN.y+0.01)).x;
+    if(xMix + yMix != 0.) split = texture2D(backbuffer, vec2(stN.x, stN.y+0.01)).x * mix(1., shimmer, 0.01);
     
     
     gl_FragColor = vec4(vec3(split), shimmer);
