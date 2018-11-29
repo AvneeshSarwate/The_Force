@@ -343,7 +343,7 @@ float splits(vec2 stN){
     }
     
     
-    float line = 0.01;
+    float line = 0.005;
     bool nearLine = abs(stN.x - xLow) < line || abs(stN.x - xHigh) < line || abs(stN.y - yLow) < line || abs(stN.y - yHigh) < line;
     return (dark  || nearLine) ? 0. : 1. ;
 }
@@ -353,21 +353,22 @@ void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
     vec3 warpN = ballTwist(stN, time);
-    vec3 warpN2 = coordWarp(stN, time);
+    vec3 warpN2 = coordWarp(stN, time/5.);
     
    
     // c = mix(c, bb.rgb, 0.1);
     
     //todo - don't forget to make these lines linear lenses
-    float split = splits(mix(stN, warpN.xy, warpN.z));
+    float split = splits(mix(stN, stN.xy, warpN.z));
     float shimmer = getShimmer();
     float c = split == 1. ? shimmer : 1. - shimmer;
     c = pow(c+0.4, .2 + sinN(time+warpN.x)*10.);
     
     vec4 bb = texture2D(backbuffer, stN);
     stN = mix(stN, cent, sinN(time/3.));
-    float xMix = quant(mod(time/5. +warpN2.x + sinN(time), 1.), 1.);
-    float yMix = quant(mod(time/5.5 +warpN2.y + sinN(time * 0.9), 1.), 1.);
+    vec2 warpM = mix(stN, warpN2.xy, 1.);
+    float xMix = quant(mod(time/5. +warpM.x + sinN(time/5.), 1.), 1.);
+    float yMix = quant(mod(time/5.5 +warpM.y + sinN(time/5. * 0.9), 1.), 1.);
     split = mix(split, bb.x, xMix);
     split = mix(split, bb.x, yMix);
     
@@ -375,7 +376,7 @@ void main () {
     stN = rotate(stN, cent, 0.01*sin(time + sinN(time/1.15)*0.5 ));
     
     if(xMix + yMix != 0.) split = texture2D(backbuffer, vec2(stN.x, stN.y+0.01)).x * mix(1., shimmer, 0.03);
-    else if(split == 0.) split = mix(split, bb.x, 1.);
+    else if(split == 0.) split = mix(split, bb.x, 0.);
     
     
     gl_FragColor = vec4(vec3(split), shimmer);
