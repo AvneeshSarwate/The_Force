@@ -267,8 +267,8 @@ void main () {
     // vec2 warp = mix(stN, ballTwist(stN, time/5.).xy, 0.03);
     // vec2 q = floor(warp*numDiv);
     // col = mod(q.x, 5.) == 0. ||  mod(q.y, 5.) == 0. ? col : black;
-    col = mix(bb.rgb, col, 0.001 + radDist*0.05);
+    col = mix(bb.rgb, col, 0.001 + twist * 0.05);
     col = mod(coordWarp(hashN.xy, time/3.).x, 10.) < 0.05 ? vec3(condition) : col;
     
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(vec3(col), feedback);
 }
