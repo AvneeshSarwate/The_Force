@@ -213,6 +213,10 @@ vec3 ballTwist(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+bool btw(float v, float low, float high){
+    return low <= v && v <= high;
+}
+
 void main () {
     float t2 = time/5. + 1000.;
     
@@ -220,6 +224,7 @@ void main () {
     mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
 
     vec2 stN = uvN();
+    stN = mix(stN, vec2(0.5), 0.0);
     float numCells = 400.;
 
     vec2 fdbkMod = (hash(vec3(stN, t2)).xy + -0.5);
@@ -256,8 +261,8 @@ void main () {
     
     vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
     
-    vec3 col = rand(quant(time, 10.)) < 0.3 ? vec3(feedback) : vec3(feedback, sinN(feedback*PI*time * 1.2), cosN((1.-feedback)*PI * time));
-    // vec3 col = ;
+    // vec3 col = rand(quant(time, 10.)) < 0.3 ? vec3(feedback) : vec3(feedback, sinN(feedback*PI*time * 1.2), cosN((1.-feedback)*PI * time));
+    vec3 col = vec3(feedback);
     
     
     float numDiv = 100. ;
@@ -268,7 +273,12 @@ void main () {
     // vec2 q = floor(warp*numDiv);
     // col = mod(q.x, 5.) == 0. ||  mod(q.y, 5.) == 0. ? col : black;
     col = mix(bb.rgb, col, 0.001 + twist * 0.05);
-    col = mod(coordWarp(hashN.xy, time/3.).x, 10.) < 0.05 ? vec3(condition) : col;
+    bool lineCond = mod(coordWarp(hashN.xy, time/3.).x, 10.) < 0.05;
+    vec3 cw = coordWarp(stN, time/3.);
+    float width = 0.0001 + sinN(time + cw.x) * 0.0001;
+    lineCond = btw(stN.x, cw.x-width, cw.x+width);
+    col =  lineCond ? vec3(condition) : col;
+    if(distance(twist.xy, cent) > 0.5) col = black;
     
     gl_FragColor = vec4(vec3(col), feedback);
 }
