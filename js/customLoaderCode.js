@@ -545,6 +545,7 @@ customLoaderMap["solidCoating"] = function(){
 
 customLoaderMap['rainbowHits_slider'] = function(){
     patterns = midiPatternMap['rainbowHits_slider'];
+    sliderConfig = rainbowHitsSliders;
 }
 
 // 

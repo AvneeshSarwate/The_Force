@@ -202,35 +202,35 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
-vec3 ballTwist(vec2 stN, float t2, float numBalls){ 
+vec3 ballTwist(vec2 stN, float t2, float numBalls, float intensity, float size){ 
     vec2 warp = stN;
     
-    float rad = .15;
+    float rad = size;
     
     for (float i = 0.0; i < 100.; i++) {
         if(i == numBalls) break;
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
         // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
-        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 5.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 10.5 * intensity * sinN(1.-length(stN - p)/rad * PI)) : warp;
     }
     
     return vec3(warp, distance(warp, stN));
 }
 
 void main () {
-    float t2 = sliderVals[1] * 20.;
+    float t2 = sliderVals[1] * 20. + sinN(time)*sliderVals[7];
     
     vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
     // mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
     vec2 cent = vec2(0.5);
-    float t = sliderVals[0]* + 60.;
+    float time1 = sliderVals[0] * 60. + sinN(time)*sliderVals[7];
 
     vec2 stN = uvN();
     float numCells = 400.;
-    vec3 warp = ballTwist(stN, t/2., 20.);
+    vec3 warp = ballTwist(stN, time1/2., 20., sliderVals[5], sliderVals[6]);
     vec3 warpSink = vec3(0.);
     // warpSink = coordWarp(stN, time/20., 3.);
-    warpSink = ballTwist(coordWarp(stN, t/6., 20.).xy, t/30., 30.);
+    warpSink = ballTwist(coordWarp(stN, time1/6., 20.).xy, time1/30., 30., sliderVals[5], sliderVals[6]);
     // vec3 warp2 = coordWarp(stN, time +4.);
     stN = mix(stN, warp.xy, 0.025);
     vec2 texN = vec2(0.);
@@ -242,7 +242,7 @@ void main () {
     float height = 0.5;
     float thickness = 0.03;
     
-    vec3 warp2 = coordWarp(warp.xy, t/2., 20.);
+    vec3 warp2 = coordWarp(warp.xy, time1/2., 20.);
     bool lineCond = abs(warp2.y - height) < thickness;
     // if(mouseN.z > 0.) cent = mouseN.xy;
     bool ballCond = distance(warp2.xy, cent) < sinN(t2/2.)*0.3 && distance(warp2.xy, cent) > sinN(t2/2.)*0.2;

@@ -99,9 +99,6 @@ $( document ).ready(function() {
         if(!parseInt(loaderInd)) initialLoaderFunction = sliderTrails(0);
         else initialLoaderFunction = sliderTrails(parseInt(loaderInd));
     }
-    if(shaderToGet.indexOf("_slider") > -1){
-        sliderConfig = eval(shaderToGet.slice(0, shaderToGet.indexOf("_slider")) + "Sliders");
-    }
 
     if(customLoaderMap[shaderToGet]) initialLoaderFunction = customLoaderMap[shaderToGet];
     
