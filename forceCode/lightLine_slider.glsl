@@ -218,12 +218,13 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls, float intensity, float size){
 }
 
 void main () {
-    float t2 = sliderVals[1] * 20. + sinN(time)*sliderVals[7];
+    float timeSwing = sinN(time + sliderVals[8]*15.)*sliderVals[7];
+    float t2 = sliderVals[1] * 20. + timeSwing;
     
     vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
     // mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
     vec2 cent = vec2(0.5);
-    float time1 = sliderVals[0] * 60. + sinN(time)*sliderVals[7];
+    float time1 = sliderVals[0] * 60. + timeSwing;
 
     vec2 stN = uvN();
     float numCells = 400.;
@@ -251,7 +252,7 @@ void main () {
     float decay = 0.999;
     float decay2 = 0.05 * sliderVals[2];
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(hashN, warpSink.xy, -0.02));
+    vec4 bb = texture2D(backbuffer, mix(hashN, warpSink.xy, (sliderVals[9]-0.5)*0.2));
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
