@@ -668,3 +668,72 @@ function responsevis3Draw(){
     time += timeDiff * timeScale;
 }
 
+
+class Point{
+    constructor(x, y, xVel, yVel, size, midiVel, note, lastTimeMoved){
+        this.x = x;
+        this.y = y;
+        this.xVel = xVel;
+        this.yVel = yVel;
+        this.size = size;
+        this.midiVel = midiVel;
+        this.note = note;
+        this.lastTimeMoved = lastTimeMoved;
+    }
+
+    calcMovement(sink, time){
+        var forceDirection = {x:sink.x  - this.x, y:sink.y - this.y};
+        var vecMagnitude = (forceDirection.x**2 + forceDirection.y**2)**0.5
+        this.xVel += forceDirection.x / vecMagnitude * sink.force;
+        this.yVel += forceDirection.y / vecMagnitude * sink.force;
+        var timeDiff = time - this.lastTimeMoved;
+        this.x += this.xVel * timeDiff;
+        this.y += this.yVel * timeDiff;
+        this.lastTimeMoved = time;
+
+        return this;
+    }
+
+    draw(){
+        fill(0);
+        ellipse(this.x, this.y, this.size, this.size);
+    }
+
+    isInFrame(xSize, ySize){
+        return 0-this.size <= this.x && this.x <= xSize+this.size && 0-this.size <= this.y && this.y <= ySize+this.size;
+    }
+}
+
+class Sink{
+    constructor(x, y, force){
+        this.x = x;
+        this.y = y;
+        this.force = force;
+    }
+}
+
+var sinks = [];
+var points = [];
+function responsevis2bSetup(){
+    p5w = 1280;
+    p5h = 720;
+    createCanvas(p5w, p5h);
+    noSmooth();
+
+    var s = new Sink(p5w/2, p5h, 10);
+    sinks.push(s);
+}
+
+function makePoint(){
+    var p = new Point(0, 0, 0, 5, 10, 0, 0, Date.now()/1000);
+    points.push(p);
+}
+
+function responsevis2bDraw(){
+    clear();
+    background(255);
+    points = points.filter(p => p.isInFrame(p5w, p5h));
+    time = Date.now()/1000;
+    points.map(p => p.calcMovement(sinks[0], time)).map(p => p.draw());   
+}
+

@@ -87,8 +87,8 @@ $( document ).ready(function() {
         else initialLoaderFunction = yoyoVideoTestB;
     } ;
     if(shaderToGet.indexOf("responsivevis") > -1){
-        var loaderInd = parseInt(shaderToGet.slice("responsivevis".length))
-        initialLoaderFunction = () => responsivevisLoader(loaderInd);
+        var loaderKey = shaderToGet.slice("responsivevis".length)
+        initialLoaderFunction = () => responsivevisLoader(loaderKey);
         shaderToGet = "responsivevis2";
     } ;
     if(shaderToGet == "interactiveGridSlice1"){

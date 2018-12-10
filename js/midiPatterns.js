@@ -41,7 +41,9 @@ midiPatternMap['rainbowHits_slider'] = [
     {chan:0, paramNum: 0, paramTarget: .8, fadeTime: .8, lastMatched: -1, regex: br(/-50/)},
 ]
 
+midiPatternMap["responsivevis2"] = [
 
+];
 
 
 
