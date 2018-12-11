@@ -41,19 +41,28 @@ midiPatternMap['rainbowHits_slider'] = [
     {chan:0, paramNum: 0, paramTarget: .8, fadeTime: .8, lastMatched: -1, regex: br(/-50/)},
 ]
 
-midiPatternMap["responsivevis2b"] = [
-    
-];
+midiPatternMap["responsivevis2b"] = [];
 
-function fill2b(){
+function chan1funcs(){
     var low = 39;
     var high = 87;
-    for(let i = low; i < high; i++){
-        midiPatternMap["responsivevis2b"].push({chan:1, responseFunc: t => makePoint(t, i, low, high, 1), lastMatched: -1, seq: [i]})
+    sinks[0] = new Sink(p5w/2, p5h, 50);
+    for(let i = low; i <= high; i++){
+        midiPatternMap["responsivevis2b"].push({chan:1, responseFunc: t => makePoint(t, i, low, high, 0), lastMatched: -1, seq: [i]})
     }
 }
 
-fill2b();
+function chan0funcs(){
+    var low = 39;
+    var high = 77;
+    for(let i = low; i <= high; i++){
+        sinks[i] = new Sink(p5w*(i-low)/(high-low), 0, 50);
+        midiPatternMap["responsivevis2b"].push({chan:0, responseFunc: t => makePoint2(t, i, low, high, i), lastMatched: -1, seq: [i]})
+    }
+}
+
+chan1funcs();
+chan0funcs();
 
 
 

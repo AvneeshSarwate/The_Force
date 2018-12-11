@@ -1,8 +1,8 @@
 //definitions of various p5 sketches to use as textures
 "use strict";
 
-var p5w = 1280*1.5;
-var p5h = 720*1.5;
+var p5w = 1280;
+var p5h = 720;
 function testSetup() {
     createCanvas(p5w, p5h);
 }
@@ -699,8 +699,8 @@ class Point{
     }
 
     draw(){
-        stroke(0);
-        strokeWeight(1);
+        stroke(250);
+        strokeWeight(2);
         fill(0);
         ellipse(this.x, this.y, this.size, this.size);
         // stroke(2);
@@ -726,22 +726,26 @@ class Sink{
     }
 }
 
-var sinks = [];
+var sinks = {};
 var points = [];
 function responsevis2bSetup(){
     p5w = 1280;
     p5h = 720;
     createCanvas(p5w, p5h);
     noSmooth();
-
-    var s = new Sink(p5w/2, p5h, 50);
-    sinks.push(s);
 }
 
 function makePoint(time, note, low, high, sinkId){
     var scale = (note-low)/(high-low);
-    var size = 1 + (1-scale) * 40;
-    var p = new Point(scale*p5w, 0, 100 * (Math.random()-0.5), 10*Math.random(), size, 0, 0, Date.now()/1000, sinkId, scale);
+    var size = 5 + (1-scale) * 40;
+    var p = new Point(scale*p5w, 0, 100 * (Math.random()-0.5), 30, size, 0, 0, Date.now()/1000, sinkId, scale);
+    points.push(p);
+}
+
+function makePoint2(time, note, low, high, sinkId){
+    var scale = (note-low)/(high-low);
+    var size = 10 + (1-scale) * 40;
+    var p = new Point(p5w/2, p5h, 100 * (Math.random()-0.5), -30, size, 0, 0, Date.now()/1000, sinkId, scale);
     points.push(p);
 }
 
@@ -751,13 +755,14 @@ function responsevis2bDraw(){
     stroke(0);
     strokeWeight(1);
 
+    Object.keys(sinks).map(k => parseInt(k)).filter(k => k > 0).forEach(k => {sinks[k].y = sinN(time/4*PI)*p5h})
     points = points.filter(p => p.isInFrame(p5w, p5h));
 
     time = Date.now()/1000;
     // sinks[0].y = sinN(time/2)**10 * p5h / 2 + p5h/2;
 
     // sinks.map(s => s.draw());
-    points.map(p => p.calcMovement(sinks[0], time)).map(p => p.draw());   
+    points.map(p => p.calcMovement(sinks[p.sinkId], time)).map(p => p.draw());   
 
     // if(frameCount%2 == 0 && points.length < 20) makePoint(time);
     frameCount++;
