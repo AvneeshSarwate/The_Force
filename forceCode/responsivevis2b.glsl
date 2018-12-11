@@ -201,6 +201,12 @@ float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
 
+float rampAD(float inputTime, float peakTime){
+    if(inputTime == peakTime) return 1.;
+    if(inputTime < peakTime) return inputTime/peakTime;
+    if(inputTime > peakTime) return 1.-(inputTime-peakTime)/(1.-peakTime);
+}
+
 void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
@@ -211,5 +217,5 @@ void main () {
 
     
     
-    gl_FragColor = vec4(p5 == white ? vec3(sinN(time + stN.x*PI), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5, 1.);
+    gl_FragColor = vec4(p5 == white ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/1.4), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5, 1.);
 }
