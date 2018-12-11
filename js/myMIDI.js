@@ -249,7 +249,7 @@ function onMIDIMessage(event) {
     }
 
     // midiFeatures = computeFeatures(noteEvents, onNoteSet, lastNoteOnTime)
-    if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey](midiNote, midiVel);
+    if(midiEventHandlers[eventKey]) midiEventHandlers[eventKey](midiNote, midiVel, chan);
 }
 
 // function noteOn(noteNumber) {

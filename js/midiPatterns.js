@@ -1,4 +1,5 @@
 var midiPatternMap = {};
+var midiResponseSetup = {};
 
 //lets you write a regex but use "-a" as a shorthand for a midi-note wildcard.
 //this function recompiles the regex into a standard one
@@ -64,8 +65,24 @@ function chan0funcs(){
     }
 }
 
-chan1funcs();
-chan0funcs();
+
+midiResponseSetup["responsivevis2b"] = function(){
+    chan1funcs();
+    chan0funcs();
+
+    var rand = n => mod(Math.sin(1000*n), 1);
+
+    midiEventHandlers["on"] = function(note, vel, chan){
+        if(chan != 2) return;
+        sinks[127 + note] = new Sink(rand(note) * p5w, rand(note+5) * p5h, 300, Date.now()/1000, vel/10);
+
+    }
+
+    midiEventHandlers["off"] = function(note, vel, chan){
+        if(chan != 2) return;
+        delete sinks[127 + note];
+    }
+}
 
 
 

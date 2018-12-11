@@ -533,6 +533,7 @@ function responsivevisLoader(i){
     draw = eval("responsevis"+i+"Draw");  
     var patternList = midiPatternMap["responsivevis"+i];
     patterns = patternList ? patternList : []; 
+    if(midiResponseSetup["responsivevis"+i]) midiResponseSetup["responsivevis"+i]();
 }
 
 customLoaderMap["solidCoating"] = function(){

@@ -687,8 +687,9 @@ class Point{
     calcMovement(sink, time){
         var forceDirection = {x:sink.x  - this.x, y:sink.y - this.y};
         var vecMagnitude = (forceDirection.x**2 + forceDirection.y**2)**0.5;
-        this.xVel += forceDirection.x / vecMagnitude * sink.force * (0.1 + this.scale*0.9);
-        this.yVel += forceDirection.y / vecMagnitude * sink.force * (0.1 + this.scale*0.9);
+        var sinkForce = sink.getForce(time);
+        this.xVel += forceDirection.x / vecMagnitude * sinkForce * (0.1 + this.scale*0.9);
+        this.yVel += forceDirection.y / vecMagnitude * sinkForce * (0.1 + this.scale*0.9);
         var timeDiff = time - this.lastTimeMoved;
         this.x += this.xVel * timeDiff;
         this.y += this.yVel * timeDiff;
@@ -717,10 +718,17 @@ class Point{
 }
 
 class Sink{
-    constructor(x, y, force){
+    constructor(x, y, force, creationTime, rampTime){
         this.x = x;
         this.y = y;
         this.force = force;
+        this.creationTime = creationTime;
+        this.rampTime = rampTime;
+    }
+
+    getForce(time){
+        if(!(this.creationTime || this.rampTime)) return this.force;
+        return Math.min((time-this.creationTime)/this.rampTime, 1) * this.force;
     }
 
     draw(){
@@ -765,14 +773,21 @@ function responsevis2bDraw(){
     stroke(0);
     strokeWeight(1);
 
-    Object.keys(sinks).map(k => parseInt(k)).filter(k => k > 0).forEach(k => {sinks[k].y = sinN(time/4*PI)*p5h})
+    Object.keys(sinks).map(k => parseInt(k)).filter(k => k > 0 && k < 127).forEach(k => {sinks[k].y = sinN(time/4*PI)*p5h})
     points = points.filter(p => p.isInFrame(p5w, p5h));
 
     time = Date.now()/1000;
     // sinks[0].y = sinN(time/2)**10 * p5h / 2 + p5h/2;
 
-    // sinks.map(s => s.draw());
-    points.map(p => p.calcMovement(sinks[p.sinkId], time)).map(p => p.draw(time));   
+    //calculate motion from non-variable sinks
+    points.map(p => p.calcMovement(sinks[p.sinkId], time));
+
+    //calculate motion from chan2 (0-indexed) instrument variable sinks
+    Object.keys(sinks).map(k => parseInt(k)).filter(k => k > 127).map(k => points.map(p => p.calcMovement(sinks[k], time)));
+
+    points.map(p => p.draw(time));   
+
+   
 
     // if(frameCount%2 == 0 && points.length < 20) makePoint(time);
     frameCount++;
