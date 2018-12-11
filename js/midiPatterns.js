@@ -74,7 +74,7 @@ midiResponseSetup["responsivevis2b"] = function(){
 
     midiEventHandlers["on"] = function(note, vel, chan){
         if(chan != 2) return;
-        sinks[127 + note] = new Sink(rand(note) * p5w, rand(note+5) * p5h, 300, Date.now()/1000, vel/10);
+        sinks[127 + note] = new Sink(rand(note)*p5w*0.5 + 0.25*p5w, rand(note+5)*p5h*0.5 + 0.25*p5h, 1000, Date.now()/1000, 0.1);
 
     }
 

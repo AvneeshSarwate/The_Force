@@ -214,8 +214,10 @@ void main () {
     vec3 p5 = texture2D(channel1, stN).rgb;
     
     float t2 = time + 100.;
+    float t3 = time + 200.;
 
+    vec3 col = p5 == white ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5;  
+    col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
     
-    
-    gl_FragColor = vec4(p5 == white ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5, 1.);
+    gl_FragColor = vec4(col, 1.);
 }

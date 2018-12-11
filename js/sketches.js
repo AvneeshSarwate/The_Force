@@ -682,12 +682,13 @@ class Point{
         this.movementSink = null;
         this.sinkId = sinkId;
         this.scale = scale;
+        this.creationTime = Date.now()/1000;
     }
 
     calcMovement(sink, time){
         var forceDirection = {x:sink.x  - this.x, y:sink.y - this.y};
         var vecMagnitude = (forceDirection.x**2 + forceDirection.y**2)**0.5;
-        var sinkForce = sink.getForce(time);
+        var sinkForce = sink.getForce(time, vecMagnitude);
         this.xVel += forceDirection.x / vecMagnitude * sinkForce * (0.1 + this.scale*0.9);
         this.yVel += forceDirection.y / vecMagnitude * sinkForce * (0.1 + this.scale*0.9);
         var timeDiff = time - this.lastTimeMoved;
@@ -724,16 +725,21 @@ class Sink{
         this.force = force;
         this.creationTime = creationTime;
         this.rampTime = rampTime;
+        this.size = 160;
     }
 
-    getForce(time){
+    getForce(time, distance){
         if(!(this.creationTime || this.rampTime)) return this.force;
-        return Math.min((time-this.creationTime)/this.rampTime, 1) * this.force;
+        return Math.min((time-this.creationTime)/this.rampTime, 1) * this.force * (p5w / Math.min(distance, this.size)**2);
     }
 
     draw(){
-        fill(255, 255, 0);
-        ellipse(this.x, this.y, 160, 160);
+        if(this.creationTime) {
+            fill(10);
+            stroke(10);
+            ellipse(this.x, this.y, this.size, this.size);
+        }
+
     }
 }
 
@@ -786,7 +792,7 @@ function responsevis2bDraw(){
     Object.keys(sinks).map(k => parseInt(k)).filter(k => k > 127).map(k => points.map(p => p.calcMovement(sinks[k], time)));
 
     points.map(p => p.draw(time));   
-
+    Object.values(sinks).map(s => s.draw());
    
 
     // if(frameCount%2 == 0 && points.length < 20) makePoint(time);
