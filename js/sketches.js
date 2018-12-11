@@ -670,7 +670,7 @@ function responsevis3Draw(){
 
 
 class Point{
-    constructor(x, y, xVel, yVel, size, midiVel, note, lastTimeMoved){
+    constructor(x, y, xVel, yVel, size, midiVel, note, lastTimeMoved, sinkId, scale){
         this.x = x;
         this.y = y;
         this.xVel = xVel;
@@ -679,24 +679,33 @@ class Point{
         this.midiVel = midiVel;
         this.note = note;
         this.lastTimeMoved = lastTimeMoved;
+        this.movementSink = null;
+        this.sinkId = sinkId;
+        this.scale = scale;
     }
 
     calcMovement(sink, time){
         var forceDirection = {x:sink.x  - this.x, y:sink.y - this.y};
-        var vecMagnitude = (forceDirection.x**2 + forceDirection.y**2)**0.5
-        this.xVel += forceDirection.x / vecMagnitude * sink.force;
-        this.yVel += forceDirection.y / vecMagnitude * sink.force;
+        var vecMagnitude = (forceDirection.x**2 + forceDirection.y**2)**0.5;
+        this.xVel += forceDirection.x / vecMagnitude * sink.force * (0.1 + this.scale*0.9);
+        this.yVel += forceDirection.y / vecMagnitude * sink.force * (0.1 + this.scale*0.9);
         var timeDiff = time - this.lastTimeMoved;
         this.x += this.xVel * timeDiff;
         this.y += this.yVel * timeDiff;
         this.lastTimeMoved = time;
+        this.movementSink = sink;
 
         return this;
     }
 
     draw(){
+        stroke(0);
+        strokeWeight(1);
         fill(0);
         ellipse(this.x, this.y, this.size, this.size);
+        // stroke(2);
+        // strokeWeight(5);
+        // line(this.x, this.y, this.movementSink.x, this.movementSink.y);
     }
 
     isInFrame(xSize, ySize){
@@ -710,6 +719,11 @@ class Sink{
         this.y = y;
         this.force = force;
     }
+
+    draw(){
+        fill(255, 255, 0);
+        ellipse(this.x, this.y, 160, 160);
+    }
 }
 
 var sinks = [];
@@ -720,20 +734,32 @@ function responsevis2bSetup(){
     createCanvas(p5w, p5h);
     noSmooth();
 
-    var s = new Sink(p5w/2, p5h, 10);
+    var s = new Sink(p5w/2, p5h, 50);
     sinks.push(s);
 }
 
-function makePoint(){
-    var p = new Point(0, 0, 0, 5, 10, 0, 0, Date.now()/1000);
+function makePoint(time, note, low, high, sinkId){
+    var scale = (note-low)/(high-low);
+    var size = 1 + (1-scale) * 40;
+    var p = new Point(scale*p5w, 0, 100 * (Math.random()-0.5), 10*Math.random(), size, 0, 0, Date.now()/1000, sinkId, scale);
     points.push(p);
 }
 
 function responsevis2bDraw(){
     clear();
     background(255);
+    stroke(0);
+    strokeWeight(1);
+
     points = points.filter(p => p.isInFrame(p5w, p5h));
+
     time = Date.now()/1000;
+    // sinks[0].y = sinN(time/2)**10 * p5h / 2 + p5h/2;
+
+    // sinks.map(s => s.draw());
     points.map(p => p.calcMovement(sinks[0], time)).map(p => p.draw());   
+
+    // if(frameCount%2 == 0 && points.length < 20) makePoint(time);
+    frameCount++;
 }
 

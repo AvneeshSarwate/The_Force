@@ -81,21 +81,26 @@ function matchPattern(){
         if(isMatched === "noPattern") return;
         var param = patterns[ind].paramNum;
         var target = patterns[ind].paramTarget;
-        if(isMatched){
-            setSliderVal(param, target);
-        } else {
-            var latestPatternTriggeredForParam = patterns.map((p, i) => ({p, i})).filter(pat => pat.p.paramNum === param).sort((p1, p2) => -(p1.p.lastMatched-p2.p.lastMatched))[0].i
-            var lastPat = patterns[latestPatternTriggeredForParam];
-
-            if(latestPatternTriggeredForParam === ind && lastPat.lastMatched > 0){
+        if(patterns[ind].responseFunc && isMatched){
+            patterns[ind].responseFunc(now);
+        }
+        else { 
+            if(isMatched){
+                setSliderVal(param, target);
+            } else {
+                var latestPatternTriggeredForParam = patterns.map((p, i) => ({p, i})).filter(pat => pat.p.paramNum === param).sort((p1, p2) => -(p1.p.lastMatched-p2.p.lastMatched))[0].i
                 var lastPat = patterns[latestPatternTriggeredForParam];
-                var rampCompletion = (now - lastPat.lastMatched)/lastPat.fadeTime;
-                if(rampCompletion < 1){
-                    var valInterpolation = mixn(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value, rampCompletion);
-                    if(isNaN(valInterpolation)){
-                        console.log("nan val", param);
+
+                if(latestPatternTriggeredForParam === ind && lastPat.lastMatched > 0){
+                    var lastPat = patterns[latestPatternTriggeredForParam];
+                    var rampCompletion = (now - lastPat.lastMatched)/lastPat.fadeTime;
+                    if(rampCompletion < 1){
+                        var valInterpolation = mixn(lastPat.paramTarget, sliderConfig[lastPat.paramNum].conf.value, rampCompletion);
+                        if(isNaN(valInterpolation)){
+                            console.log("nan val", param);
+                        }
+                        setSliderVal(param, valInterpolation);
                     }
-                    setSliderVal(param, valInterpolation);
                 }
             }
         }
