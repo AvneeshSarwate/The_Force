@@ -217,5 +217,5 @@ void main () {
 
     
     
-    gl_FragColor = vec4(p5 == white ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/1.4), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5, 1.);
+    gl_FragColor = vec4(p5 == white ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5, 1.);
 }
