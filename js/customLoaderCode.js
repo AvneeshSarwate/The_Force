@@ -529,8 +529,12 @@ function sliderTrails(ind){
 }
 
 function responsivevisLoader(i){
-    setup = eval("responsevis"+i+"Setup");
-    draw = eval("responsevis"+i+"Draw");  
+    try { 
+        setup = eval("responsevis"+i+"Setup");
+        draw = eval("responsevis"+i+"Draw");  
+    } catch(e){
+        console.log("p5 function eval error", e);
+    }
     var patternList = midiPatternMap["responsivevis"+i];
     patterns = patternList ? patternList : []; 
     if(midiResponseSetup["responsivevis"+i]) midiResponseSetup["responsivevis"+i]();

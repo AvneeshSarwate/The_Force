@@ -21,6 +21,9 @@ if it exceeds the range on either side -
 for example wrap(10, 1, 9) -> 8
 and wrap (-2, -1, 9) -> 0
 */
+
+
+
 float wrap3(float val, float low, float high){
     float range  = high - low;
     if(val > high){
@@ -28,9 +31,9 @@ float wrap3(float val, float low, float high){
         float difMod = mod(dif, range);
         float numWrap = dif/range - difMod;
         if(mod(numWrap, 2.) == 0.){
-            return high - difMod;
+            return high - difMod; 
         } else {
-            return low + difMod;
+            return low + difMod; 
         }
     }
     if(val < low){
@@ -199,6 +202,16 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+vec2 getNoteBall(int i){
+    vec2 v = vec2(-200);
+    if(i == 0 && lastNoteOnTime[50] > lastNoteOffTime[50]) v =vec2(midiCC[80], midiCC[81]);
+    if(i == 1 && lastNoteOnTime[55] > lastNoteOffTime[55]) v =vec2(midiCC[82], midiCC[83]);
+    if(i == 2 && lastNoteOnTime[60] > lastNoteOffTime[60]) v =vec2(midiCC[84], midiCC[85]);
+    if(i == 3 && lastNoteOnTime[65] > lastNoteOffTime[65]) v =vec2(midiCC[80], midiCC[87]);
+    if(i == 4 && lastNoteOnTime[70] > lastNoteOffTime[70]) v =vec2(midiCC[88], midiCC[89]);
+    return v/127.;
+}
+
 void main () {
     float t2 = time/5. + 1000.;
     
@@ -252,7 +265,13 @@ void main () {
     // col.zx = rotate(col.zx, cent, warp.z*3.);
     
     col = mix(bb.rgb, col, 0.0001 + 0.02 * (1. - midiCC[9]/127.));
-    if(distance(uvN()+hashPart*pow(1. + midiCC[10]/127., 4.), vec2(0.5)) < 0.05) col = red;
+    
+    vec2 distRef = uvN()+hashPart*pow(1. + midiCC[10]/127., 4.);
+    for(int i = 0; i < 5; i++){
+        vec2 b = getNoteBall(i);
+        if(distance(distRef, b*0.5 + .25) < 0.02 && b.x > -1.) col = red;
+    }
+    
     
     // if(colourDistance(col, red) < 0.9) mix(col, red, 0.5);
     
