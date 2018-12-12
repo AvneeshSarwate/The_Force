@@ -159,8 +159,6 @@ vec4 circleSlice(vec2 stN, float t, float randw){
     
 }
 
-
-
 vec3 coordWarp(vec2 stN, float t2){ 
     vec2 warp = stN;
     
@@ -190,6 +188,10 @@ vec2 multiBallCondition(vec2 stN, float t2){
     return vec2(cond ? 1. :0., ballInd/20.);
 }
 
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
 // calculates the luminance value of a pixel
 // formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
 vec3 lum(vec3 color){
@@ -197,32 +199,64 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
-float sigmoid(float x){
-    return 1. / (1. + exp(-x));
-}
-
-float rampAD(float inputTime, float peakTime){
-    if(inputTime == peakTime) return 1.;
-    if(inputTime < peakTime) return inputTime/peakTime;
-    if(inputTime > peakTime) return 1.-(inputTime-peakTime)/(1.-peakTime);
-}
-
 void main () {
+    float t2 = time/5. + 1000.;
+    
+    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+
     vec2 stN = uvN();
+    
+    float numCells = 400.;
+    vec3 warp = coordWarp(stN, time/2. + midiCC[8]/10.);
+    // vec3 warp2 = coordWarp(stN, time +4.);
+    stN = mix(stN, warp.xy, 0.01 + 0.05* midiCC[9]/127.);
+    vec2 hashPart = + (hash(vec3(stN, t2)).xy + -0.5)/numCells * (.5 + midiCC[10]/127. * 5.);
+    vec2 hashN = stN + hashPart;
+    
+
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.01;
+    float feedback;
+    vec4 bb = texture2D(backbuffer, hashN);
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
+    condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+    vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
+    
+    vec3 col = vec3(feedback);
+    
     vec2 cent = vec2(0.5);
-
-    vec3 p5 = texture2D(channel1, stN).rgb;
     
-    float t2 = time + 100.;
-    float t3 = time + 200.;
-
-    float v = quant(sinN(time/5.), 127.) * 127.;
-    float x = sinN(v *10. + cos(v * 20.));
-    float y = cosN(v *14. + cos(v * 17. + 0.5));
-    vec2 pos = vec2(x, y);
-
-    vec3 col = p5 == white ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : p5;  
-    col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
+    // col.xy = rotate(col.xy, cent, warp.x*3.);
+    // col.yz = rotate(col.yz, cent, warp.y*3.);
+    // col.zx = rotate(col.zx, cent, warp.z*3.);
     
-    gl_FragColor = vec4(col, 1.);
+    col = mix(bb.rgb, col, 0.0001 + 0.02 * (1. - midiCC[9]/127.));
+    if(distance(uvN()+hashPart*pow(1. + midiCC[10]/127., 4.), vec2(0.5)) < 0.05) col = red;
+    
+    // if(colourDistance(col, red) < 0.9) mix(col, red, 0.5);
+    
+    
+    
+    gl_FragColor = vec4(col, feedback);
 }
