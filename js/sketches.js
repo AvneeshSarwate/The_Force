@@ -418,13 +418,14 @@ function responsevis1Draw(){
     times[3] += timeDiff * (4+30*sliderVals[3]);
 
     // cirlces.forEach(function(circle){ circle.drawCircle(frameCount, time/4.)});
-    var rad1 = 0.3;
+    var rad1 = 0.3 + sliderVals[7] * 0.2;
     var rad2 = 0.05;
     var speed1 = 1/1.5;
     var speed2 = 5;
     var size = 10;
     var numCenters = 40;
     var circleCounter = 0;
+    var rand = n => mod(Math.sin(1000*n), 1);
 
     for(var i = 0; i < numCenters; i++){
         var ct = rotVec2_p5(p5w*0.5, p5h*0.5 + rad1*p5h, p5w*0.5, p5h*0.5, PI*2*i/numCenters + time*speed1);
@@ -438,12 +439,25 @@ function responsevis1Draw(){
             ptW = mix(pt, ptW, sliderVals[5]);
 
             var sz = size*(1 + sinN((times[3]+tmodT) + (i/numCenters*PI*2))*(1+ sliderVals[4]*4.));
-            ellipse(ptW.x, ptW.y, sz, sz);
+            if(rand(circleCounter) < sliderVals[6]){
+                makeCircles(ptW.x, ptW.y, sz, 5);
+            }
+            else {
+                ellipse(ptW.x, ptW.y, sz, sz);
+            }
             circleCounter++;
         }
     }
 
     frameCount++;
+}
+
+function makeCircles(centX, centY, rad, numCircles){
+    for(var i = 0; i < numCircles; i++){
+        var pt = rotVec2_p5(centX + rad, centY, centX, centY, PI*2*i/numCircles);
+        ellipse(pt.x, pt.y, rad/numCircles, rad/numCircles);   
+    }
+    
 }
 
 

@@ -85,8 +85,8 @@ function matchPattern(){
             patterns[ind].responseFunc(now);
         }
         else { 
-            if(isMatched){
-                setSliderVal(param, target);
+            if(isMatched){ //TODO - remove hardcoding for param5 for responsevis1
+                setSliderVal(param, param == 5 ? 0 : target);
             } else {
                 var latestPatternTriggeredForParam = patterns.map((p, i) => ({p, i})).filter(pat => pat.p.paramNum === param).sort((p1, p2) => -(p1.p.lastMatched-p2.p.lastMatched))[0].i
                 var lastPat = patterns[latestPatternTriggeredForParam];
@@ -99,7 +99,7 @@ function matchPattern(){
                         if(isNaN(valInterpolation)){
                             console.log("nan val", param);
                         }
-                        setSliderVal(param, valInterpolation);
+                        setSliderVal(param, lastPat.paramNum == 5 ? rampAD(rampCompletion, 0.5)*2 : valInterpolation);
                     }
                 }
             }
