@@ -214,11 +214,12 @@ void main () {
 
     vec3 p5 = texture2D(channel1, stN.xy).rgb;
     
+    float numStripes = 20.;
+    p5 = mod(stN.x + time/5., 1./numStripes) < 0.5/numStripes ? white : black;
     vec4 bb = texture2D(backbuffer, stN.xy);
     vec2 rotN = rotate(warpN.xy, cent, sinN(time*5. + stN.x*PI));
-
-    //made with responsevis1 (with third row of slider params in sliders.js comments)
     p5 = mix(p5, bb.rgb, sinN(rotN.x * (50. + sinN(time)*(1000. + sinN(time)*0000.)) ));
+    //made with responsevis1 (with third row of slider params in sliders.js comments)
     
 
     
