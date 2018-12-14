@@ -108,4 +108,5 @@ var rainbowHitsSliders = [
 /*
 responsivevis1 sliderVals = [0.475, 0.116, 0.691, 0.016, 0.208, 1, 0, 0, 0, 0] - for only p5, no shader
 responsivevis1 sliderVals = [0.445, 0.075, 0.525, 0, 0.183, 1, 0, 0, 0.883, 0]
+responsivevis1 sliderVals = [.4, .1, .79, 0, .2, .8]
 */
