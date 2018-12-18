@@ -166,7 +166,7 @@ vec3 coordWarp(vec2 stN, float t2){
     
     float rad = .5;
     
-    for (float i = 0.0; i < 20.; i++) {
+    for (float i = 0.0; i < 40.; i++) {
         vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
         warp = length(p - stN) <= rad ? mix(warp, p, 1. - length(stN - p)/rad)  : warp;
     }
@@ -220,14 +220,13 @@ void main () {
     float x = sinN(v *10. + cos(v * 20.));
     float y = cosN(v *14. + cos(v * 17. + 0.5));
     vec2 pos = vec2(x, y);
-    stN.x = mix(stN, coordWarp(stN, time/7.).xy, 2.).y;
+    stN.x = mix(stN, coordWarp(coordWarp(stN.yx, time).xy, time/3.3).xy, 2.).y;
     vec3 col = vec3(sinN(time + stN.x*PI*3.  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.));  
     // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
     vec4 bb = texture2D(backbuffer, uvN());
     float fdbk = 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2;
-    float fdbk2 = 0.3 + sigmoid(sin(time+stN.x*PI)*10.)*0.7;
-    col = mix(col, bb.rgb, pow(fdbk, 150.));
-    col = mix(black, col, sigmoid((pow(fdbk, 3.)-0.8)*100. ));
-    if(pow(fdbk, 150.) > 0.95) col = mix(col, black, 0.02);
+    col = mix(col, bb.rgb, fdbk);
+    if(fdbk > 0.95) col = mix(col, mix(black, white, pow(stN.x, 4.)), 0.09);
+    col = mix(black, white, pow(stN.x, .4 + mod(time/10. + stN.x, 1.)));
     gl_FragColor = vec4(col, 1.);
 }
