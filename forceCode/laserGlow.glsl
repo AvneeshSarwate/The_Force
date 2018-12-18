@@ -223,8 +223,10 @@ void main () {
     stN.x = mix(stN, coordWarp(stN, time).xy, 2.).y;
     vec3 col = vec3(sinN(time + stN.x*PI*3.  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.));  
     // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
-    vec4 bb = texture2D(backbuffer, stN);
-    col = mix(col, bb.rgb, 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2);
+    vec4 bb = texture2D(backbuffer, uvN());
+    float fdbk = 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2;
+    col = mix(col, bb.rgb, fdbk);
+    if(fdbk > 0.95)
     
     gl_FragColor = vec4(col, 1.);
 }
