@@ -210,23 +210,12 @@ float rampAD(float inputTime, float peakTime){
 void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
-
-    vec3 p5 = texture2D(channel1, stN).rgb;
     
-    float t2 = time + 10000. + sigmoid(sin(time/5.)*5.)*400000.;
-    float t3 = 00000.;
+    stN.x = mix(stN, coordWarp(mix(stN, coordWarp(mix(stN, coordWarp(stN, time/2.1).xy, 2.+ sinN(time/1.2)).yx, time/5.).xy, 2.+ sinN(time/1.1)), time/3.3).xy, 2. + sinN(time)).y;
 
-    float v = quant(sinN(time/5.), 127.) * 127.;
-    float x = sinN(v *10. + cos(v * 20.));
-    float y = cosN(v *14. + cos(v * 17. + 0.5));
-    vec2 pos = vec2(x, y);
-    stN.x = mix(stN, coordWarp(coordWarp(stN.yx, time).xy, time/3.3).xy, 2.).y;
-    vec3 col = vec3(sinN(time + stN.x*PI*3.  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.));  
-    // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
-    vec4 bb = texture2D(backbuffer, uvN());
     float fdbk = 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2;
-    col = mix(col, bb.rgb, fdbk);
-    if(fdbk > 0.95) col = mix(col, mix(black, white, pow(stN.x, 4.)), 0.09);
-    col = mix(black, white, pow(stN.x, .4 + mod(time/10. + stN.x, 1.)));
+    vec3 col = mix(black, white, pow(stN.x, .4 + mod(time/10. + stN.x, 1.)));
+    vec4 bb = texture2D(backbuffer, mix(uvN(), stN, 0.5+sinN(time)));
+    col = mix(col, bb.rgb, 0.9);
     gl_FragColor = vec4(col, 1.);
 }
