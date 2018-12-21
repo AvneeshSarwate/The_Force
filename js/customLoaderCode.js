@@ -562,6 +562,7 @@ customLoaderMap['prince'] = function(){
         updateManualTime = false;
     };
     sliderConfig = princeSliders;
+    loadImageToTexture(5, "princeGuitar.jpg");
 }
 
 // 

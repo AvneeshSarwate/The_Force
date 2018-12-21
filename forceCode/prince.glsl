@@ -200,6 +200,7 @@ vec3 lum(vec3 color){
 }
 
 void main () {
+    vec2 cent = vec2(0.5);
     float stepTime = manualStepTime;
     float t2 = stepTime/5. + 1000.;
     
@@ -214,6 +215,7 @@ void main () {
     stN = mix(stN, warp.xy, sliderVals[0]);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
 
+    vec3 guitar = texture2D(channel5, mix(uvN(), cent, -1. + sinN(time))).rgb == white ? black : white;
     
     vec3 cc;
     float decay = 0.999;
@@ -244,7 +246,6 @@ void main () {
     
     vec3 col = vec3(feedback);
     
-    vec2 cent = vec2(0.5);
     
     // col.xy = rotate(col.xy, cent, warp.x*3.);
     // col.yz = rotate(col.yz, cent, warp.y*3.);
@@ -254,10 +255,10 @@ void main () {
     float ringRad = 0.4 * sliderVals[2] + sinN(stepTime *PI)*0.1;
     float ringThick = 0.05;
     float fdbkBuffer =2./numCells;
-    if(ringRad < centDist && centDist < ringRad+ringThick) col = yellow;
+    if(ringRad < centDist && centDist < ringRad+ringThick) col = mix(col, yellow, sliderVals[5]);
     if(ringRad - fdbkBuffer < centDist && centDist < ringRad+ringThick + fdbkBuffer) col = col;
     else col = mix(bb.rgb, col, sliderVals[3]*0.02);
     
     
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(mix(white, guitar, pow(sliderVals[4], 5.)) * col, feedback);
 }

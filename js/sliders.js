@@ -109,7 +109,15 @@ var princeSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "background warp amount"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "ring warp amount"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "ring size"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "generated background grit"},
+    {conf: {min: 0, max: 1, value: 0.85}, label: "generated background grit"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "guitar overlay"},
+    {conf: {min: 0, max: 1, value: 1}, label: "gold ring overlay"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 0"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 1"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 2"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 3"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 4"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 5"},
 ];
 
 /*
