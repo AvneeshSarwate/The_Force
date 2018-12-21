@@ -110,9 +110,6 @@ var princeSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "ring warp amount"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "ring size"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "generated background grit"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "warp amount"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "warp amount"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "warp amount"},
 ];
 
 /*
