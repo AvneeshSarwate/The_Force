@@ -31,6 +31,7 @@ var vjLastNoteUniforms = Array.from(new Array(5), () => null);
 var lastPatternU = null;
 var sliderValsU = null;
 var midiFeaturesU = null;
+var manualStepTime = 0, manualStepTimeU = null, manualHoldTime = 0, manualHoldTimeU = null, updateHoldTime = false;
 
 var mHeader = null;
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
@@ -356,6 +357,8 @@ function newShader(vs, shaderCode) {
     lastPatternU = gl.getUniformLocation(mProgram, "lastPattern");
     sliderValsU = gl.getUniformLocation(mProgram, "sliderVals");
     midiFeaturesU = gl.getUniformLocation(mProgram, "midiFeatures");
+    manualStepTimeU = gl.getUniformLocation(mProgram, "manualStepTime");
+    manualHoldTimeU = gl.getUniformLocation(mProgram, "manualHoldTime");
 
     lastNoteOnTimeU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
     lastNoteOffTimeU = gl.getUniformLocation(mProgram, "lastNoteOffTime");
@@ -859,6 +862,9 @@ function paint(timeVal) {
     if(midiCCU !== null) gl.uniform1fv(midiCCU, midiCC);
     if(sliderValsU !== null) gl.uniform1fv(sliderValsU, sliderVals);
     if(midiFeaturesU !== null) gl.uniform1fv(midiFeaturesU, midiFeatures);
+    if(updateHoldTime) manualHoldTime = (Date.now() - mTime) * 0.001;
+    if(manualStepTimeU !== null) gl.uniform1f(manualStepTimeU, manualStepTime);
+    if(manualHoldTimeU !== null) gl.uniform1f(manualHoldTimeU, manualHoldTime);
 
 
     for(var i = 0; i < 5; i++){

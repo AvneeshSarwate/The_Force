@@ -200,7 +200,7 @@ vec3 lum(vec3 color){
 }
 
 void main () {
-    float stepTime = quant(time/10., 2.);
+    float stepTime = manualStepTime;
     float t2 = stepTime/5. + 1000.;
     
     vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
@@ -208,9 +208,9 @@ void main () {
 
     vec2 stN = uvN();
     float numCells = 400.;
-    vec3 warp = coordWarp(stN, stepTime/2.);
+    vec3 warp = coordWarp(stN, stepTime/2. * 50.);
     // vec3 warp2 = coordWarp(stN, time +4.);
-    stN = mix(stN, warp.xy, 0.025);
+    stN = mix(stN, warp.xy, sliderVals[0]);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
 
     

@@ -553,4 +553,15 @@ customLoaderMap['rainbowHits_slider'] = function(){
     sliderConfig = rainbowHitsSliders;
 }
 
+customLoaderMap['prince'] = function(){
+    midiEventHandlers["on"] = function(note, vel, chan){
+        updateManualTime = true;
+        manualStepTime = (Date.now() - mTime) * 0.001;
+    };
+    midiEventHandlers["off"] = function(note, vel, chan){
+        updateManualTime = false;
+    };
+    sliderConfig = princeSliders;
+}
+
 // 
