@@ -209,6 +209,7 @@ void main () {
     vec2 stN = uvN();
     float numCells = 400.;
     vec3 warp = coordWarp(stN, stepTime/2. * 50.);
+    vec3 warp2 = coordWarp(stN, stepTime/2.);
     // vec3 warp2 = coordWarp(stN, time +4.);
     stN = mix(stN, warp.xy, sliderVals[0]);
     vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
@@ -248,14 +249,14 @@ void main () {
     // col.xy = rotate(col.xy, cent, warp.x*3.);
     // col.yz = rotate(col.yz, cent, warp.y*3.);
     // col.zx = rotate(col.zx, cent, warp.z*3.);
-    float centDist = distance(cent, uvN());
+    float centDist = distance(cent, mix(uvN(), warp2.xy, sliderVals[1]));
     col = mix(col, purple, 0.2 + sinN(stepTime + warp.y*PI)*0.7);
-    float ringRad = 0.1 + sinN(stepTime  * 4.*PI)*0.1;
+    float ringRad = 0.4 * sliderVals[2] + sinN(stepTime *PI)*0.1;
     float ringThick = 0.05;
     float fdbkBuffer =2./numCells;
     if(ringRad < centDist && centDist < ringRad+ringThick) col = yellow;
     if(ringRad - fdbkBuffer < centDist && centDist < ringRad+ringThick + fdbkBuffer) col = col;
-    else col = mix(bb.rgb, col, 0.01);
+    else col = mix(bb.rgb, col, sliderVals[3]*0.02);
     
     
     gl_FragColor = vec4(col, feedback);
