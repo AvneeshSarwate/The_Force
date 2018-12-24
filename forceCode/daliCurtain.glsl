@@ -307,7 +307,8 @@ float splits(vec2 stN, float low, float high){
     
     float xHigh = high;
     float xLow = low;
-    float seed = 5.212;quant(time/2. + stN.x, 1.) + quant(time/2. + stN.y + 0.3, 1.);
+    float seed = quant(time/5., 1.);
+    float oldSeed = seed - 1.;
     
     float yHigh = high;
     float yLow = low;
@@ -315,10 +316,11 @@ float splits(vec2 stN, float low, float high){
     bool xSplit = false;
     bool ySplit = false;
     bool dark = false;
-    vec2 rotN = rotate(stN, vec2(0.5), time/5.);
     for(int i = 0; i < 8; i++){
         float phase = dark ? 0. : 1.;
-        float randSplit= 0.3 + rand(float(i)+phase + seed)*0.4; // * sinN(time*mix(1., rotN.y, sinN(time+stN.y*PI)/300.) + float(i)*PI2/8.);
+        float randSplit = 0.3 + rand(float(i)+phase + seed)*0.4; // * sinN(time*mix(1., rotN.y, sinN(time+stN.y*PI)/300.) + float(i)*PI2/8.);
+        float oldSplit = 0.3 + rand(float(i)+phase + oldSeed)*0.4; // * sinN(time*mix(1., rotN.y, sinN(time+stN.y*PI)/300.) + float(i)*PI2/8.);
+        randSplit = mix(randSplit, oldSplit, sinN(time*PI/5.));
         if(mod(float(i), 2.) == 0.) {
             float xPos = mix(xLow, xHigh, randSplit);
             if(stN.x <= xPos){
@@ -350,7 +352,7 @@ void main () {
     vec2 stN = uvN();
     stN.y += 0.002;
     vec2 cent = vec2(0.5);
-    vec3 warpN = ballTwist(stN, time/15.);
+    vec3 warpN = ballTwist(stN, time/15. - sinN(time*PI/5.));
     
 
     float tMod = mod(time, 1.)/2.;
