@@ -6,6 +6,8 @@ function draw(){}
 
 var customLoaderMap = {};
 
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1']);
+
 
 function videoUploadResponder(){}
 function audioFilesSelected(){}

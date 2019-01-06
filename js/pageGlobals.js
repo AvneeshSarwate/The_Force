@@ -91,9 +91,9 @@ $( document ).ready(function() {
         initialLoaderFunction = () => responsivevisLoader(loaderKey);
         if(shaderToGet.indexOf("b") == -1) shaderToGet = "responsivevis2";
     } ;
-    if(shaderToGet == "interactiveGridSlice1"){
-        useWebGL2 = true;
-    }
+    
+    useWebGL2 = webgl2Shaders.has(shaderToGet);
+
     if(shaderToGet.indexOf("controllableFeedbackTrails") > -1){
         var loaderInd = shaderToGet[shaderToGet.length-1];
         if(!parseInt(loaderInd)) initialLoaderFunction = sliderTrails(0);
