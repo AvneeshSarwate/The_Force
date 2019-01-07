@@ -66,6 +66,10 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+float sigmoid(float x){
+    return 1. / (1. + exp(-x));
+}
+
 void main(){
     
     // vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
@@ -91,7 +95,7 @@ void main(){
     vec2 stN = uvN();
     for(float i = 1.; i < 20.; i++){
         if(i == 1.) stN = uvN() + vec2(0, sin(tm*+stN.x*100.)/10.);
-        float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/60. * (10.+i/500. * sin(tm*2.+i/30.*PI2)) + stN.x)*.75 + 0.5;
+        float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/60. * (10.+i/500. * sin(tm*.5+i/30.*PI2)) + stN.x)*.75 + 0.5;
         float t = th * sinN(tm + i/30. * PI2);
         bool drawThisLine = inBound(noiseVal, t, stN.y);
         drawLine = drawLine || drawThisLine;
@@ -103,7 +107,7 @@ void main(){
     vec3 col = drawLine ? lineCol : black;
     vec4 bb = texture(backbuffer, uvN());
     
-    col = mix(col, bb.rgb, sinN(time+topLine/30.*PI2));
+    col = vec3(pow(mix(col, bb.rgb, pow(sinN(time+topLine/30.*PI2), 0.07)).x, .95 + sigmoid(sin(time/10.+topLine/30.*PI2)*8.4)*0.05) );
     
     fragColor = vec4(col, 1);//vec4(c, feedback);
 }
