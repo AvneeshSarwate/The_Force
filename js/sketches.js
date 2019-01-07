@@ -813,3 +813,77 @@ function responsevis2bDraw(){
     frameCount++;
 }
 
+
+class RandBlob{
+    constructor(x, y, radius, numPoints, lineThickness, radFunc){ //x/y denote center of blob
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.numPoints = numPoints;
+        this.lineThickness = lineThickness; 
+        this.radFunc = radFunc; 
+        this.funcScale = PI_2; //how many oscilations the changeFunc gives - sinN(time+funcScale*y)
+        this.angle = 0;
+        this.warpFunc = (id, time) => id;
+        // this.points = arrayOf(numPoints).map((p, i) => ({x: x+radius*cos(i/numPoints*PI_2), y: y+radius*sin(i/numPoints*PI_2)}));
+        this.radii = arrayOf(numPoints).map(p => 1);
+    }
+
+    setPos(p){
+        this.x = p.x;
+        this.y = p.y;
+        return this;
+    }
+
+    setRad(rad){
+        this.radius = rad;
+        return this;
+    }
+
+    getPos(){
+        return {x: this.x, y: this.y};
+    }
+
+
+
+    render(time){
+        var points = [];
+        fill(0);
+        var rand1 = () => (Math.random-0.5)*2;
+        beginShape();
+        for(var i = 0; i < this.numPoints; i++){
+            var theta = i/this.numPoints * PI_2
+            var rad = wrapVal(this.radii[i] + rand1()*.01, 0, 2);
+            this.radii[i] = rad;
+            var deviation = {x: cos(theta)*rad*this.radius, y: sin(theta)*rad*this.radius};
+            var pt = vecadd(this.getPos(), deviation);
+            points.push(pt);
+
+            curveVertex(pt.x * p5w, pt.y * p5h);
+        }
+        for(var i = 0; i < 3; i++){
+            curveVertex(points[i].x*p5w, points[i].y*p5h);
+        }
+        endShape();
+    }
+}
+
+
+
+var blob;
+function randBlobSetup(){
+    p5w = 1280;
+    p5h = 720;
+    blob = new RandBlob(0.5, 0.5, 300, 300, 10, n => n) ;
+    createCanvas(p5w, p5h);
+    noSmooth();
+}
+
+function randBlobDraw(){
+    clear();
+    background(255);
+    time = Date.now()/1000;
+    blob.render(time);
+}
+
+

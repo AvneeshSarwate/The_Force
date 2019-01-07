@@ -102,14 +102,13 @@ $( document ).ready(function() {
 
     if(customLoaderMap[shaderToGet]) initialLoaderFunction = customLoaderMap[shaderToGet];
     
-    if(shaderToGet){
-        $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
+
+    $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             // console.log(shaderCode.replace("\n", "NEWLINE"));
             defaultShader = shaderCode;
             editor.setValue(shaderCode, -1);
             setShaderFromEditor(shaderCode);
         });
-    }
 
 
     //--------------------- FOOTER UI ------------

@@ -567,4 +567,9 @@ customLoaderMap['prince'] = function(){
     loadImageToTexture(5, "princeGuitar.jpg");
 }
 
+customLoaderMap['randBlob'] = function(){
+    setup = randBlobSetup;
+    draw = randBlobDraw;
+}
+
 // 

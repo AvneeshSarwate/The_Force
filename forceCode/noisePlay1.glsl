@@ -59,14 +59,19 @@ void main(){
     bool drawLine = false;
     float t = 0.01;
     float tm = time;
-    for(float i = 1.; i < 14.; i++){
+    vec3 lineCol = white;
+    float topLine = 0.;
+    for(float i = 1.; i < 30.; i++){
         vec2 stN = uvN();
-        float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/20. * (10.+i/10.) + stN.x)*.75 + 0.5;
-        drawLine = drawLine || inBound(noiseVal, t, stN.y);
+        float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/60. * (10.+i/2000. * sin(time*2.+i/30.*PI2)) + stN.x)*.75 + 0.5;
+        bool drawThisLine = inBound(noiseVal, t, stN.y);
+        drawLine = drawLine || drawThisLine;
+        if(drawThisLine) topLine = i;
+        lineCol = white*sinN(time*5.+topLine/30.*PI2);
     }
     
     // vec3 col = inBound(n1, 0.01, stN.y) || inBound(n2, 0.01, stN.y) ? white : black;
-    vec3 col = drawLine ? white : black;
+    vec3 col = drawLine ? lineCol : black;
     
     fragColor = vec4(col, 1);//vec4(c, feedback);
 }
