@@ -38,6 +38,33 @@ float noise2(vec3 p)
 //this example shows how I use it to do feedback/trail effects
 out vec4 fragColor;
 
+vec3 ballTwist(vec2 stN, float t2, float numBalls){ 
+    vec2 warp = stN;
+    
+    float rad = .35;
+    
+    for (float i = 0.0; i < 100.; i++) {
+        if(i == numBalls) break;
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 5.5 * sinN(1.-length(stN - p)/rad * PI)) : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
+vec3 coordWarp(vec2 stN, float t2){ 
+    vec2 warp = stN;
+    
+    float rad = .5;
+    
+    for (float i = 0.0; i < 20.; i++) {
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
 
 void main(){
     
@@ -57,21 +84,26 @@ void main(){
     // float n1 = noise2(hash(vec3(4, 5, 6)) + time/10. + stN.x)*.75 + 0.5;
     // float n2 = noise2(hash(vec3(4, 5, 6)) + time/9. + stN.x + 0.5)*.75 + 0.5;
     bool drawLine = false;
-    float t = 0.01;
-    float tm = time;
+    float th = 0.02;
+    float tm = time+1000.;
     vec3 lineCol = white;
     float topLine = 0.;
-    for(float i = 1.; i < 30.; i++){
-        vec2 stN = uvN();
-        float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/60. * (10.+i/2000. * sin(time*2.+i/30.*PI2)) + stN.x)*.75 + 0.5;
+    vec2 stN = uvN();
+    for(float i = 1.; i < 20.; i++){
+        if(i == 1.) stN = uvN() + vec2(0, sin(tm*+stN.x*100.)/10.);
+        float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/60. * (10.+i/500. * sin(tm*2.+i/30.*PI2)) + stN.x)*.75 + 0.5;
+        float t = th * sinN(tm + i/30. * PI2);
         bool drawThisLine = inBound(noiseVal, t, stN.y);
         drawLine = drawLine || drawThisLine;
         if(drawThisLine) topLine = i;
-        lineCol = white*sinN(time*5.+topLine/30.*PI2);
+        lineCol = white*sinN(tm+topLine/30.*PI2);
     }
     
     // vec3 col = inBound(n1, 0.01, stN.y) || inBound(n2, 0.01, stN.y) ? white : black;
     vec3 col = drawLine ? lineCol : black;
+    vec4 bb = texture(backbuffer, uvN());
+    
+    col = mix(col, bb.rgb, sinN(time+topLine/30.*PI2));
     
     fragColor = vec4(col, 1);//vec4(c, feedback);
 }
