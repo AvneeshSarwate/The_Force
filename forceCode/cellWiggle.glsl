@@ -133,7 +133,27 @@ void main () {
     
     vec2 nn = uvN();
     
-    float quantNum = 100.;
+    float quantNum = 10.;
+    if(stN.x <= 0.5 && stN.y > 0.5) quantNum = 2.;
+    if(stN.x > 0.5 && stN.y > 0.5) quantNum = 10.;
+    if(stN.x <= 0.5 && stN.y < 0.5) quantNum = 100.;
+    if(stN.x > 0.5 && stN.y < 0.5) quantNum = 10000.;
+    
+   float xTime = mod(time/10.+stN.x/2., 1.);
+   float yTime = mod(time/11.+stN.y/2., 1.);
+   
+    if(xTime <= 0.5 && yTime > 0.5) quantNum = 2.;
+    if(xTime > 0.5 && yTime > 0.5) quantNum = 10.;
+    if(xTime <= 0.5 && yTime < 0.5) quantNum = 100.;
+    if(xTime > 0.5 && yTime < 0.5) quantNum = 10000.;
+    
+    vec3 ts = orange;
+     if(xTime <= 0.5 && yTime > 0.5) ts=red;
+    if(xTime > 0.5 && yTime > 0.5) ts=blue;
+    if(xTime <= 0.5 && yTime < 0.5) ts = green;
+    if(xTime > 0.5 && yTime < 0.5) ts = yellow;
+    
+    
     vec3 warpCoord = coordWarp(stN, time/4.);
     
     vec2 quantN = quant(nn, quantNum);
@@ -142,12 +162,12 @@ void main () {
    
     
     vec3 cc;
-    float decay = 0.9;;
+    float decay = 0.98;;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(stN, warpCoord.xy, (1.-warpCoord.z)/10.));
+    vec4 bb = texture2D(backbuffer, mix(stN, warpCoord.xy, 0.));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = c.x < 0.35 + warpCoord.z/1.4;
+    bool condition = c.x < 0.55 + warpCoord.z/1.4;
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
@@ -178,5 +198,5 @@ void main () {
     
     // c = vec3(pow(distance(dropCoord, cent), 1./(1. + sinN(time)*10.)));
     
-    gl_FragColor = vec4(c, feedback);
+    gl_FragColor = vec4(cc, feedback);
 }
