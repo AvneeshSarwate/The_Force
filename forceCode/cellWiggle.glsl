@@ -133,12 +133,12 @@ void main () {
     
     vec2 nn = uvN();
     
-    float quantNum = 10.;
+    float quantNum = 100.;
     vec3 warpCoord = coordWarp(stN, time/4.);
     
     vec2 quantN = quant(nn, quantNum);
     vec2 dropCoord = drops(quantN, time/10., 10.);
-    c = vec3(pow(distance(dropCoord, nn), 1./(1. + 5.)));
+    c = vec3(pow(distance(dropCoord, warpCoord.xy), 1./(1. + 5.)));
    
     
     vec3 cc;
