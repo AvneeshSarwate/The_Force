@@ -40,6 +40,8 @@ uniform float     sliderVals[100];
 uniform float     midiFeatures[10];
 uniform float     manualStepTime;
 uniform float     manualHoldTime;
+uniform float     hyperphasePhases[10];
+//replaceWithUniformDefinitions
 
 
 float PI = 3.14159;

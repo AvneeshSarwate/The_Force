@@ -886,4 +886,16 @@ function randBlobDraw(){
     blob.render(time);
 }
 
+var hyperphasePatterns = arrayOf(3)
+function hyperphaseSetup(){
+    p5w = 1280;
+    p5h = 720;
+    createCanvas(p5w, p5h);
+}
+
+function hyperphaseDraw(){
+    clear();
+    background(255);
+}
+
 

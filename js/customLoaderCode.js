@@ -6,7 +6,7 @@ function draw(){}
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1']);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase']);
 
 
 function videoUploadResponder(){}
@@ -570,6 +570,28 @@ customLoaderMap['prince'] = function(){
 customLoaderMap['randBlob'] = function(){
     setup = randBlobSetup;
     draw = randBlobDraw;
+}
+
+customLoaderMap['hyperphase'] = function(){
+    setup = hyperphaseSetup;
+    draw = hyperphaseDraw;
+
+    var hyperphasePhases = arrayOf(3);
+
+    osc.on("/hitInfo", function(msg){
+        console.log(msg);
+    });
+    osc.on("/pattern", function(msg){
+        console.log(msg);
+    });
+    osc.on("/phaseVal", function(msg){
+        console.log(msg);
+    });
+
+    customLoaderUniformSet = function(time, mProgram){
+        var hyperphasePhasesU = gl.getUniformLocation(mProgram, "hyperphasePhases");
+        if(hyperphasePhasesU) gl.uniform1f(hyperphasePhasesU, hyperphasePhases);
+    };
 }
 
 // 
