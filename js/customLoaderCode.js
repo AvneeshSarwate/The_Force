@@ -576,16 +576,19 @@ customLoaderMap['hyperphase'] = function(){
     setup = hyperphaseSetup;
     draw = hyperphaseDraw;
 
-    var hyperphasePhases = arrayOf(3);
+    var hyperphasePhases = arrayOf(10);
 
     osc.on("/hitInfo", function(msg){
         console.log(msg);
+        hyperphasePatterns[msg.args[0]].currentInd = msg.args[1];
     });
     osc.on("/pattern", function(msg){
         console.log(msg);
+        hyperphasePatterns[msg.args[0]].pattern = msg.args.slice(1);
     });
     osc.on("/phaseVal", function(msg){
-        console.log(msg);
+        // console.log(msg);
+        hyperphasePhases[msg.args[0]] = msg.args[1];
     });
 
     customLoaderUniformSet = function(time, mProgram){

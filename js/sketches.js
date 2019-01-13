@@ -886,7 +886,8 @@ function randBlobDraw(){
     blob.render(time);
 }
 
-var hyperphasePatterns = arrayOf(3)
+var hyperphasePatterns = arrayOf(10).map(i => ({currentInd: -1, pattern:[]}));
+var numPatterns = 3;
 function hyperphaseSetup(){
     p5w = 1280;
     p5h = 720;
@@ -896,6 +897,17 @@ function hyperphaseSetup(){
 function hyperphaseDraw(){
     clear();
     background(255);
+    for(var i = 1; i < 1+numPatterns; i++){
+        var pat = hyperphasePatterns[i];
+        var sumLength = 0;
+        for(var j = 0; j < pat.pattern.length; j++){
+            var blockColor = pat.currentInd == j ? 127 : 0;
+            stroke(blockColor);
+            fill(blockColor);
+            rect(sumLength*p5w, (i-1)/numPatterns * p5h, (sumLength + pat.pattern[i]/2) * p5w, i/numPatterns * p5h);
+            sumLength += pat.pattern[j];
+        }
+    }
 }
 
 
