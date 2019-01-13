@@ -886,7 +886,8 @@ function randBlobDraw(){
     blob.render(time);
 }
 
-var hyperphasePatterns = arrayOf(10).map(i => ({currentInd: -1, pattern:[]}));
+
+// var hyperphasePatterns = arrayOf(10).map(i => ({currentInd: -1, pattern:[]}));
 var numPatterns = 3;
 function hyperphaseSetup(){
     p5w = 1280;

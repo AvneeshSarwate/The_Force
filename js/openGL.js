@@ -34,6 +34,7 @@ var midiFeaturesU = null;
 var manualStepTime = 0, manualStepTimeU = null, manualHoldTime = 0, manualHoldTimeU = null, updateHoldTime = false;
 
 var mHeader = null;
+var webglVersionPrefix = "";
 var fsNew = "void main () {\n\tgl_FragColor = vec4(black, 1.0);\n}";
 var fsNewWGL2 = `
 out vec4 fragColor;

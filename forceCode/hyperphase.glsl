@@ -201,6 +201,15 @@ float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
 
+
+vec3 getColor(vec2 stN, float t){
+    float pat[10];
+    if(stN.y > 2./3.) pat = hyperphasePattern1;
+    else if(stN.y > 2./3.) pat = hyperphasePattern2;
+    else pat = hyperphasePattern3;
+    return red;
+}
+
 out vec4 fragColor;
 void main () {
     vec2 stN = uvN();
