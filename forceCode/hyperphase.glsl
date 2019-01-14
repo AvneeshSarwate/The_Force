@@ -204,10 +204,30 @@ float sigmoid(float x){
 
 vec3 getColor(vec2 stN, float t){
     float pat[10];
-    if(stN.y > 2./3.) pat = hyperphasePattern1;
-    else if(stN.y > 2./3.) pat = hyperphasePattern2;
-    else pat = hyperphasePattern3;
-    return red;
+    int patId = 0;
+    if(stN.y > 2./3.) {
+        pat = hyperphasePattern1;
+        patId = 1;  
+    } else if(stN.y > 1./3.) {
+        pat = hyperphasePattern2;
+        patId = 2;
+    } else {
+        pat = hyperphasePattern3;
+        patId = 3;
+    }
+    
+    float patTime = 0.;
+    int patInd = 0;
+    while(patTime < stN.x && false){
+        patTime += pat[patInd];
+        patInd += 1;
+    }
+    float blockStart = patInd == 1 ? 0. : patTime;
+    float blockEnd = patTime + pat[patInd]/2.;
+    bool inBlock = blockStart <= stN.x && stN.x < blockEnd;
+    vec3 blockColor = float(patInd-1) == hyperphaseInds[patId] ? vec3(0.5) : black;
+
+    return inBlock ? blockColor : white;
 }
 
 out vec4 fragColor;
@@ -234,7 +254,6 @@ void main () {
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = p5;
     
-    
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
         if(lastFeedback < 1.1) {
@@ -259,5 +278,5 @@ void main () {
     float mixWeight = 0.99;
     cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
-    fragColor = vec4(p5, feedback);
+    fragColor = vec4(getColor(stN, time), feedback);
 }

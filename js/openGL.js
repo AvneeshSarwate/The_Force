@@ -501,7 +501,7 @@ function createMIDIUniforms() {
 }
 
 function getHeaderSize() {
-    var n = (mHeader + mInputsStr + mOSCStr + mMIDIStr).split(/\r\n|\r|\n/).length;
+    var n = (mHeader + customLoaderUniforms + mInputsStr + mOSCStr + mMIDIStr).split(/\r\n|\r|\n/).length;
     return n;
 }
 

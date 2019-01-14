@@ -580,7 +580,7 @@ customLoaderMap['hyperphase'] = function(){
     uniform float     hyperphasePhases[10];
     `;
 
-    var hyperphasePatterns = arrayOf(10).map(i => ({currentInd: -1, pattern:[]}));
+    var hyperphasePatterns = arrayOf(10).map(i => ({currentInd: -1, pattern:[0]}));
     var hyperphasePhases = arrayOf(10);
     var patternArrays = [];
     for(var i = 0; i < 10; i++){
@@ -606,7 +606,7 @@ customLoaderMap['hyperphase'] = function(){
         if(hyperphasePhasesU) gl.uniform1fv(hyperphasePhasesU, hyperphasePhases);
         for(var i = 0; i < 10; i++){
             var hyperphasePatternU = gl.getUniformLocation(mProgram, "hyperphasePattern" + (i+1));
-            if(hyperphasePatternU) gl.uniform1fv(hyperphasePatternU, hyperphasePatterns[(i+1)]);
+            if(hyperphasePatternU) gl.uniform1fv(hyperphasePatternU, hyperphasePatterns[(i+1)].pattern);
         }
         var hyperphaseIndsU = gl.getUniformLocation(mProgram, "hyperphaseInds");
         if(hyperphaseIndsU) gl.uniform1fv(hyperphaseIndsU, hyperphasePatterns.map(p => p.currentInd));
