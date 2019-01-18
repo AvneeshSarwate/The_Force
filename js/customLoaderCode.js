@@ -613,4 +613,9 @@ customLoaderMap['hyperphase'] = function(){
     };
 }
 
+customLoaderMap['yoyoPortAuthority'] = function(){
+    yoyoVideoTestB();
+    
+}
+
 // 
