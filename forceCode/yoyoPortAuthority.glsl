@@ -356,6 +356,7 @@ vec3 rainbowLava () {
 void ex3() {
     vec2 stN = uvN();
     vec2 camPos = vec2(1.-stN.x, stN.y);
+    vec2 cent = vec2(0.5);
     
     vec3 cam = texture2D(channel0, camPos).rgb;
     vec3 snap = texture2D(channel3, camPos).rgb;
@@ -387,11 +388,21 @@ void ex3() {
     // float moshVal = mosh();
     // moshVal = mix(0., moshVal, feedback);
     float diffFilter = quant(lum(cam).x/lum(white).x , 1.) * 2.; ((diff < 0.1) ? 0. : 1.);
-    vec3 cc = feedback  > 0.9 ? rainbowLava()*sliderVals[3] * diffFilter : black;
+    vec3 cc = feedback  > 0.9 ? rainbowLava()*sliderVals[3] : black;
     // cc = feedback == 1. ? white : cc;
+
     
     cc = cc * (1.-rawVid*sliderVals[7]);
-    gl_FragColor = vec4(vec3(cc), feedback);//vec4(c, feedback);
+    
+    cc = vec3(cc.xy, diff);
+    
+    cc.xy = rotate(cc.xy, cent, time/1.4);
+    cc.yz = rotate(cc.yz, cent, time/4.3);
+    cc.zx = rotate(cc.zx, cent, time/5.3);
+    cc = mix(bb.rgb, cc, 0.5);
+    
+    
+    gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
 }
 
 void main(){
