@@ -12,6 +12,7 @@ var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase']
 function videoUploadResponder(){}
 function audioFilesSelected(){}
 function videoSnapshot(){}
+function everyFrameSnapshot(){}
 
 
 function loadImageToTexture(slotID, imageUrl){
@@ -615,7 +616,19 @@ customLoaderMap['hyperphase'] = function(){
 
 customLoaderMap['yoyoPortAuthority'] = function(){
     yoyoVideoTestB();
-    
+    everyFrameSnapshot = function(){
+        mInputs[6] = mInputs[0];
+
+    }
+}
+
+customLoaderMap['yoyoPortAuthority2'] = function(){
+    yoyoVideoTestB();
+    sliderConfig = yoyoPortAuthoritySliders;
+    everyFrameSnapshot = function(){
+        mInputs[6] = mInputs[0];
+
+    }
 }
 
 // 

@@ -120,6 +120,15 @@ var princeSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "slider 5"},
 ];
 
+var yoyoPortAuthoritySliders = [
+    {conf: {min: 0, max: 1, value: 0.98}, label: "trail feedback time"},
+    {conf: {min: 0, max: 5, value: 0.5}, label: "dancer brightness"},
+    {conf: {min: 0, max: 5, value: 1}, label: "trail Brightness"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 3"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 4"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "slider 5"},
+];
+
 /*
 responsivevis1 sliderVals = [0.475, 0.116, 0.691, 0.016, 0.208, 1, 0, 0, 0, 0] - for only p5, no shader
 responsivevis1 sliderVals = [0.445, 0.075, 0.525, 0, 0.183, 1, 0, 0, 0.883, 0]

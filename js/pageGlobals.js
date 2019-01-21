@@ -1151,6 +1151,8 @@ $( document ).ready(function() {
                 $("#defaultCanvas0").hide();
             }
 
+            everyFrameSnapshot();
+            
             if(takeSnapshot){
                 if(webcamReady) { 
                     updateVideoTexture(gl, webcamSnapshotTexture, webcam);
@@ -1171,6 +1173,7 @@ $( document ).ready(function() {
                 takeSnapshot = false;
                 createInputStr();
             }
+
 
             for(var i = 0; i < videosReady.length; i++) {
                 if(videosReady[i]){
