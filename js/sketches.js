@@ -927,7 +927,7 @@ function guitarPaintSetup(){
 function guitarPaintDraw(){
     clear();
     brushPos.x = mod((brushPos.x + brushSpeed * cos(brushAngle)),p5w);
-    brushPos.y = mod((brushPos.y - brushSpeed * sin(brushAngle)),p5h);
+    brushPos.y = mod((brushPos.y + brushSpeed * sin(brushAngle)),p5h);
     ellipse(brushPos.x, brushPos.y, 50);
 }
 
