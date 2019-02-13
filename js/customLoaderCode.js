@@ -6,13 +6,15 @@ function draw(){}
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase']);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush']);
 
 
 function videoUploadResponder(){}
 function audioFilesSelected(){}
 function videoSnapshot(){}
 function everyFrameSnapshot(){}
+function frameStateUpdate(){}
+var frameState = {};
 
 
 function loadImageToTexture(slotID, imageUrl){
@@ -628,6 +630,21 @@ customLoaderMap['yoyoPortAuthority2'] = function(){
     everyFrameSnapshot = function(){
         mInputs[6] = mInputs[0];
 
+    }
+}
+
+customLoaderMap['guitarPaintBrush'] = function(){
+    setup = guitarPaintSetup;
+    draw = guitarPaintDraw;
+    customLoaderUniforms = `
+    uniform float brushAngle;
+    uniform vec2 brushPos;
+    `;
+    customLoaderUniformSet = function(time, mProgram){
+        var brushAngleU = gl.getUniformLocation(mProgram, "brushAngle");
+        if(brushAngleU) gl.uniform1f(brushAngleU, brushAngle);
+        var brushPosU = gl.getUniformLocation(mProgram, "brushPos");
+        if(brushPosU) gl.uniform2f(brushPosU, [brushPos.x/p5w, brushPos.y/p5h]);
     }
 }
 
