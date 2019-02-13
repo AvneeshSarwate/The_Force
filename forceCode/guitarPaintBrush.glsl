@@ -92,15 +92,29 @@ float colourDistance(vec3 e1, vec3 e2) {
 }
 
 bool inBrushBox(vec2 stN, float brushH, float brushW){
-    vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-    vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
-    vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
-    vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
+    // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
+    // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
+    // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
+    // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
 
     vec2 rotSTN = rotate(stN, brushPos, brushAngle);
     vec2 boxDist = abs(rotSTN - brushPos);
 
     return boxDist.x <= brushW && boxDist.y <= brushH;
+}
+
+vec3 brushColor(vec2 stN, float brushH, float brushW){
+    // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
+    // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
+    // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
+    // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
+
+    vec2 rotSTN = rotate(stN, brushPos, brushAngle);
+    vec2 boxDist = abs(rotSTN - brushPos);
+
+    float strokePos = (stN.y-(brushPos.y-brushH))/(2.*brushH);
+
+    return vec3(sinN(strokePos*10.*PI+sinN(time*10.)*PI*10.))*red;
 }
 
 out vec4 fragColor;
@@ -142,7 +156,7 @@ void main () {
         // cc = foreGround;
     }
     
-    p5 = inBrushBox(stN, 0.1, 0.005)  ? white : black;
+    p5 = inBrushBox(stN, 0.1, 0.005)  ? brushColor(stN, 0.1, 0.005) : bb.rgb;
     
     fragColor = vec4(vec3(p5), feedback);
 }
