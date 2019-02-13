@@ -128,7 +128,6 @@ void main () {
     //the current pixel coordinate 
     vec2 stN = uvN();
 
-    vec3 cam = texture(channel0, stN).rgb;    
 
     vec3 p5 = texture(channel1, stN).rgb;
     vec3 p5Snap = texture(channel2, stN).rgb;
@@ -136,6 +135,20 @@ void main () {
     vec4 bb = texture(backbuffer, vec2(stN.x, stN.y));
     float brushH = 0.3 * sliderVals[2];
     float brushW = 0.1 * sliderVals[3];
+    
+    
+    float dev = 100.;
+    vec2 n2 = stN + snoise(vec3(stN*5., time*sliderVals[5]*10.))/dev;
+    
+    float dist  = distance(stN, n2)*dev;
+    dist = clamp(dist, 0., 1.);
+    // dist = .1 + pow(dist, 1.0)*.8;
+    
+    // dist = 0.3 + dist*0.7;
+    float d2 = dist <= 0.3 + sinN(time)*0.6 ? 1. : 0.;
+    float d3 = pow(dist, 0.1+sinN(time+stN.x*PI)*1.8);
+    vec3 bgCol = vec3(mix(blue, orange, d3));
+    
     
     vec3 cc;
     float decay = 0.002;
@@ -149,7 +162,7 @@ void main () {
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     
-    vec2 n2 = stN + snoise(vec3(stN*5., time*sliderVals[5]*10.))/100.;
+
     
     if(condition){
         feedback = 1.;
@@ -162,12 +175,14 @@ void main () {
         } else {
             feedback = 0.;
             cc = mix(foreGround, bb.rgb, feedback);
-            cc = mix(red, blue, distance(stN, n2)*50. *sliderVals[4]+.5*(1.-sliderVals[4]));
+            cc =bgCol; // mix(red, blue, distance(stN, n2)*50. *sliderVals[4]+.5*(1.-sliderVals[4]));
         }
         // cc = foreGround;
     }
     
+    vec3 cam = texture(channel0, n2).rgb;
     p5 = inBrushBox(stN, 0.1, 0.005)  ? brushColor(stN, 0.1, 0.005) : bb.rgb;
     
-    fragColor = vec4(vec3(cc), feedback);
+    
+    fragColor = vec4(cc, feedback);
 }
