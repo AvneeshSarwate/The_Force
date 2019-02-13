@@ -646,6 +646,9 @@ customLoaderMap['guitarPaintBrush'] = function(){
         var brushPosU = gl.getUniformLocation(mProgram, "brushPos");
         if(brushPosU) gl.uniform2f(brushPosU, brushPos.x/p5w, brushPos.y/p5h);
     }
+
+    sliderCallbacks[0] = function(sliderVal){brushAngle = sliderVal*2*PI};
+    sliderCallbacks[1] = function(sliderVal){brushSpeed = sliderVal*20};
 }
 
 // 
