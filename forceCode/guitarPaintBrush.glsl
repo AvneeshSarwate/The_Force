@@ -145,7 +145,8 @@ void main () {
     
     
     float dev = 100.;
-    vec2 n2 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
+    // vec2 n1 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
+    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev, snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.+35.))/dev);
     
     float dist  = distance(stN, n2)*dev;
     dist = clamp(dist, 0., 1.);
@@ -161,7 +162,7 @@ void main () {
     
     
     vec3 cc;
-    float decay = 0.002;
+    float decay = 0.0019;
     float feedback;
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
