@@ -143,6 +143,8 @@ void main () {
     float dev = 100.;
     // vec2 n1 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
     vec2 n2 = stN + vec2(snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev, snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.+35.))/dev);
+    float dev2 = 10.;
+    vec2 n3 = stN + vec2(snoise(vec3(stN*10.*sliderVals[9], time*sliderVals[5]*10.)), snoise(vec3(stN*10.*sliderVals[9], time*sliderVals[5]*10.+35.)))/dev2;
     
     float dist  = distance(stN, n2)*dev;
     dist = clamp(dist, 0., 1.);
@@ -153,7 +155,9 @@ void main () {
     float d3 = pow(dist, 0.1+sinN(time+stN.x*PI)*1.8);
     vec3 sw1 = swirl(time/100., mix(n2, cent, sliderVals[7]));
     vec3 sw2 = swirl(time/50.+10., mix(n2, cent, sliderVals[7]));
-    vec3 bgCol = purple; vec3(mix(sw1, sw2, d3));
+    
+    //decide whether to use n2 or n3 or what combination here
+    vec3 bgCol = vec3(distance(stN, n3)*dev)*mix(purple, green, sinN(rotate(n3, cent, sinN(n3.x+time)*10./(1.+sinN(n3.y*PI+time))).x*10.*PI)); vec3(mix(sw1, sw2, d3));
     vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
     
     
@@ -181,7 +185,7 @@ void main () {
             cc = mix(foreGround, bb.rgb, feedback); //trail
         } else {
             feedback = 0.;
-            cc =bgCol; 
+            cc = bgCol; 
         }
     }
     
