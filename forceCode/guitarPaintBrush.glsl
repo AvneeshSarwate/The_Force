@@ -117,7 +117,7 @@ vec3 brushColor(vec2 stN, float brushH, float brushW){
     vec2 rotSTN = rotate(stN, brushPos, brushAngle);
     vec2 boxDist = abs(rotSTN - brushPos);
 
-    float strokePos = (stN.y-(brushPos.y-brushH))/(2.*brushH);
+    float strokePos = (rotSTN.y-(brushPos.y-brushH))/(2.*brushH);
 
     vec3 swirlCol = vec3(0.3 + sinN(strokePos*10.*PI+sinN(time*10.)*PI*10.))*swirl(time, stN);
     float bandArr[4];
