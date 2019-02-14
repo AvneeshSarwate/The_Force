@@ -649,6 +649,8 @@ customLoaderMap['guitarPaintBrush'] = function(){
 
     sliderCallbacks[0] = function(sliderVal){brushAngle = sliderVal*2*PI};
     sliderCallbacks[1] = function(sliderVal){brushSpeed = sliderVal*20};
+
+    sliderConfig = guitarPaintSliders;
 }
 
 // 

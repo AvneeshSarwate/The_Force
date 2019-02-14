@@ -127,6 +127,7 @@ void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
+    vec2 cent = vec2(0.5);
 
 
     vec3 p5 = texture(channel1, stN).rgb;
@@ -138,7 +139,7 @@ void main () {
     
     
     float dev = 100.;
-    vec2 n2 = stN + snoise(vec3(stN*5., time*sliderVals[5]*10.))/dev;
+    vec2 n2 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
     
     float dist  = distance(stN, n2)*dev;
     dist = clamp(dist, 0., 1.);
@@ -147,7 +148,9 @@ void main () {
     // dist = 0.3 + dist*0.7;
     float d2 = dist <= 0.3 + sinN(time)*0.6 ? 1. : 0.;
     float d3 = pow(dist, 0.1+sinN(time+stN.x*PI)*1.8);
-    vec3 bgCol = vec3(mix(blue, orange, d3));
+    vec3 sw1 = swirl(time/100., mix(n2, cent, sliderVals[7]));
+    vec3 sw2 = swirl(time/50.+10., mix(n2, cent, sliderVals[7]));
+    vec3 bgCol = vec3(mix(sw1, sw2, d3));
     vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
     
     

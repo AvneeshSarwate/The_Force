@@ -1044,24 +1044,27 @@ $( document ).ready(function() {
     //     alert("Browser may not support microphone on non-secure connection. Please copy your code before changing protocol in the URL from http to https.");
 
     if (navigator.getUserMedia && !isMobile && useAudioInput) 
-    {
-        initAudio();
-        navigator.getUserMedia(
-            {audio: true}, 
-            function(stream)  //success
-            {
-                mSound.mStream = stream;
-                mSound.mSource = mAudioContext.createMediaStreamSource(stream);
-                mSound.mSource.disconnect();
-                mSound.mSource.connect(mSound.mAnalyser);
-            }, 
-            function() //failure
-            {
-                alert("Error getting user media stream.");
-            });
+    {   
+        StartAudioContext(mAudioContext, $('#demogl')).then(function(){
+            initAudio();
+            navigator.getUserMedia(
+                {audio: true}, 
+                function(stream)  //success
+                {
+                    mSound.mStream = stream;
+                    mSound.mSource = mAudioContext.createMediaStreamSource(stream);
+                    mSound.mSource.disconnect();
+                    mSound.mSource.connect(mSound.mAnalyser);
+                }, 
+                function() //failure
+                {
+                    alert("Error getting user media stream.");
+                });
 
-        $("#micTogglePlaythrough").button("enable");
-        bandsOn = true;
+            $("#micTogglePlaythrough").button("enable");
+            console.log("analyzer audio context started");
+            bandsOn = true;
+        });
     }
     // else
     //     alert("Browser doesn't support microphone or audio line in.");
@@ -1250,7 +1253,7 @@ $( document ).ready(function() {
     var loader = new SoundcloudLoader(player,uiUpdater);
 
     StartAudioContext(Tone.context, $('#demogl')).then(function(){
-        console.log('audio context started from StartAudioContext');
+        console.log('Tone.js audio context started from StartAudioContext');
         Tone.Transport.start();
     });
 
