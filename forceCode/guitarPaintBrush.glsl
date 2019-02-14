@@ -135,10 +135,6 @@ void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
 
-
-    vec3 p5 = texture(channel1, stN).rgb;
-    vec3 p5Snap = texture(channel2, stN).rgb;
-    
     
     float brushH = 0.3 * sliderVals[2];
     float brushW = 0.1 * sliderVals[3];
@@ -150,9 +146,9 @@ void main () {
     
     float dist  = distance(stN, n2)*dev;
     dist = clamp(dist, 0., 1.);
-    // dist = .1 + pow(dist, 1.0)*.8;
+
     
-    // dist = 0.3 + dist*0.7;
+
     float d2 = dist <= 0.3 + sinN(time)*0.6 ? 1. : 0.;
     float d3 = pow(dist, 0.1+sinN(time+stN.x*PI)*1.8);
     vec3 sw1 = swirl(time/100., mix(n2, cent, sliderVals[7]));
@@ -162,38 +158,35 @@ void main () {
     
     
     vec3 cc;
-    float decay = 0.0019;
+    float decay = 0.002 + (1.-sliderVals[8])*.05;
     float feedback;
     float lastFeedback = bb.a;
-    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    
     bool condition =  inBrushBox(stN, brushH, brushW); 
-    vec3 trail =  brushColor(stN, brushH, brushW); // swirl(time/5., trans2) * c.x;
+    vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = bb.rgb;trail;black; lum(swirl(time/4., stN));
     
     
-    //   implement the trailing effectm using the alpha channel to track the state of decay 
     
 
     
     if(condition){
+        //to make "playhead" stand out from trail you could draw a perimiter around the box using inBrushBox with a border parameter
         feedback = 1.;
-        cc = trail;
+        cc = trail*2.;
     }
     else {
         feedback = lastFeedback - decay;
         if(lastFeedback > 0.4) {
-            cc = mix(foreGround, bb.rgb, feedback);
+            cc = mix(foreGround, bb.rgb, feedback); //trail
         } else {
             feedback = 0.;
-            vec4 bb2 = texture(backbuffer, n2);
-            cc = mix(foreGround, bb.rgb, feedback);
-            cc =bgCol; // mix(red, blue, distance(stN, n2)*50. *sliderVals[4]+.5*(1.-sliderVals[4]));
+            cc =bgCol; 
         }
-        // cc = foreGround;
     }
     
     vec3 cam = texture(channel0, n2).rgb;
-    p5 = inBrushBox(stN, 0.1, 0.005)  ? brushColor(stN, 0.1, 0.005) : bb.rgb;
+
     
     
     fragColor = vec4(cc, feedback);

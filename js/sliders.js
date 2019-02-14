@@ -138,7 +138,7 @@ var guitarPaintSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "5: warp speed"},
     {conf: {min: 0, max: 1, value: 0.2}, label: "6: trail warp mix"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "7: background zoom"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "8: warp speed"},
+    {conf: {min: 0, max: 1, value: 0.5}, label: "8: decay time"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "8: warp speed"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "8: warp speed"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "8: warp speed"},
