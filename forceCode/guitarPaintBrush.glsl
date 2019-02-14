@@ -119,7 +119,13 @@ vec3 brushColor(vec2 stN, float brushH, float brushW){
 
     float strokePos = (stN.y-(brushPos.y-brushH))/(2.*brushH);
 
-    return vec3(0.3 + sinN(strokePos*10.*PI+sinN(time*10.)*PI*10.))*swirl(time, stN);
+    vec3 swirlCol = vec3(0.3 + sinN(strokePos*10.*PI+sinN(time*10.)*PI*10.))*swirl(time, stN);
+    float bandArr[4];
+    bandArr[0] = bands.x;
+    bandArr[1] = bands.y;
+    bandArr[2] = bands.z;
+    bandArr[3] = bands.w;
+    return vec3(bandArr[int(floor(strokePos*4.))]);
 }
 
 out vec4 fragColor;
@@ -150,7 +156,7 @@ void main () {
     float d3 = pow(dist, 0.1+sinN(time+stN.x*PI)*1.8);
     vec3 sw1 = swirl(time/100., mix(n2, cent, sliderVals[7]));
     vec3 sw2 = swirl(time/50.+10., mix(n2, cent, sliderVals[7]));
-    vec3 bgCol = vec3(mix(sw1, sw2, d3));
+    vec3 bgCol = purple; vec3(mix(sw1, sw2, d3));
     vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
     
     
@@ -161,7 +167,7 @@ void main () {
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition =  inBrushBox(stN, brushH, brushW); 
     vec3 trail =  brushColor(stN, brushH, brushW); // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = lum(swirl(time/4., stN));
+    vec3 foreGround = bb.rgb;trail;black; lum(swirl(time/4., stN));
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
