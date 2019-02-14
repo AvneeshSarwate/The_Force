@@ -132,7 +132,7 @@ void main () {
     vec3 p5 = texture(channel1, stN).rgb;
     vec3 p5Snap = texture(channel2, stN).rgb;
     
-    vec4 bb = texture(backbuffer, vec2(stN.x, stN.y));
+    
     float brushH = 0.3 * sliderVals[2];
     float brushW = 0.1 * sliderVals[3];
     
@@ -148,6 +148,7 @@ void main () {
     float d2 = dist <= 0.3 + sinN(time)*0.6 ? 1. : 0.;
     float d3 = pow(dist, 0.1+sinN(time+stN.x*PI)*1.8);
     vec3 bgCol = vec3(mix(blue, orange, d3));
+    vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
     
     
     vec3 cc;
@@ -174,6 +175,7 @@ void main () {
             cc = mix(foreGround, bb.rgb, feedback);
         } else {
             feedback = 0.;
+            vec4 bb2 = texture(backbuffer, n2);
             cc = mix(foreGround, bb.rgb, feedback);
             cc =bgCol; // mix(red, blue, distance(stN, n2)*50. *sliderVals[4]+.5*(1.-sliderVals[4]));
         }
