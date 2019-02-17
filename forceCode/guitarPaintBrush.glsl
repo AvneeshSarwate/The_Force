@@ -156,8 +156,16 @@ void main () {
     vec3 sw1 = swirl(time/100., mix(n2, cent, sliderVals[7]));
     vec3 sw2 = swirl(time/50.+10., mix(n2, cent, sliderVals[7]));
     
-    //decide whether to use n2 or n3 or what combination here
-    vec3 bgCol = vec3(distance(stN, n3)*dev)*mix(purple, green, sinN(rotate(n3, cent, sinN(n3.x+time)*10./(1.+sinN(n3.y*PI+time))).x*10.*PI)); vec3(mix(sw1, sw2, d3));
+    //decide whether to use n2 or n3 or what combination 
+    // n3 = quant(n3,10.);
+    vec3 c1 = hsv2rgb(vec3(sliderVals[10], 1., 1.));
+    vec3 c2 = hsv2rgb(vec3(sliderVals[10]+sliderVals[11]+sinN(time*0.9)/4., 1., 1.));
+    float mixVal1 = sinN(rotate(n3, cent, sinN(n3.x+time)*10./(1.+sinN(n3.y*PI+time))).x*10.*PI)/10.;
+    float mixVal2 = sliderVals[12];
+    vec3 bgCol = /*vec3(distance(stN, n3)*dev)*/mix(c1, c2,  quant(sinN(stN.x*10.*PI), 2.+sinN(time)*10.));
+    
+    
+    
     vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
     
     
@@ -168,7 +176,7 @@ void main () {
     
     bool condition =  inBrushBox(stN, brushH, brushW); 
     vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = bb.rgb;trail;black; lum(swirl(time/4., stN));
+    vec3 foreGround = bb.rgb*bgCol;trail;black; lum(swirl(time/4., stN));
     
     
     
