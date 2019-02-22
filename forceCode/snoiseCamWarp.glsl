@@ -91,42 +91,8 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
-bool inBrushBox(vec2 stN, float brushH, float brushW){
-    // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-    // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
-    // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
-    // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
 
-    vec2 rotSTN = rotate(stN, brushPos, brushAngle);
-    vec2 boxDist = abs(rotSTN - brushPos);
 
-    return boxDist.x <= brushW && boxDist.y <= brushH;
-}
-
-vec3 lum(vec3 color){
-    vec3 weights = vec3(0.212, 0.7152, 0.0722);
-    return vec3(dot(color, weights));
-}
-
-vec3 brushColor(vec2 stN, float brushH, float brushW){
-    // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-    // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
-    // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
-    // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-
-    vec2 rotSTN = rotate(stN, brushPos, brushAngle);
-    vec2 boxDist = abs(rotSTN - brushPos);
-
-    float strokePos = (rotSTN.y-(brushPos.y-brushH))/(2.*brushH);
-
-    vec3 swirlCol = vec3(0.3 + sinN(strokePos*10.*PI+sinN(time*10.)*PI*10.))*swirl(time, stN);
-    float bandArr[4];
-    bandArr[0] = bands.x;
-    bandArr[1] = bands.y;
-    bandArr[2] = bands.z;
-    bandArr[3] = bands.w;
-    return vec3(bandArr[int(floor(strokePos*4.))]);
-}
 
 out vec4 fragColor;
 void main () {
@@ -142,7 +108,7 @@ void main () {
     
     float dev = 100.;
     // vec2 n1 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
-    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*sliderVals[4]*(sinN(time)+0.05), time*sliderVals[5]*10.))/dev, snoise(vec3(stN*100.*sliderVals[4]*(cosN(time*1.1)+0.05), time*sliderVals[5]*10.+35.))/dev);
+    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10. + sliderVals[3]*10.))/dev, snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.+35. + sliderVals[3]*10.))/dev);
     float dev2 = 10.;
     vec2 n3 = stN + vec2(snoise(vec3(stN*10.*sliderVals[9], time*sliderVals[5]*10.)), snoise(vec3(stN*10.*sliderVals[9], time*sliderVals[5]*10.+35.)))/dev2;
     
@@ -168,42 +134,43 @@ void main () {
     
     vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
     
-    
+
     vec3 cc;
     float decay = 0.002 + (1.-sliderVals[8])*.05;
     float feedback;
     float lastFeedback = bb.a;
     
-    bool condition =  inBrushBox(stN, brushH, brushW); 
-    vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = bb.rgb*bgCol;trail;black; lum(swirl(time/4., stN));
+    // bool condition =  inBrushBox(stN, brushH, brushW); 
+    // vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
+    // vec3 foreGround = bb.rgb*bgCol;trail;black; lum(swirl(time/4., stN));
     
     
     
 
     
-    if(condition){
-        //to make "playhead" stand out from trail you could draw a perimiter around the box using inBrushBox with a border parameter
-        feedback = 1.;
-        cc = trail*2.;
-    }
-    else {
-        feedback = lastFeedback - decay;
-        if(lastFeedback > 0.4) {
-            cc = mix(foreGround, bb.rgb, feedback); //trail
-        } else {
-            feedback = 0.;
-            cc = bgCol; 
-        }
-    }
+    // if(condition){
+    //     //to make "playhead" stand out from trail you could draw a perimiter around the box using inBrushBox with a border parameter
+    //     feedback = 1.;
+    //     cc = trail*2.;
+    // }
+    // else {
+    //     feedback = lastFeedback - decay;
+    //     if(lastFeedback > 0.4) {
+    //         cc = mix(foreGround, bb.rgb, feedback); //trail
+    //     } else {
+    //         feedback = 0.;
+    //         cc = bgCol; 
+    //     }
+    // }
     
     vec2 camPos = vec2(1.-stN.x, stN.y);
     vec2 camPos2 = vec2(1.-n2.x, n2.y);
     vec3 cam = texture(channel0, camPos).rgb;
     vec3 cam2 = texture(channel0, camPos2).rgb;
-    vec3 bb2 = texture(backbuffer, n2).rgb;
+    vec3 bb2 = texture(backbuffer, mix(stN, n2, sliderVals[1])).rgb;
     cc = dist <= sliderVals[0] ? cam : bb2.rgb;
-    cc = dist < sliderVals[0] ? cam2 : bb2;mix(cam, bb2, pow(dist, 1./10.));
+    vec3 bb2hsv = rgb2hsv(bb2);
+    cc = dist < sliderVals[0] ? cam2 : hsv2rgb(bb2hsv + vec3(0., -0.03 + sliderVals[2]*0.06, 0.));
 
     
     
