@@ -110,7 +110,7 @@ void main () {
     vec2 n2 = stN + vec2(snoise(vec3(stN*100.*res*(scale), tm+0.))/dev, snoise(vec3(stN*100.*res*(scale), tm+35.))/dev);
 
     float dev2 = 1.;
-    vec2 n3 = stN + vec2(snoise(vec3(stN*dev2, time*sliderVals[5]*10.)), snoise(vec3(stN*dev2, time*sliderVals[5]*10.+35.)))/dev2;
+    vec2 n3 = stN + vec2(snoise(vec3(stN*dev2, tm)), snoise(vec3(stN*dev2, tm+35.)))/dev2;
     
 
     
@@ -138,6 +138,8 @@ void main () {
     // vec3 grid2 = mod(rotN2.y*10., 1.) < 0.5 ? black : white;
     cc = dist < 0.1 + sinN(tScale)*0.4 ? grid :bb2;
     cc = dist2 < .3 && dist >= 0.1 + sinN(tScale)*0.4 ? black : cc;
+    vec3 bb = texture(backbuffer, stN).rgb;
+    cc = distance(cent, n3) < 0.5 ? cc : bb;
 
     
     
