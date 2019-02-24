@@ -91,42 +91,6 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
-bool inBrushBox(vec2 stN, float brushH, float brushW){
-    // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-    // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
-    // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
-    // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-
-    vec2 rotSTN = rotate(stN, brushPos, brushAngle);
-    vec2 boxDist = abs(rotSTN - brushPos);
-
-    return boxDist.x <= brushW && boxDist.y <= brushH;
-}
-
-vec3 lum(vec3 color){
-    vec3 weights = vec3(0.212, 0.7152, 0.0722);
-    return vec3(dot(color, weights));
-}
-
-vec3 brushColor(vec2 stN, float brushH, float brushW){
-    // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-    // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
-    // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
-    // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-
-    vec2 rotSTN = rotate(stN, brushPos, brushAngle);
-    vec2 boxDist = abs(rotSTN - brushPos);
-
-    float strokePos = (rotSTN.y-(brushPos.y-brushH))/(2.*brushH);
-
-    vec3 swirlCol = vec3(0.3 + sinN(strokePos*10.*PI+sinN(time*10.)*PI*10.))*swirl(time, stN);
-    float bandArr[4];
-    bandArr[0] = bands.x;
-    bandArr[1] = bands.y;
-    bandArr[2] = bands.z;
-    bandArr[3] = bands.w;
-    return vec3(bandArr[int(floor(strokePos*4.))]);
-}
 
 out vec4 fragColor;
 void main () {
@@ -136,16 +100,14 @@ void main () {
     vec2 cent = vec2(0.5);
 
     
-    float brushH = 0.3 * sliderVals[2];
-    float brushW = 0.1 * sliderVals[3];
-    
-    
+
     float dev = 100.;
     // vec2 n1 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
     float tScale = time * 0.7;
-    float tm = tScale;quant(time, 2.);
+    float tm = tScale/4. ;quant(time, 2.);
     float res = 0.0166;
-    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*res*(sinN(tm)+0.05), 0.))/dev, snoise(vec3(stN*100.*res*(cosN(tm*1.1)+0.05), 35.))/dev);
+    float scale = .575; sliderVals[0];
+    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*res*(scale), tm+0.))/dev, snoise(vec3(stN*100.*res*(scale), tm+35.))/dev);
 
     float dev2 = 1.;
     vec2 n3 = stN + vec2(snoise(vec3(stN*dev2, time*sliderVals[5]*10.)), snoise(vec3(stN*dev2, time*sliderVals[5]*10.+35.)))/dev2;
@@ -165,17 +127,11 @@ void main () {
     
     
     
-    vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
-    
     
     vec3 cc;
    
-    
-    vec2 camPos = vec2(1.-stN.x, stN.y);
-    vec2 camPos2 = vec2(1.-n2.x, n2.y);
-    vec3 cam = texture(channel0, camPos).rgb;
-    vec3 cam2 = texture(channel0, camPos2).rgb;
-    vec3 bb2 = texture(backbuffer, mix(stN, n2, 0.1)).rgb;
+
+    vec3 bb2 = texture(backbuffer, mix(stN, n2, 10.5)).rgb;
     vec2 rotN = rotate(stN, cent, snoise(vec3(0.5, 10., tScale/10.))*10.);
     // vec2 rotN2 = rotate(stN, cent, snoise(vec3(1.5, 10., time/10.))*10.);
     vec3 grid = mod(rotN.x*10., 1.) < 0.5 ? black : white;
