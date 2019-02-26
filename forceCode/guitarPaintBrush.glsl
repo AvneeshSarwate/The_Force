@@ -159,10 +159,14 @@ void main () {
     //decide whether to use n2 or n3 or what combination 
     // n3 = quant(n3,10.);
     vec3 c1 = hsv2rgb(vec3(sliderVals[10], 1., 1.));
-    vec3 c2 = hsv2rgb(vec3(sliderVals[10]+sliderVals[11]+sinN(time*0.9)/4., 1., 1.));
+    vec3 c2 = hsv2rgb(vec3(sliderVals[10]+sliderVals[11]*sinN(time*0.9), 1., 1.));
     float mixVal1 = sinN(rotate(n3, cent, sinN(n3.x+time)*10./(1.+sinN(n3.y*PI+time))).x*10.*PI)/10.;
     float mixVal2 = sliderVals[12];
-    vec3 bgCol = /*vec3(distance(stN, n3)*dev)*/mix(c1, c2,  quant(sinN(stN.x*10.*PI), 2.+sinN(time)*10.));
+    
+    //todo: times here dependent on drone note onsets (either triggered envelopes or sustain times)
+    vec2 bgN = rotate(mix(stN, n3 ,1.), cent, n3.y+time);
+    bgN = rotate(bgN, cent, n3.x+sinN(time/5.)*PI);
+    vec3 bgCol = /*vec3(distance(stN, n3)*dev)*/mix(c1, c2,  sinN(pow(quant(bgN.x, pow(sliderVals[12], 2.5)*1000.), 0.01+sinN(time))*10.*PI));
     
     
     
@@ -176,7 +180,7 @@ void main () {
     
     bool condition =  inBrushBox(stN, brushH, brushW); 
     vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = bb.rgb*bgCol;trail;black; lum(swirl(time/4., stN));
+    vec3 foreGround = bgCol;trail;black; lum(swirl(time/4., stN));
     
     
     
@@ -201,5 +205,5 @@ void main () {
 
     
     
-    fragColor = vec4(cc, feedback);
+    fragColor = vec4(bgCol, feedback);
 }

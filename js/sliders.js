@@ -148,6 +148,26 @@ var guitarPaintSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "15: blank"}
 ];
 
+
+var cameraSinkSliders = [
+    {conf: {min: 0, max: 1, value: 0.25}, label: "0: % camera feed"},
+    {conf: {min: 0, max: 1, value: 0.2}, label: "1: warp depth"},
+    {conf: {min: 0, max: 1, value: 0.5}, label: "2: color balance"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "3: time offset only useful if speed is 0)"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "4: warp resolution"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "5: warp speed"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "6: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "7: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "8: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "9: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "10: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "11: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "12: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "13: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "14: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "15: blank"}
+];
+
 /*
 responsivevis1 sliderVals = [0.475, 0.116, 0.691, 0.016, 0.208, 1, 0, 0, 0, 0] - for only p5, no shader
 responsivevis1 sliderVals = [0.445, 0.075, 0.525, 0, 0.183, 1, 0, 0, 0.883, 0]

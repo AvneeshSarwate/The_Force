@@ -653,4 +653,7 @@ customLoaderMap['guitarPaintBrush'] = function(){
     sliderConfig = guitarPaintSliders;
 }
 
+customLoaderMap['snoiseCamWarp'] = function(){
+    sliderConfig = cameraSinkSliders;
+}
 // 
