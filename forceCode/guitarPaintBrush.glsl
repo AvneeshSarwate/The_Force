@@ -196,7 +196,7 @@ void main () {
         feedback = lastFeedback - decay;
         if(lastFeedback > 0.4) {
             cc = mix(foreGround, mix(hsv2rgb(foreGround), bb.rgb*(1.-foreGround), feedback), feedback); //trail
-            cc = mix(foreGround, trail*bb.rgb/(0.2+bgCol), feedback);
+            cc = mix(bgCol, bb.rgb, pow(feedback, 0.5));
         } else {
             feedback = 0.;
             cc = foreGround; 
