@@ -142,9 +142,9 @@ var guitarPaintSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "9: background warp zoom"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "10: color base"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "11: color deviation"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "12: color mix"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "13: blank"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "14: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "12: background color quantization"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "13: background saturation"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "14: background brightness"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "15: blank"}
 ];
 

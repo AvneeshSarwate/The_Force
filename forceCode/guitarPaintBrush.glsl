@@ -180,7 +180,8 @@ void main () {
     
     bool condition =  inBrushBox(stN, brushH, brushW); 
     vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = bgCol;trail;black; lum(swirl(time/4., stN));
+    vec3 hsvCol = rgb2hsv(bgCol);
+    vec3 foreGround = hsv2rgb(hsvCol*vec3(1., sliderVals[13], sliderVals[14]));trail;black; lum(swirl(time/4., stN));
     
     
     
@@ -194,10 +195,11 @@ void main () {
     else {
         feedback = lastFeedback - decay;
         if(lastFeedback > 0.4) {
-            cc = mix(foreGround, bb.rgb, feedback); //trail
+            cc = mix(foreGround, mix(hsv2rgb(foreGround), bb.rgb*(1.-foreGround), feedback), feedback); //trail
+            cc = mix(foreGround, trail*bb.rgb/(0.2+bgCol), feedback);
         } else {
             feedback = 0.;
-            cc = bgCol; 
+            cc = foreGround; 
         }
     }
     
