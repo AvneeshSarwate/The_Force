@@ -651,6 +651,13 @@ customLoaderMap['guitarPaintBrush'] = function(){
     sliderCallbacks[1] = function(sliderVal){brushSpeed = sliderVal*20};
 
     sliderConfig = guitarPaintSliders;
+
+    osc.on("/brushAngle", function(msg){
+        brushAngle = msg.args[0];
+    });
+    osc.on("/brushSpeed", function(msg){
+        brushSpeed = msg.args[0];
+    });
 }
 
 customLoaderMap['snoiseCamWarp'] = function(){

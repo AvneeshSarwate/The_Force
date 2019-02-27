@@ -205,5 +205,5 @@ void main () {
 
     
     
-    fragColor = vec4(bgCol, feedback);
+    fragColor = vec4(cc, feedback);
 }
