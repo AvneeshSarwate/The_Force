@@ -6,7 +6,7 @@ function draw(){}
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp', 'foregroundDive']);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive']);
 
 
 function videoUploadResponder(){}
@@ -660,7 +660,7 @@ customLoaderMap['guitarPaintBrush'] = function(){
     });
 }
 
-customLoaderMap['snoiseCamWarp'] = function(){
+customLoaderMap['snoiseCamWarp_slider'] = function(){
     sliderConfig = cameraSinkSliders;
 }
 // 
