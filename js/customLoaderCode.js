@@ -663,4 +663,10 @@ customLoaderMap['guitarPaintBrush'] = function(){
 customLoaderMap['snoiseCamWarp_slider'] = function(){
     sliderConfig = cameraSinkSliders;
 }
+
+customLoaderMap['lightLine_slider'] = function(){
+    sliderConfig = arrayOf(10).map((e, i) => ({conf: {min:0, max: 1, value: Math.random()}, label: "slider "+i }));
+}
+
+
 // 
