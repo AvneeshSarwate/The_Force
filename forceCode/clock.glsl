@@ -38,34 +38,46 @@ void ex3() {
     vec3 snap = texture2D(channel3, camPos).rgb;
     vec2 nn = uvN();
     float centT = time/5.;
+    vec2 cent0 = vec2(0.5);
     vec2 cent = vec2(0.5) + vec2(sin(centT), cos(centT))/5.;
     
     float t2 = time/2.; //time is the uniform for global time
     
     //the fragment color variable name (slightly different from shader toy)
-    float noiseT = time/4.;
-    vec2 warpN = stN + vec2(snoise(vec3(stN, noiseT)), snoise(vec3(stN, noiseT+4.)))/4.;
+    float noiseT = time/2.;
+    stN = rotate(stN, cent0, time/10.);
+    vec2 warpN = stN + vec2(snoise(vec3(stN, noiseT)), snoise(vec3(stN, noiseT+4.)))/4.; //play with warp amount
+    vec2 warpN2 = stN + vec2(snoise(vec3(stN, noiseT/2.)), snoise(vec3(stN, noiseT/2.+4.)))/4.;
     stN = mix(stN, warpN, distance(stN, cent)*2.);
-    stN = rotate(stN, cent, time/10.);
-    float width = 0.001 + 0.005 * distance(nn, cent)*100.;
+    vec2 stN2 = mix(stN, warpN2, distance(stN, cent)*2.);
+    
+    float width = 0.001 + 0.001 * pow(distance(nn, cent), 1.)*500.;
     vec3 col = stN.y < 0.5 && stN.y > 0.1 && stN.x > .5-width && stN.x < 0.5+width ? black : white;
     
     
     
     vec3 c;
-    vec2 bbN = mix(nn, stN, distance(nn, vec2(0.5))/10. );
+    vec2 bbN = mix(nn, stN2, distance(nn, vec2(0.5))/(10. + cosN(time/2.3)*1000.) ); //play with warp feedback mix
     vec4 bb = texture2D(backbuffer, bbN);
+    vec4 bb0 = texture2D(backbuffer, nn);
+    float fb2;
     float feedback; 
     if(col == white){
         feedback = bb.a * 0.97;
+        fb2 = bb0.a * 0.97;
     } 
     else{
         feedback = 1.;
+        fb2 = 1.;
     } 
     
-    vec3 cc = vec3(sinN(feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent))));
+    feedback  = mix(feedback, fb2, sinN(time/5.));
+    vec3 lowFdbkCol = vec3(feedback); vec3(cosN(feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent))));
+    float cc = feedback < 0.4 ? 0.: sinN(-time*10. + feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent)));
     
-    gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
+    cc = pow(cc, 1. + 200. * sinN(time/2.)); //play with pulsed line resolution
+    
+    gl_FragColor = vec4(vec3(cc), feedback);//vec4(c, feedback);
 }
 
 
