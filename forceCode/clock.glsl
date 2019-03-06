@@ -36,27 +36,34 @@ void ex3() {
     vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
     vec3 cam = texture2D(channel0, camPos).rgb; 
     vec3 snap = texture2D(channel3, camPos).rgb;
+    vec2 nn = uvN();
+    float centT = time/5.;
+    vec2 cent = vec2(0.5) + vec2(sin(centT), cos(centT))/5.;
     
     float t2 = time/2.; //time is the uniform for global time
     
     //the fragment color variable name (slightly different from shader toy)
-    vec2 warpN = stN + vec2(snoise(vec3(stN, time)), snoise(vec3(stN, time+4.)))/4.;
-    stN = mix(stN, warpN, distance(stN, vec2(0.5))*2.);
-    stN = rotate(stN, vec2(0.5), time/1.);
-    vec3 col = stN.y < 0.5 && stN.y > 0.1 && stN.x > 0.495 && stN.x < 0.505 ? black : white;
+    float noiseT = time/4.;
+    vec2 warpN = stN + vec2(snoise(vec3(stN, noiseT)), snoise(vec3(stN, noiseT+4.)))/4.;
+    stN = mix(stN, warpN, distance(stN, cent)*2.);
+    stN = rotate(stN, cent, time/10.);
+    float width = 0.001 + 0.005 * distance(nn, cent)*100.;
+    vec3 col = stN.y < 0.5 && stN.y > 0.1 && stN.x > .5-width && stN.x < 0.5+width ? black : white;
     
-    vec2 nn = uvN();
+    
     
     vec3 c;
+    vec2 bbN = mix(nn, stN, distance(nn, vec2(0.5))/10. );
+    vec4 bb = texture2D(backbuffer, bbN);
     float feedback; 
     if(col == white){
-        feedback = texture2D(backbuffer, mix(nn, stN, distance(nn, vec2(0.5))/100. )).a * 0.97;
+        feedback = bb.a * 0.97;
     } 
     else{
         feedback = 1.;
     } 
     
-    vec3 cc = vec3(sinN(feedback * distance(nn, vec2(0.5))*10.));
+    vec3 cc = vec3(sinN(feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent))));
     
     gl_FragColor = vec4(cc, feedback);//vec4(c, feedback);
 }
