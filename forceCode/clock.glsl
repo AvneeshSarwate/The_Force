@@ -29,6 +29,58 @@ void ex2() {
     gl_FragColor = diff;
 }
 
+// quantize and input number [0, 1] to quantLevels levels
+float quant(float num, float quantLevels){
+    float roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+/* bound a number to [low, high] and "wrap" the number back into the range
+if it exceeds the range on either side - 
+for example wrap(10, 1, 9) -> 8
+and wrap (-2, -1, 9) -> 0
+*/
+float wrap3(float val, float low, float high){
+    float range  = high - low;
+    if(val > high){
+        float dif = val-high;
+        float difMod = mod(dif, range);
+        float numWrap = dif/range - difMod;
+        if(mod(numWrap, 2.) == 0.){
+            return high - difMod;
+        } else {
+            return low + difMod;
+        }
+    }
+    if(val < low){
+        float dif = low-val;
+        float difMod = mod(dif, range);
+        float numWrap = dif/range - difMod;
+        if(mod(numWrap, 2.) == 0.){
+            return low + difMod;
+        } else {
+            return high - difMod;
+        }
+    }
+    return val;
+}
+vec2 wrap(vec2 val, float low, float high){
+    return vec2(wrap3(val.x, low, high), wrap3(val.y, low, high));
+}
+
+
 //the backbuffer uniform is a texture that stores the last rendered frame
 //this example shows how I use it to do feedback/trail effects
 void ex3() {
@@ -48,6 +100,8 @@ void ex3() {
     stN = rotate(stN, cent0, time/10.);
     vec2 warpN = stN + vec2(snoise(vec3(stN, noiseT)), snoise(vec3(stN, noiseT+4.)))/4.; //play with warp amount
     vec2 warpN2 = stN + vec2(snoise(vec3(stN, noiseT/2.)), snoise(vec3(stN, noiseT/2.+4.)))/4.;
+    // warpN = mod(warpN, 0.2 + sinN(time/5.5)); wrap(warpN, 0., 1.);
+    // warpN2 = mod(warpN2, 0.2 + sinN(time/5.5)); wrap(warpN2, 0., 1.);
     stN = mix(stN, warpN, distance(stN, cent)*2.);
     vec2 stN2 = mix(stN, warpN2, distance(stN, cent)*2.);
     
@@ -75,7 +129,7 @@ void ex3() {
     vec3 lowFdbkCol = vec3(feedback); vec3(cosN(feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent))));
     float cc = feedback < 0.4 ? 0.: sinN(-time*10. + feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent)));
     
-    cc = pow(cc, 1. + 200. * sinN(time/2.)); //play with pulsed line resolution
+    cc = pow(cc, 1. + 200. * pow(sinN(time/2.), 10.)); //play with pulsed line resolution
     
     gl_FragColor = vec4(vec3(cc), feedback);//vec4(c, feedback);
 }
