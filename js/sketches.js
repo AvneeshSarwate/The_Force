@@ -931,3 +931,35 @@ function guitarPaintDraw(){
     ellipse(brushPos.x, brushPos.y, 50);
 }
 
+function beyonceGrainSetup(){
+    p5w = 1280/2;
+    p5h = 720/2;
+    createCanvas(p5w, p5h);
+}
+
+var grainQueue = [];
+var bufferIds = new Set();
+var bufferIdMap = {};
+var bufferColors = [[255, 0, 0], [0, 255, 0]];
+var numVoices = 5;
+function beyonceGrainDraw(){
+    // clear();
+    grainQueue.forEach(function(grain){
+        
+        if(grain[0] > 0) {
+            var midiF =  69 + 12 * Math.log2(grain[0]/440);
+            var bufferId = grain[2];
+            if(!bufferIds.has(bufferId)){
+                bufferIdMap[bufferId] = bufferIds.size;
+                bufferIds.add(bufferId);
+            }
+            var c = bufferColors[bufferIdMap[bufferId]];
+            stroke(c[0], c[1], c[2]);
+            fill(c[0], c[1], c[2]);
+            ellipse(midiF/127*p5w, grain[1]/numVoices*p5h, 10, 10);
+        }
+
+    });
+    grainQueue = [];
+}
+

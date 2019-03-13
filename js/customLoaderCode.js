@@ -668,5 +668,13 @@ customLoaderMap['lightLine_slider'] = function(){
     sliderConfig = arrayOf(10).map((e, i) => ({conf: {min:0, max: 1, value: Math.random()}, label: "slider "+i }));
 }
 
+customLoaderMap['beyonceGrain'] = function(){
+    setup = beyonceGrainSetup;
+    draw = beyonceGrainDraw;
+    osc.on("/grainPitch", function(msg){
+        grainQueue.push(msg.args);
+    });
+}
+
 
 // 
