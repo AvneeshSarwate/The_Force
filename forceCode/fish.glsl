@@ -232,7 +232,7 @@ void main () {
     float yMult = 10.;
     float barWidth = 1./yMult/2.1;
     float barLength = .43;
-    vec2 warpN = stN + vec2(snoise(vec3(stN.yy, 5.)), snoise(vec3(stN.xx, 5.)))/10.;
+    vec2 warpN = stN + vec2(snoise(vec3(stN.yy, time/50.)), snoise(vec3(stN.xx, 5.)))/50.;
     float ySlice = quant(warpN.y, yMult);
     float yTime = time/2. * (0.3+hash(vec3(0.5, 3., ySlice)).x);
     vec3 colY = ySlice- barWidth < warpN.y && warpN.y < ySlice+barWidth && mod(yTime+ySlice, 2.)-barLength < stN.x && stN.x < mod(yTime+ySlice, 2.) ? black : white;
@@ -243,8 +243,11 @@ void main () {
     vec3 lowX = mod(xTime+xSlice, 2.) <  barLength ? black : white;
     // colX *= lowX;
     
+    vec4 bb = texture2D(backbuffer, warpN);
     
-    vec3 col = colX*colY ;
+    vec3 col = colX;
+    
+    col = mix(col, bb.rgb, colY);
     
     gl_FragColor = vec4(col, 1.);
 }
