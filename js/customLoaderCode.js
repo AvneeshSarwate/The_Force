@@ -676,5 +676,10 @@ customLoaderMap['beyonceGrain'] = function(){
     });
 }
 
+customLoaderMap['fogShip_slider'] = function(){
+    mTime += Math.random()*200*1000;
+    sliderConfig = arrayOf(6).map((e, i) => ({conf: {min:0, max: 1, value: Math.random()}, label: "slider "+i }));
+}
+
 
 // 
