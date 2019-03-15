@@ -232,7 +232,7 @@ void main () {
     float yMult = 10.;
     float barWidth = 1./yMult/2.1;
     float barLength = .43;
-    float warpRes = 1. + sinN(time*2.)*3.;
+    float warpRes = snoise(vec3(4., 3., time/4.))*3.;
     vec2 delta = vec2(snoise(vec3(stN.yy * warpRes, time/50.)), snoise(vec3(stN.xx * warpRes, 5.)));
     
     vec2 warpN = stN + delta/10.;
