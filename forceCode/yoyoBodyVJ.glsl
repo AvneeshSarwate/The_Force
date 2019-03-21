@@ -360,15 +360,21 @@ void ex3() {
     
     
     vec2 noiseN = vec2(snoise(vec3(stN + 10., cTime)), snoise(vec3(stN + 10., cTime)));
-    vec2 transCoord = stN + (hash(vec3(stN, time)).xy - 0.5)*sliderVals[3]/50. + noiseN*sliderVals[4];
+    vec2 transCoord = stN + (hash(vec3(stN, time)).xz - 0.5)*sliderVals[3]/50. + noiseN*sliderVals[4];
     vec3 vidTransform = texture2D(channel5, transCoord).rgb;
     vec3 transformSnap = texture2D(channel7, transCoord).rgb;
     
+    vec2 noiseN2 = vec2(snoise(vec3(stN + 10., cTime*sliderVals[6]+10.)), snoise(vec3(stN + 10., cTime*sliderVals[6]+10.)));
+    vec2 colorN = stN + noiseN2*sliderVals[7];
+    vec3 col = hsv2rgb(vec3(distance(stN, colorN) + sliderVals[8], stN));
     
     vec4 bb = texture2D(backbuffer, stN);
     float feedback; 
     float dist = colourDistance(vidTransform, transformSnap)/colourDistance(black, white);
     float decay = (1. - sliderVals[5]) * 0.1;
+    
+    
+    
     if(dist < .3 + sinN(time)*0.3){
         feedback = bb.a - decay;
     } 
@@ -380,7 +386,9 @@ void ex3() {
     // float moshVal = mosh();
     // moshVal = mix(0., moshVal, feedback);
     
-    vec3 cc = vec3(feedback);
+    vec3 splotch = hsv2rgb(vec3(sliderVals[9] + distance(stN, noiseN)*sliderVals[8], .1, .1)) * pow(distance(stN, noiseN), 3.);
+    vec3 trailCol = hsv2rgb(vec3(feedback*sliderVals[7] + sliderVals[6], 1, 1));
+    vec3 cc = trailCol * feedback + splotch;
     // cc = feedback == 1. ? white : cc;
     
     // cc = cc * (1.-rawVid*sliderVals[7]);
