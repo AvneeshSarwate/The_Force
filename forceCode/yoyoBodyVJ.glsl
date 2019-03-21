@@ -357,10 +357,13 @@ void ex3() {
     vec2 stN = uvN();
     vec2 camPos = vec2(1.-stN.x, stN.y);
     float cTime = controllableTime;
-    
-    
     vec2 noiseN = vec2(snoise(vec3(stN + 10., cTime)), snoise(vec3(stN + 10., cTime)));
-    vec2 transCoord = stN + (hash(vec3(stN, time)).xz - 0.5)*sliderVals[3]/50. + noiseN*sliderVals[4];
+
+
+    vec3 cam = texture2D(channel0, camPos+noiseN*sliderVals[13]*0.2).rgb;
+    
+    
+    vec2 transCoord = mix(stN, cam.xy, sliderVals[12]) + (hash(vec3(stN, time)).xz - 0.5)*sliderVals[3]/50. + noiseN*sliderVals[4];
     vec3 vidTransform = texture2D(channel5, transCoord).rgb;
     vec3 transformSnap = texture2D(channel7, transCoord).rgb;
     

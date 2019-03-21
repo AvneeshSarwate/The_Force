@@ -181,8 +181,8 @@ var yoyoBodyVJSliders = [
     {conf: {min: 0, max: 1, value: 0.05}, label: "9: blob hue base"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "10: blob speed"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "11: blob brighness"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "12: blank"},
-    {conf: {min: 0, max: 1, value: 0.05}, label: "13: blank"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "12: camera blend"},
+    {conf: {min: 0, max: 1, value: 0.05}, label: "13: camera warp"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "14: blank"},
     {conf: {min: 0, max: 1, value: 0.05}, label: "15: blank"}
 ];

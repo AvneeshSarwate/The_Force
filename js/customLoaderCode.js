@@ -707,13 +707,14 @@ customLoaderMap['yoyoBodyVJ'] = function(){
         videos[1].playbackRate = Math.max(1/16, sliderVal * 4);
     }
     videoUploadResponder = function(videoFile){
-        replaceVideo(0, 5, videoFile)
+        replaceVideo(0, 5, videoFile);
     }
 
     var midiNoteFunction = function(note, vel){
         if(note < 36 || note > 99) return;
-        var lowNote = 36; 
+        var lowNote = 36+12; 
         var range = 99 - 36;
+
         videos[0].currentTime = videos[0].duration * (note-lowNote)/range;
         videos[1].currentTime = mod(videos[0].currentTime + 10*sliders[1].value, videos[0].duration);
     }   
