@@ -5,6 +5,7 @@ uniform vec2      resolution;
 uniform vec2      timeVec;
 uniform float     zoom;
 uniform float     time;
+uniform float     controllableTime;
 uniform float     randValue;
 uniform float     randWalk;
 uniform float     channelTime[4];

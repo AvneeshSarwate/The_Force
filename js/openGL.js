@@ -14,6 +14,9 @@ var elapsedBandPeaks = [0.0, 0.0, 0.0, 0.0];
 //unifoms
 var vertPosU, l2, l3, l4, l5, l6, l7, l8, ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7, ch8, bs, screenResU, screenTexU, screenBlendU, translateUniform, scaleUniform, rotateUniform, gammaU, bandsTimeU, midiCCU;
 var timeVec, zoom;
+var controllableTime = 0, controllableTimeU;
+var timeScale = 1;
+var referenceTime = 0;
 var randValueU, randValueVal = 0, randWalkU, randWalkVal = 0;
 var markovState = 0, markovP = 0.05;
 var zoomVal = 1;
@@ -319,6 +322,7 @@ function newShader(vs, shaderCode) {
 
     // vertPosU =  gl.getUniformLocation(mProgram, "position");
     l2 = gl.getUniformLocation(mProgram, "time");
+    controllableTimeU = gl.getUniformLocation(mProgram, "controllableTime");
     timeVec = gl.getUniformLocation(mProgram, "timeVec");
     zoom = gl.getUniformLocation(mProgram, "zoom");
     randValueU = gl.getUniformLocation(mProgram, "randValue");
@@ -821,7 +825,11 @@ function paint(timeVal) {
 
     var toneTime = Tone.Transport.seconds;
     //add uniform stuff
+    
+    controllableTime += ((Date.now() - mTime) * 0.001 - referenceTime) * timeScale;
+    if(controllableTimeU !== null) gl.uniform1f(controllableTimeU, controllableTime);
     if (l2 !== null) gl.uniform1f(l2, (Date.now() - mTime) * 0.001);
+    referenceTime = (Date.now() - mTime) * 0.001;
     if (timeVec !== null) gl.uniform2f(timeVec, toneTime, timeVal);
     if (zoom !== null && zoomVal != 'undefined') gl.uniform1f(zoom, zoomVal);
     markovState = markovWalk(markovP, markovState)

@@ -217,6 +217,7 @@ function goreLoader(){
     var goreSequencer = new Tone.Sequence(function(time, note){
         if(videos[1]) {
             videos[1].currentTime = videos[1].currentTime + (-1 + Math.random()*2);
+
             videos[1].playBackRate = Math.min(5, Math.max(1/16, videos[1].playBackRate + (-0.1 + Math.random()*0.2)));
         }
     }, [1, [1, 1]], "4n");
@@ -679,6 +680,35 @@ customLoaderMap['beyonceGrain'] = function(){
 customLoaderMap['fogShip_slider'] = function(){
     mTime += Math.random()*200*1000;
     sliderConfig = arrayOf(6).map((e, i) => ({conf: {min:0, max: 1, value: Math.random()}, label: "slider "+i }));
+}
+
+customLoaderMap['yoyoBodyVJ'] = function(){
+    var videoSnapshotTexture;
+    blobVideoLoad(0, 5, "LaraDance.mp4", false, {'postLoadFunc': () => {
+        // videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
+        blobVideoLoad(1, 7, "LaraDance.mp4", false, {'postLoadFunc': function(){
+            setTimeout(() => {videos[1].currentTime = videos[0].currentTime + 0.7}, 2000);
+        }});
+    }});
+
+    videoSnapshot = function(){
+        if(videoSnapshotTexture && videoSnapshotTexture.globject) updateVideoTexture(gl, videoSnapshotTexture.globject, videos[0]);
+    }
+
+    everyFrameSnapshot = function(){
+        mInputs[6] = mInputs[5];
+    }
+
+    sliderConfig = yoyoBodyVJSliders;
+    sliderCallbacks[0] = function(sliderVal){timeScale = sliderVal*2};
+    sliderCallbacks[1] = function(sliderVal){videos[1].currentTime = mod(videos[0].currentTime + 10*sliderVal, videos[0].duration)};
+    sliderCallbacks[2] = function(sliderVal){
+        videos[0].playbackRate = Math.max(1/16, sliderVal * 4);
+        videos[1].playbackRate = Math.max(1/16, sliderVal * 4);
+    }
+    videoUploadResponder = function(videoFile){
+        replaceVideo(0, 5, videoFile)
+    }
 }
 
 
