@@ -20,6 +20,8 @@ midiPatternMap["responsivevis1"] = [
     {chan:1, paramNum: 1, paramTarget: .8, fadeTime: .8, lastMatched: -1, regex: br(/-52/)},
     {chan:1, paramNum: 2, paramTarget: 1, fadeTime: 4, lastMatched: -1, regex: br(/-57-59-60/)},
     {chan:1, paramNum: 0, paramTarget: .4, fadeTime: 2, lastMatched: -1, regex: br(/-55/)},
+    {chan:1, paramNum: 0, paramTarget: .4, fadeTime: 6, lastMatched: -1, regex: br(/-53/), curve: (t)=> rampAD(t, .5)},
+    {chan:1, paramNum: 0, paramTarget: .4, fadeTime: 6, lastMatched: -1, regex: br(/-65/)},
 
     {chan:1, paramNum: 3, paramTarget: .9, fadeTime: 6, lastMatched: -1, regex: br(/-57-a{1,3}-60/)},
     {chan:1, paramNum: 3, paramTarget: .9, fadeTime: 6, lastMatched: -1, regex: br(/-57-60/)},
@@ -27,7 +29,7 @@ midiPatternMap["responsivevis1"] = [
     {chan:1, paramNum: 0, paramTarget: .4, fadeTime: 2, lastMatched: -1, regex: br(/-59-a{1,3}-62/)},
     {chan:1, paramNum: 2, paramTarget: 1, fadeTime: 4, lastMatched: -1, regex: br(/-79-a{1,8}-76/)},
     {chan:1, paramNum: 4, paramTarget: .4, fadeTime: 2, lastMatched: -1, regex: br(/-a.{1,4}\1/)},
-    {chan:1, paramNum: 5, paramTarget: 1, fadeTime: 6, lastMatched: -1, regex: br(/-43/)},
+    {chan:1, paramNum: 5, paramTarget: 1, fadeTime: 6, lastMatched: -1, regex: br(/-43/), curve: (t)=> rampAD(t, .5)*2},
 ];
 
 midiPatternMap['rainbowHits_slider'] = [

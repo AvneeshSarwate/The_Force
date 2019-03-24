@@ -99,7 +99,7 @@ function matchPattern(){
                         if(isNaN(valInterpolation)){
                             console.log("nan val", param);
                         }
-                        setSliderVal(param, lastPat.paramNum == 5 ? rampAD(rampCompletion, 0.5)*2 : valInterpolation);
+                        setSliderVal(param, lastPat.curve ? lastPat.curve(rampCompletion) : valInterpolation);
                     }
                 }
             }
