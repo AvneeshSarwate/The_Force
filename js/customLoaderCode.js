@@ -542,6 +542,9 @@ function responsivevisLoader(i){
         console.log("p5 function eval error", e);
     }
     var patternList = midiPatternMap["responsivevis"+i];
+
+    midiDeviceName = "IAC Driver Bus 2";
+
     patterns = patternList ? patternList : []; 
     if(midiResponseSetup["responsivevis"+i]) midiResponseSetup["responsivevis"+i]();
 }

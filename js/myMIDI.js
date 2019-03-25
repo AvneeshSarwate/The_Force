@@ -24,6 +24,7 @@ var midiOffEventFlag = false;
 var midiCC = arrayOf(128);
 var noteEvents = [];
 
+var midiDeviceName = null;
 
 var velocitySequence = new Array();
 var lastMatchedPattern = -1;
@@ -116,12 +117,15 @@ function onMIDISuccess(midiAccess) {
 
     var midiName = window.location.href.split("?")[1].split("&")[1];
     usingVJPad = midiName == "vjPad";
-    var midiDeviceName = usingVJPad ? "IAC Driver Bus 2" : null;
-    midiDeviceName = usingXkey ? "Xkey" : midiDeviceName;
-    console.log(midiDeviceName, midiName);  
+    var midiDeviceNombre = usingVJPad ? "IAC Driver Bus 2" : null;
+    midiDeviceNombre = usingXkey ? "Xkey" : midiDeviceNombre;
+
+    midiDeviceName = midiDeviceName ? midiDeviceName : midiDeviceNombre;
+
+    console.log(midiDeviceNombre, midiName);  
 
     var useAllDevices = true;  
-    useAllDevices = !usingVJPad;
+    useAllDevices = !midiDeviceName;
 
     listInputsAndOutputs(midi);
     startLoggingMIDIInput(midiDeviceName, useAllDevices);
@@ -189,7 +193,7 @@ function onMIDIMessage(event) {
     // Mask off the lower nibble (MIDI channel, which we don't care about)
     // var channel = ev.data[0] & 0xf;
     var chan = event.data[0] & 0x0f;
-    //console.log("MIDI EVENT", chan, midiNote, midiVel);
+    console.log("MIDI EVENT", chan, midiNote, midiVel);
 
     var eventKey; //string determining message type/number for callbacks mapped to midi messages
     var eventTime = (Date.now() - mTime) * 0.001;

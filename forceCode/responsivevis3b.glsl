@@ -204,12 +204,35 @@ vec3 lum(vec3 color){
 
 vec2 getNoteBall(int i){
     vec2 v = vec2(-200);
-    if(i == 0 && lastNoteOnTime[50] > lastNoteOffTime[50]) v =vec2(midiCC[80], midiCC[81]);
-    if(i == 1 && lastNoteOnTime[55] > lastNoteOffTime[55]) v =vec2(midiCC[82], midiCC[83]);
-    if(i == 2 && lastNoteOnTime[60] > lastNoteOffTime[60]) v =vec2(midiCC[84], midiCC[85]);
-    if(i == 3 && lastNoteOnTime[65] > lastNoteOffTime[65]) v =vec2(midiCC[80], midiCC[87]);
-    if(i == 4 && lastNoteOnTime[70] > lastNoteOffTime[70]) v =vec2(midiCC[88], midiCC[89]);
-    return v/127.;
+    bool note = false;
+    float midiScale = PI2 / 127.;
+    if(i == 0 && lastNoteOnTime[50] > lastNoteOffTime[50]) {
+        v = vec2(midiCC[80], midiCC[81]);
+        v += vec2(sinN(midiCC[0]*midiScale), cosN(midiCC[0]*midiScale))*127.;
+        note = true;
+    }
+    if(i == 1 && lastNoteOnTime[55] > lastNoteOffTime[55]) {
+        v = vec2(midiCC[82], midiCC[83]);
+        v += vec2(sinN(midiCC[1]*midiScale), cosN(midiCC[1]*midiScale))*127.;
+        note = true;
+    }
+    if(i == 2 && lastNoteOnTime[60] > lastNoteOffTime[60]) {
+        v = vec2(midiCC[84], midiCC[85]);
+        v += vec2(sinN(midiCC[2]*midiScale), cosN(midiCC[2]*midiScale))*127.;
+        note = true;
+    }
+    if(i == 3 && lastNoteOnTime[65] > lastNoteOffTime[65]) {
+        v = vec2(midiCC[80], midiCC[87]);
+        v += vec2(sinN(midiCC[3]*midiScale), cosN(midiCC[3]*midiScale))*127.;
+        note = true;
+    }
+    if(i == 4 && lastNoteOnTime[70] > lastNoteOffTime[70]) {
+        v = vec2(midiCC[88], midiCC[89]);
+        v += vec2(sinN(midiCC[4]*midiScale), cosN(midiCC[4]*midiScale))*127.;
+        note = true;
+    }
+    v = v/127.;
+    return note ? vec2(mod(v.x, 1.), mod(v.y, 1.)) : vec2(0.);
 }
 
 void main () {
@@ -269,7 +292,7 @@ void main () {
     vec2 distRef = uvN()+hashPart*pow(1. + midiCC[10]/127., 4.);
     for(int i = 0; i < 5; i++){
         vec2 b = getNoteBall(i);
-        if(distance(distRef, b*0.5 + .25) < 0.02 && b.x > -1.) col = red;
+        if(distance(stN, b*0.8 + .1) < 0.02 && b.x > -1. && b != vec2(0.)) col = red;
     }
     
     
