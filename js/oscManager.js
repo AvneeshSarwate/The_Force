@@ -8,6 +8,12 @@ var pubnub;
 var subKey = 'sub-c-81d9f970-fd67-11e7-991b-ee282aa22bde';
 var pubKey = '';
 
+function connectOSC() {
+    var address = $('#socket_address').val();
+    var port = $('#socket_port').val();
+    osc.connect(address, port);
+}
+
 function initOSC() {
     
     // pubnub = new PubNub({

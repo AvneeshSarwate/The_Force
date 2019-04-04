@@ -249,5 +249,5 @@ void main () {
     float mixWeight = 0.99;
     cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
-    gl_FragColor = vec4(mix(p5, cc, sweep), feedback);
+    gl_FragColor = vec4(mix(p5, cc, 0.), feedback);
 }

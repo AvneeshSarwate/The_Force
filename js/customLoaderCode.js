@@ -678,6 +678,7 @@ customLoaderMap['beyonceGrain'] = function(){
     osc.on("/grainPitch", function(msg){
         grainQueue.push(msg.args);
     });
+    connectOSC(false);
 }
 
 customLoaderMap['fogShip_slider'] = function(){

@@ -944,6 +944,12 @@ var bufferColors = [[255, 0, 0], [0, 255, 0]];
 var numVoices = 5;
 function beyonceGrainDraw(){
     // clear();
+    lastTime = newTime;
+    newTime = Date.now() / 1000;
+    var timeDiff = newTime - lastTime;
+    var timeScale = 1;
+    time += timeDiff * timeScale;
+
     grainQueue.forEach(function(grain){
         
         if(grain[0] > 0) {
@@ -956,7 +962,10 @@ function beyonceGrainDraw(){
             var c = bufferColors[bufferIdMap[bufferId]];
             stroke(c[0], c[1], c[2]);
             fill(c[0], c[1], c[2]);
-            ellipse(midiF/127*p5w, grain[1]/numVoices*p5h, 10, 10);
+            var rangeFrac = (midiF-50)/24;
+            var p = {x:rangeFrac, y:grain[1]/numVoices - 0.5/numVoices};
+            p = coordWarp(p, time/1., 0.4, 20);
+            ellipse(p.x*p5w, p.y*p5h, 10, 10);
         }
 
     });
