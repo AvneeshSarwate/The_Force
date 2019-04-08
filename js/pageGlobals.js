@@ -26,14 +26,14 @@ mErrors = new Array();
 
 var useAVInput = true;
 var isMobile = mobileAndTabletcheck();
-var useAudioInput = !isMobile;
+var useAudioInput = !isMobile && !ignoreAudioForShader;
 var useVideoInput = !isMobile;
 
 var numFrames = 0;
 
 //create an audio context
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioContext = new AudioContext();
+var audioContext = useAudioInput ? new AudioContext() : null;
 
 var lastShaderTime = 0;
 
@@ -102,6 +102,8 @@ $( document ).ready(function() {
 
     if(customLoaderMap[shaderToGet]) initialLoaderFunction = customLoaderMap[shaderToGet];
     
+    useAudioInput = !isMobile && audioOnShaders.has(shaderToGet);
+    ignoreAudioForShader = !audioOnShaders.has(shaderToGet);
 
     $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             // console.log(shaderCode.replace("\n", "NEWLINE"));
@@ -473,7 +475,7 @@ $( document ).ready(function() {
     }
 
     function initAudio()
-    {
+    {   if(!useAudioInput) return;
         if (mSound === null)
         {   // build a new sound object
             mSound = {};
@@ -1033,10 +1035,10 @@ $( document ).ready(function() {
     // --- audio context ---------------------
     var contextAvailable = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;
     
-    if(contextAvailable)
+    if(contextAvailable && useAudioInput)
         mAudioContext = new contextAvailable();
     else
-        alert("This browser doesn't support Audio Contexts. Audio input will not be available.");
+        if(!ignoreAudioForShader) alert("This browser doesn't support Audio Contexts. Audio input will not be available.");
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 
@@ -1252,10 +1254,12 @@ $( document ).ready(function() {
     player.crossorigin="anonymous";
     var loader = new SoundcloudLoader(player,uiUpdater);
 
-    StartAudioContext(Tone.context, $('#demogl')).then(function(){
-        console.log('Tone.js audio context started from StartAudioContext');
-        Tone.Transport.start();
-    });
+    if(!ignoreAudioForShader) {
+        StartAudioContext(Tone.context, $('#demogl')).then(function(){
+            console.log('Tone.js audio context started from StartAudioContext');
+            Tone.Transport.start();
+        });
+    }
 
 
     var touchMe = document.getElementById('demogl');

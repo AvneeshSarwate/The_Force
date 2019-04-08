@@ -7,7 +7,7 @@ function draw(){}
 var customLoaderMap = {};
 
 var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive']);
-
+var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4"]);
 
 function videoUploadResponder(){}
 function audioFilesSelected(){}
@@ -16,6 +16,7 @@ function everyFrameSnapshot(){}
 function frameStateUpdate(){}
 var frameState = {};
 
+var ignoreAudioForShader = false;
 
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
@@ -662,6 +663,8 @@ customLoaderMap['guitarPaintBrush'] = function(){
     osc.on("/brushSpeed", function(msg){
         brushSpeed = msg.args[0];
     });
+
+    ignoreAudioForShader = true;
 }
 
 customLoaderMap['snoiseCamWarp_slider'] = function(){
