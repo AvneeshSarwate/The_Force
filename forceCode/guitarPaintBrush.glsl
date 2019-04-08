@@ -202,8 +202,6 @@ void main () {
             cc = foreGround; 
         }
     }
-    
-    vec3 cam = texture(channel0, n2).rgb;
 
     
     

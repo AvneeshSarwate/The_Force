@@ -920,15 +920,15 @@ function guitarPaintSetup(){
     p5h = 720/2;
     brushPos.x = p5w/2;
     brushPos.y = p5h/2;
-    createCanvas(p5w, p5h);
+    // createCanvas(p5w, p5h);
 }
 
 
 function guitarPaintDraw(){
-    clear();
+    // clear();
     brushPos.x = mod((brushPos.x + brushSpeed * cos(brushAngle)),p5w);
     brushPos.y = mod((brushPos.y + brushSpeed * sin(brushAngle)),p5h);
-    ellipse(brushPos.x, brushPos.y, 50);
+    // ellipse(brushPos.x, brushPos.y, 50);
 }
 
 function beyonceGrainSetup(){

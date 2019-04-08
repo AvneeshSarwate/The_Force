@@ -105,6 +105,8 @@ $( document ).ready(function() {
     useAudioInput = !isMobile && audioOnShaders.has(shaderToGet);
     ignoreAudioForShader = !audioOnShaders.has(shaderToGet);
 
+    useVideoInput = useVideoInput && !ignoreCameraShaders.has(shaderToGet);
+
     $.get("forceCode/"+shaderToGet+".glsl", function(shaderCode){
             // console.log(shaderCode.replace("\n", "NEWLINE"));
             defaultShader = shaderCode;
@@ -1214,22 +1216,24 @@ $( document ).ready(function() {
         mInputs[0] = wcTex;
     }
 
-    p5Texture = initVideoTexture(gl, "blankurl");
-    p5Tex = {}
-    p5Tex.globject = p5Texture;
-    p5Tex.type = "tex_2D";
-    p5Tex.image = {height: webcam.height, width: webcam.width};
-    p5Tex.loaded = true;
-    mInputs[1] = p5Tex;
+    if(!isMobile && useVideoInput) {
+        p5Texture = initVideoTexture(gl, "blankurl");
+        p5Tex = {}
+        p5Tex.globject = p5Texture;
+        p5Tex.type = "tex_2D";
+        p5Tex.image = {height: webcam.height, width: webcam.width};
+        p5Tex.loaded = true;
+        mInputs[1] = p5Tex;
 
 
-    p5SnapTexture = initVideoTexture(gl, "blankurl");
-    p5SnapTex = {}
-    p5SnapTex.globject = p5SnapTexture;
-    p5SnapTex.type = "tex_2D";
-    p5SnapTex.image = {height: webcam.height, width: webcam.width};
-    p5SnapTex.loaded = true;
-    mInputs[2] = p5SnapTex;
+        p5SnapTexture = initVideoTexture(gl, "blankurl");
+        p5SnapTex = {}
+        p5SnapTex.globject = p5SnapTexture;
+        p5SnapTex.type = "tex_2D";
+        p5SnapTex.image = {height: webcam.height, width: webcam.width};
+        p5SnapTex.loaded = true;
+        mInputs[2] = p5SnapTex;
+    }
 
     if(initialLoaderFunction) initialLoaderFunction();
 
