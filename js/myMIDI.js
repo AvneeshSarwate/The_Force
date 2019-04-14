@@ -173,14 +173,6 @@ function listInputsAndOutputs(midiAccess) {
     }
 }
 
-
-function midiCCSliderChange(ccNum, val){
-    if(3 <= ccNum && ccNum <= 6){
-        $("#sliderVal"+(ccNum-3)).val(val/127);
-        sliders[ccNum-3].value = val/127;
-    }
-}
-
 function onMIDIMessage(event) {
     var str = "MIDI message received at timestamp " + event.timestamp + "[" + event.data.length + " bytes]: ";
     for (var i = 0; i < event.data.length; i++) {
@@ -240,7 +232,6 @@ function onMIDIMessage(event) {
             midiData[event.data[1]] = event.data[2];
             midiCC[midiNote] = midiVel;
             eventKey = "cc";
-            midiCCSliderChange(midiNote, midiVel)
             break;
     }
     // console.log(noteOnEventCount, noteOffEventCount);
