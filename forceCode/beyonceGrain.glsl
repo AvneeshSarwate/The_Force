@@ -201,6 +201,11 @@ float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
 
+vec3 qSatShift(vec3 col, float sat, float hue){
+    vec3 c = rgb2hsv(col);
+    return hsv2rgb(vec3(c.x + hue*2., pow(sat, 0.3), c.z));
+}
+
 void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
@@ -212,9 +217,17 @@ void main () {
     float sweep = sigmoid(sin(rowColN.x*PI)*30.);
     hashN = mix(stN, hashN, sweep);
     vec2 stR = rotate(stN, cent, time*PI2/5.);
-    vec3 p5 = texture2D(channel1, mix(stN, rowColN, 0.5)).rgb;
+    vec3 p5 = texture2D(channel1, mix(stN, rowColN, .2)).rgb;
     vec3 halo = texture2D(channel5, stN).rgb;
     vec3 halo2 = texture2D(channel6, stN).rgb;
+    
+    
+    float p5warp = max(p5.r, p5.g);
+    vec3 p5halo = texture2D(channel5, mix(stN, rowColN, p5warp)).rgb;
+    vec3 p5vid = p5.r > p5.g ? qSatShift(p5halo, sliderVals[4], sliderVals[0]) : 1.-qSatShift(p5halo, sliderVals[5], sliderVals[2]);
+    p5vid = p5warp < 0.1 ? black : p5vid;
+    // p5vid
+    
     
     vec3 cc;
     float decay = mix(0., sliderVals[8], sweep);
@@ -251,5 +264,5 @@ void main () {
     float mixWeight = 0.99;
     cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
-    gl_FragColor = vec4(mix(p5, cc, 0.) + halo, feedback);
+    gl_FragColor = vec4(p5vid, feedback);
 }
