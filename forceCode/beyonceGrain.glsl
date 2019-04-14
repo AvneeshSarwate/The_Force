@@ -212,7 +212,9 @@ void main () {
     float sweep = sigmoid(sin(rowColN.x*PI)*30.);
     hashN = mix(stN, hashN, sweep);
     vec2 stR = rotate(stN, cent, time*PI2/5.);
-    vec3 p5 = texture2D(channel1, mix(stN, hashN, 0.)).rgb;
+    vec3 p5 = texture2D(channel1, mix(stN, rowColN, 0.5)).rgb;
+    vec3 halo = texture2D(channel5, stN).rgb;
+    vec3 halo2 = texture2D(channel6, stN).rgb;
     
     vec3 cc;
     float decay = mix(0., sliderVals[8], sweep);
@@ -249,5 +251,5 @@ void main () {
     float mixWeight = 0.99;
     cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
-    gl_FragColor = vec4(mix(p5, cc, 0.), feedback);
+    gl_FragColor = vec4(mix(p5, cc, 0.) + halo, feedback);
 }

@@ -943,6 +943,8 @@ var bufferIdMap = {};
 var bufferColors = [[255, 0, 0], [0, 255, 0]];
 var numVoices = 5;
 var p5fadeaway = 5;
+var pitchDeviations = [[0, 0], [0, 0]]; //per voice, pitch/playrate
+var noteSizes = [10, 10];
 function beyonceGrainDraw(){
     // clear();
     fill(0, p5fadeaway);
@@ -964,13 +966,20 @@ function beyonceGrainDraw(){
                 bufferIdMap[bufferId] = bufferIds.size;
                 bufferIds.add(bufferId);
             }
-            var c = bufferColors[bufferIdMap[bufferId]];
+
+            var bufInd = bufferIdMap[bufferId]
+            var ballSize = 30 * (bufInd === 0 ? sliderVals[1] : sliderVals[3]);
+            var xyDev = {x: pitchDeviations[bufInd][0] * p5w/16, y: pitchDeviations[bufInd][1] * p5h/16}
+            var c = bufferColors[bufInd];
+
             stroke(c[0], c[1], c[2]);
             fill(c[0], c[1], c[2]);
+
             var rangeFrac = (midiF-50)/24;
             var p = {x:rangeFrac, y:grain[1]/numVoices - 0.5/numVoices};
+
             p = coordWarp(p, time/1., 0.4, 20);
-            ellipse(p.x*p5w, p.y*p5h, 10, 10);
+            ellipse(mod(p.x*p5w + xyDev.x, p5w), mod(p.y*p5h + xyDev.y, p5h), ballSize, ballSize);
         }
 
     });
