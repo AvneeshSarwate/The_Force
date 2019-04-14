@@ -942,14 +942,19 @@ var bufferIds = new Set();
 var bufferIdMap = {};
 var bufferColors = [[255, 0, 0], [0, 255, 0]];
 var numVoices = 5;
+var p5fadeaway = 5;
 function beyonceGrainDraw(){
     // clear();
+    fill(0, p5fadeaway);
+    stroke(0, p5fadeaway);
+    rect(0, 0, p5w, p5h);
     lastTime = newTime;
     newTime = Date.now() / 1000;
     var timeDiff = newTime - lastTime;
     var timeScale = 1;
     time += timeDiff * timeScale;
 
+    //grain is [midiPitch, voiceNum]
     grainQueue.forEach(function(grain){
         
         if(grain[0] > 0) {

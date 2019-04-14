@@ -6,7 +6,7 @@ function draw(){}
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive']);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin']);
 var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
@@ -729,6 +729,13 @@ customLoaderMap['yoyoBodyVJ'] = function(){
         videos[1].currentTime = mod(videos[0].currentTime + 10*sliders[1].value, videos[0].duration);
     }   
     midiEventHandlers["on"] = midiNoteFunction
+}
+
+customLoaderMap['kevin'] = function(){
+    blobVideoLoad(0, 5, "Attempt1.mov", true);
+    blobVideoLoad(1, 6, "Attempt2.mov", true);
+    blobVideoLoad(2, 7, "Attempt3.mov", true);
+    blobVideoLoad(3, 8, "Attempt4.mov", true);
 }
 
 
