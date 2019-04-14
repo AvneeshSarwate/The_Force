@@ -407,7 +407,7 @@ var lowestKeyboardNote = 48;
 //you can scroll forwards through the jump points with the highest key, and backwards with the lowest key
 function videoSoundSampler2Loader(){
     var videoSnapshotTexture;
-    blobVideoLoad(0, 5, "gore.mp4", true, {'postLoadFunc': () => {
+    blobVideoLoad(0, 5, "gore.mp4", false, {'postLoadFunc': () => {
         videoSnapshotTexture = mInputs[6] = createVideoSnapshotTexture(gl, videos[0])
     }});
 
@@ -442,13 +442,11 @@ function videoSoundSampler2Loader(){
     var midiNoteFunction = function(note, vel){
         var moveDownNote = lowestKeyboardNote;
         var moveUpNote = lowestKeyboardNote + 24; //62
-        if(note == moveDownNote) baseInd = Math.max(baseInd-6, 0);
-        else if(note == moveUpNote) baseInd+=6;
-        else if(moveDownNote < note && note <= moveDownNote + 12 ){
-            videos[0].currentTime = deviations[baseInd + (note-37)];
+        if(note == moveDownNote) baseInd = Math.max(baseInd-12, 0);
+        else if(note == moveUpNote) baseInd+=12;
+        else if(moveDownNote < note && note < moveUpNote ){
+            videos[0].currentTime = deviations[baseInd + (note-(lowestKeyboardNote+1))];
         }
-        else if(moveDownNote + 12 < note && note < moveUpNote && vel > 0) players[note % (moveDownNote+13)].start(); //sample on
-        else if(moveDownNote + 12 < note && note < moveUpNote && vel == 0) players[note % (moveDownNote+13)].stop(); //sample off
     }   
     midiEventHandlers["on"] = midiNoteFunction;
 
