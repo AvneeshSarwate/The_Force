@@ -7,7 +7,7 @@ function draw(){}
 var customLoaderMap = {};
 
 var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin']);
-var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4"]);
+var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
 var ignoreCameraShaders = new Set(["guitarPaintBrush"]);

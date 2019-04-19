@@ -91,6 +91,9 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
+
+//TODO return index of brush (1-4, or zero if none), map brush width to note velocity
+//or, make it bool based on all brushes
 bool inBrushBox(vec2 stN, float brushH, float brushW){
     // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
     // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
