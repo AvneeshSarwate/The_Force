@@ -913,13 +913,15 @@ function hyperphaseDraw(){
 
 
 var brushSpeeds = [10, 10, 10, 10];
-var brushAngles = [0, 0, 0, 0];
+var brushAngles = arrayOf(4).map(i => Math.random() * PI_2);
 var brushPositions = [{}, {}, {}, {}];
 function guitarPaintSetup(){
     p5w = 1280/2;
     p5h = 720/2;
-    brushPos.x = p5w/2;
-    brushPos.y = p5h/2;
+    brushPositions.forEach(function(brushPos) {
+        brushPos.x = p5w/2 + (Math.random()-1) * p5w/2;
+        brushPos.y = p5h/2 + (Math.random()-1) * p5h/2;
+    });
     // createCanvas(p5w, p5h);
 }
 
@@ -927,7 +929,7 @@ function guitarPaintSetup(){
 function guitarPaintDraw(){
     // clear();
     for(var i = 0; i < 4; i++){
-        brushPos = brushPositions[i]
+        var brushPos = brushPositions[i]
         brushPos.x = mod((brushPos.x + brushSpeeds[i] * cos(brushAngles[i])),p5w);
         brushPos.y = mod((brushPos.y + brushSpeeds[i] * sin(brushAngles[i])),p5h);
     }

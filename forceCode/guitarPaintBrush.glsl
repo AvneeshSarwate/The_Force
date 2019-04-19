@@ -92,18 +92,21 @@ float colourDistance(vec3 e1, vec3 e2) {
 }
 
 
-//TODO return index of brush (1-4, or zero if none), map brush width to note velocity
+//TODO return index of brush (0-4, or -1 if none), map brush width to note velocity
 //or, make it bool based on all brushes
-bool inBrushBox(vec2 stN, float brushH, float brushW){
+int inBrushBox(vec2 stN, float brushH, float brushW){
     // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
     // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
     // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
     // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
+    int brushInd = -1;
+    for(int i = 0; i < 4; i++) {
+        vec2 rotSTN = rotate(stN, brushPositions[i], brushAngles[i]);
+        vec2 boxDist = abs(rotSTN - brushPositions[i]);
 
-    vec2 rotSTN = rotate(stN, brushPos, brushAngle);
-    vec2 boxDist = abs(rotSTN - brushPos);
-
-    return boxDist.x <= brushW && boxDist.y <= brushH;
+        brushInd = boxDist.x <= brushW && boxDist.y <= brushH ? i : brushInd;
+    }
+    return brushInd;
 }
 
 vec3 lum(vec3 color){
@@ -111,12 +114,13 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
-vec3 brushColor(vec2 stN, float brushH, float brushW){
+vec3 brushColor(vec2 stN, float brushH, float brushW, int brushInd){
     // vec2 tl = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
     // vec2 tr = rotate(brushPos + vec2(brushW, brushH), brushPos, brushAngle);
     // vec2 bl = rotate(brushPos + vec2(-brushW, -brushH), brushPos, brushAngle);
     // vec2 br = rotate(brushPos + vec2(-brushW, brushH), brushPos, brushAngle);
-
+    vec2 brushPos = brushPositions[brushInd];
+    float brushAngle = brushAngles[brushInd];
     vec2 rotSTN = rotate(stN, brushPos, brushAngle);
     vec2 boxDist = abs(rotSTN - brushPos);
 
@@ -181,8 +185,9 @@ void main () {
     float feedback;
     float lastFeedback = bb.a;
     
-    bool condition =  inBrushBox(stN, brushH, brushW); 
-    vec3 trail =  brushColor(stN, brushH, brushW)*2.; // swirl(time/5., trans2) * c.x;
+    int brushInd = inBrushBox(stN, brushH, brushW);
+    bool condition = brushInd > -1; 
+    vec3 trail = brushColor(stN, brushH, brushW, brushInd)*2.; // swirl(time/5., trans2) * c.x;
     vec3 hsvCol = rgb2hsv(bgCol);
     vec3 foreGround = hsv2rgb(hsvCol*vec3(1., sliderVals[13], sliderVals[14]));trail;black; lum(swirl(time/4., stN));
     

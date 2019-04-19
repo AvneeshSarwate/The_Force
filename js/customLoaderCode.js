@@ -643,14 +643,14 @@ customLoaderMap['guitarPaintBrush'] = function(){
     setup = guitarPaintSetup;
     draw = guitarPaintDraw;
     customLoaderUniforms = `
-    uniform float brushAngle[4];
-    uniform vec2 brushPos[4];
+    uniform float brushAngles[4];
+    uniform vec2 brushPositions[4];
     `;
     customLoaderUniformSet = function(time, mProgram){
-        var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngle");
+        var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngles");
         if(brushAnglesU) gl.uniform1fv(brushAnglesU, brushAngles);
-        var brushPosU = gl.getUniformLocation(mProgram, "brushPos");
-        var positionArray = brushPositions.map(p => [p.x/p5w, p.y/p5h]).flatten();
+        var brushPosU = gl.getUniformLocation(mProgram, "brushPositions");
+        var positionArray = brushPositions.map(p => [p.x/p5w, p.y/p5h]).flat();
         if(brushPosU) gl.uniform2fv(brushPosU, positionArray);
     }
 
