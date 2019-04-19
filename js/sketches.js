@@ -912,9 +912,9 @@ function hyperphaseDraw(){
 }
 
 
-var brushSpeed = 10;
-var brushAngle = 0;
-var brushPos = {};
+var brushSpeeds = [10, 10, 10, 10];
+var brushAngles = [0, 0, 0, 0];
+var brushPositions = [{}, {}, {}, {}];
 function guitarPaintSetup(){
     p5w = 1280/2;
     p5h = 720/2;
@@ -926,8 +926,11 @@ function guitarPaintSetup(){
 
 function guitarPaintDraw(){
     // clear();
-    brushPos.x = mod((brushPos.x + brushSpeed * cos(brushAngle)),p5w);
-    brushPos.y = mod((brushPos.y + brushSpeed * sin(brushAngle)),p5h);
+    for(var i = 0; i < 4; i++){
+        brushPos = brushPositions[i]
+        brushPos.x = mod((brushPos.x + brushSpeeds[i] * cos(brushAngles[i])),p5w);
+        brushPos.y = mod((brushPos.y + brushSpeeds[i] * sin(brushAngles[i])),p5h);
+    }
     // ellipse(brushPos.x, brushPos.y, 50);
 }
 

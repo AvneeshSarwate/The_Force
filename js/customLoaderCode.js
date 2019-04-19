@@ -7,7 +7,7 @@ function draw(){}
 var customLoaderMap = {};
 
 var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin']);
-var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno"]);
+var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno", "hedberg"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
 var ignoreCameraShaders = new Set(["guitarPaintBrush"]);
@@ -643,26 +643,27 @@ customLoaderMap['guitarPaintBrush'] = function(){
     setup = guitarPaintSetup;
     draw = guitarPaintDraw;
     customLoaderUniforms = `
-    uniform float brushAngle;
-    uniform vec2 brushPos;
+    uniform float brushAngle[4];
+    uniform vec2 brushPos[4];
     `;
     customLoaderUniformSet = function(time, mProgram){
-        var brushAngleU = gl.getUniformLocation(mProgram, "brushAngle");
-        if(brushAngleU) gl.uniform1f(brushAngleU, brushAngle);
+        var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngle");
+        if(brushAnglesU) gl.uniform1fv(brushAnglesU, brushAngles);
         var brushPosU = gl.getUniformLocation(mProgram, "brushPos");
-        if(brushPosU) gl.uniform2f(brushPosU, brushPos.x/p5w, brushPos.y/p5h);
+        var positionArray = brushPositions.map(p => [p.x/p5w, p.y/p5h]).flatten();
+        if(brushPosU) gl.uniform2fv(brushPosU, positionArray);
     }
 
-    sliderCallbacks[0] = function(sliderVal){brushAngle = sliderVal*2*PI};
-    sliderCallbacks[1] = function(sliderVal){brushSpeed = sliderVal*20};
+    sliderCallbacks[0] = function(sliderVal){brushAngles = arrayOf(4).map(i => sliderVal*2*PI)};
+    sliderCallbacks[1] = function(sliderVal){brushSpeeds = arrayOf(4).map(i => sliderVal*20)};
 
     sliderConfig = guitarPaintSliders;
 
     osc.on("/brushAngle", function(msg){
-        brushAngle = msg.args[0];
+        brushAngles = msg.args;
     });
     osc.on("/brushSpeed", function(msg){
-        brushSpeed = msg.args[0];
+        brushSpeeds = msg.args;
     });
 
     ignoreAudioForShader = true;
@@ -777,6 +778,10 @@ customLoaderMap['kevin'] = function(){
     blobVideoLoad(1, 6, "Attempt2.mov", true);
     blobVideoLoad(2, 7, "Attempt3.mov", true);
     blobVideoLoad(3, 8, "Attempt4.mov", true);
+}
+
+customLoaderMap['hedberg'] = function(){
+    loadImageToTexture(5, "hedberg.jpg");
 }
 
 
