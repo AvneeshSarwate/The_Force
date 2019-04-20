@@ -205,12 +205,18 @@ void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
 
-    float camFrac = 3.;
-    vec3 cam= texture2D(channel0, vec2(1.-stN.x, stN.y)*camFrac).rgb;
-    vec3 p5 = texture2D(channel1, stN).rgb;
+    float camFrac = 1./3.;
+    float imageFrac = 0.8;
+    vec3 cam= texture2D(channel0, vec2(1.-stN.x, stN.y)/camFrac).rgb;
+    
+    vec2 imgN = vec2(stN.x/imageFrac, (stN.y-(1.-imageFrac))/imageFrac);
+    vec3 p5 = texture2D(channel1, imgN).rgb;
     
     
-    vec3 finalCol = stN.x > 1.-1./camFrac && stN.y < 1./camFrac ? cam : p5;
+    vec3 finalCol = black;
+    if(stN.x < imageFrac && stN.y > 1.-imageFrac) finalCol = p5;
+    if(stN.x > 1.-camFrac && stN.y < camFrac) finalCol = cam;
+    
 
     
     
