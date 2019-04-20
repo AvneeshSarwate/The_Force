@@ -240,6 +240,12 @@ void main () {
     
     vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
     mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+    
+    float camFrac = 1./3.;
+    float imageFrac = 0.8;
+    vec2 nn = uvN();
+    vec3 cam = texture2D(channel0, vec2(1.-nn.x, nn.y)/camFrac).rgb;
+    vec2 imgN = vec2(nn.x/imageFrac, (nn.y-(1.-imageFrac))/imageFrac);
 
     vec2 stN = uvN();
     
@@ -295,10 +301,14 @@ void main () {
         if(distance(stN, b*0.8 + .1) < 0.02 && b.x > -1. && b != vec2(0.)) col = red;
     }
     
+    // col = blue;
+    vec3 finalCol = black;
     
+    if(nn.x > 1.-camFrac && nn.y < camFrac) finalCol = cam;
+    if(nn.x < imageFrac && nn.y > 1.-imageFrac) finalCol = col;
     // if(colourDistance(col, red) < 0.9) mix(col, red, 0.5);
     
     
     
-    gl_FragColor = vec4(col, feedback);
+    gl_FragColor = vec4(finalCol, feedback);
 }
