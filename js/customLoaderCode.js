@@ -21,6 +21,15 @@ var frameState = {};
 
 var ignoreAudioForShader = false;
 
+function enterFullscreen(){
+    if (document.body.requestFullScreen)
+        document.body.requestFullScreen();
+    else if (document.body.mozRequestFullScreen)
+        document.body.mozRequestFullScreen();
+    else if (document.body.webkitRequestFullScreen)
+        document.body.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+}
+
 function loadImageToTexture(slotID, imageUrl){
     destroyInput(slotID);
     var texture = {};
@@ -549,6 +558,13 @@ function responsivevisLoader(i){
 
     patterns = patternList ? patternList : []; 
     if(midiResponseSetup["responsivevis"+i]) midiResponseSetup["responsivevis"+i]();
+    osc.on("/changeVisuals", function(msg){
+        window.location.href = msg[0];
+    });
+    osc.on("/enterFullscreen", function(msg){
+        enterFullscreen();
+    });
+    connectOSC(false);
 }
 
 customLoaderMap["solidCoating"] = function(){
@@ -666,7 +682,15 @@ customLoaderMap['guitarPaintBrush'] = function(){
         brushSpeeds = msg.args;
     });
 
+    osc.on("/changeVisuals", function(msg){
+        window.location.href = msg[0];
+    });
+    osc.on("/enterFullscreen", function(msg){
+        enterFullscreen();
+    });
+
     ignoreAudioForShader = true;
+    connectOSC(false);
 }
 
 customLoaderMap['snoiseCamWarp_slider'] = function(){
@@ -722,6 +746,13 @@ customLoaderMap['beyonceGrain'] = function(){
         osc.on("/2/pitch/1/"+(i+1), function(msg){
             pitchDeviations[1][1] = (i+1) - 11;
         });
+    });
+
+    osc.on("/changeVisuals", function(msg){
+        window.location.href = msg[0];
+    });
+    osc.on("/enterFullscreen", function(msg){
+        enterFullscreen();
     });
 
     connectOSC(false);
