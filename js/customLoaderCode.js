@@ -675,10 +675,10 @@ customLoaderMap['guitarPaintBrush'] = function(){
 
     sliderConfig = guitarPaintSliders;
 
-    osc.on("/brushAngle", function(msg){
+    osc.on("/brushAngles", function(msg){
         brushAngles = msg.args;
     });
-    osc.on("/brushSpeed", function(msg){
+    osc.on("/brushSpeeds", function(msg){
         brushSpeeds = msg.args;
     });
 

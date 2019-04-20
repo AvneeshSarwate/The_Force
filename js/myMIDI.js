@@ -185,7 +185,7 @@ function onMIDIMessage(event) {
     // Mask off the lower nibble (MIDI channel, which we don't care about)
     // var channel = ev.data[0] & 0xf;
     var chan = event.data[0] & 0x0f;
-    console.log("MIDI EVENT", chan, midiNote, midiVel);
+    // console.log("MIDI EVENT", chan, midiNote, midiVel);
 
     var eventKey; //string determining message type/number for callbacks mapped to midi messages
     var eventTime = (Date.now() - mTime) * 0.001;
