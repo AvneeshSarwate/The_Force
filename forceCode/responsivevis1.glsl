@@ -204,50 +204,15 @@ float sigmoid(float x){
 void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
-    
-    float numCells = 90.;
-    vec2 rotN = rotate(stN, vec2(0.5), PI);
-    vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
-    vec2 hashN = stN + (hash(vec3(stN, time)).xy + -0.5)/numCells;
-    float sweep = sigmoid(sin(rowColN.x*PI)*30.);
-    hashN = mix(stN, hashN, sweep);
-    vec2 stR = rotate(stN, cent, time*PI2/5.);
-    vec3 p5 = texture2D(channel1, mix(stN, hashN, 0.)).rgb;
-    
-    vec3 cc;
-    float decay = mix(0., sliderVals[8], sweep);
-    float feedback;
-    vec4 bb = texture2D(backbuffer, hashN);
-    float lastFeedback = bb.a;
-    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition = p5.x < 0.7; 
-    vec3 trail = black; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = p5;
+
+    float camFrac = 3.;
+    vec3 cam= texture2D(channel0, vec2(1.-stN.x, stN.y)*camFrac).rgb;
+    vec3 p5 = texture2D(channel1, stN).rgb;
     
     
-    //   implement the trailing effectm using the alpha channel to track the state of decay 
-    if(condition){
-        if(lastFeedback < 1.1) {
-            feedback = 1.;
-            cc = trail; 
-        } 
-        // else {
-        //     feedback = lastFeedback * decay;
-        //     c = mix(snap, bb, lastFeedback);
-        // }
-    }
-    else {
-        feedback = lastFeedback * decay;
-        if(lastFeedback > 0.4) {
-            cc = mix(foreGround, trail, lastFeedback); 
-        } else {
-            feedback = 0.;
-            cc = foreGround;
-        }
-    }
+    vec3 finalCol = stN.x > 1.-1./camFrac && stN.y < 1./camFrac ? cam : p5;
+
     
-    float mixWeight = 0.99;
-    cc = mix(bb.rgb, cc, mix(1., .03, sweep));
     
-    gl_FragColor = vec4(mix(p5, cc, sweep), feedback);
+    gl_FragColor = vec4(finalCol, 1.);
 }
