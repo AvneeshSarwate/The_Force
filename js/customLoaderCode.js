@@ -661,13 +661,21 @@ customLoaderMap['guitarPaintBrush'] = function(){
     customLoaderUniforms = `
     uniform float brushAngles[4];
     uniform vec2 brushPositions[4];
+    uniform float fftValues[50];
     `;
+
+    var fftValues = arrayOf(50);
+
     customLoaderUniformSet = function(time, mProgram){
         var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngles");
         if(brushAnglesU) gl.uniform1fv(brushAnglesU, brushAngles);
         var brushPosU = gl.getUniformLocation(mProgram, "brushPositions");
         var positionArray = brushPositions.map(p => [p.x/p5w, p.y/p5h]).flat();
         if(brushPosU) gl.uniform2fv(brushPosU, positionArray);
+        var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngles");
+        if(brushAnglesU) gl.uniform1fv(brushAnglesU, brushAngles);
+        var fftValuesU = gl.getUniformLocation(mProgram, "fftValues");
+        if(fftValuesU) gl.uniform1fv(fftValuesU, fftValues);
     }
 
     sliderCallbacks[0] = function(sliderVal){brushAngles = arrayOf(4).map(i => sliderVal*2*PI)};
@@ -687,6 +695,9 @@ customLoaderMap['guitarPaintBrush'] = function(){
     });
     osc.on("/enterFullscreen", function(msg){
         enterFullscreen();
+    });
+    osc.on("/fftValues", function(msg){
+        fftValues = msg.args;
     });
 
     ignoreAudioForShader = true;
@@ -813,6 +824,7 @@ customLoaderMap['kevin'] = function(){
 
 customLoaderMap['hedberg'] = function(){
     loadImageToTexture(5, "hedberg.jpg");
+    doFaceTracking();
 }
 
 

@@ -132,7 +132,7 @@ vec3 brushColor(vec2 stN, float brushH, float brushW, int brushInd){
     bandArr[1] = bands.y;
     bandArr[2] = bands.z;
     bandArr[3] = bands.w;
-    return vec3(bandArr[int(floor(strokePos*4.))]);
+    return vec3(fftValues[int(floor(strokePos*50.))]/255.);
 }
 
 out vec4 fragColor;
