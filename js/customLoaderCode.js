@@ -231,6 +231,7 @@ function goreLoader(){
         if(videos[1]) {
             videos[1].currentTime = videos[1].currentTime + (-1 + Math.random()*2);
 
+            //this is actually supposed to be playbackRate (lowercase b) - so it does nothing, but i don't mind the effect without it
             videos[1].playBackRate = Math.min(5, Math.max(1/16, videos[1].playBackRate + (-0.1 + Math.random()*0.2)));
         }
     }, [1, [1, 1]], "4n");
@@ -838,8 +839,13 @@ customLoaderMap['hedberg'] = function(){
         handleMouthData(mouthData);
     });
     var handleMouthData = function(mouthData){
-
+        console.log(mouthData);
+        if(mouthData.openDist > 0 && mouthData.closedDist > 0){
+            var openFrac = (parseFloat(mouthData.avg) - mouthData.closedDist) / (mouthData.openDist - mouthData.closedDist);
+            videos[0].playbackRate = openFrac >= 0.5 ? openFrac * 2 * 16 : Math.max(1/16, openFrac * 2);
+        }
     }
+    connectOSC(false);
 }
 
 
