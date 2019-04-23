@@ -950,6 +950,9 @@ var numVoices = 5;
 var p5fadeaway = 5;
 var pitchDeviations = [[0, 0], [0, 0]]; //per voice, pitch/playrate
 var noteSizes = [10, 10];
+var freq2midi = freq => 69 + 12 * Math.log2(freq/440)
+var voiceVolumes = [0, 0];
+var beyVolScale = 2;
 function beyonceGrainDraw(){
     // clear();
     fill(0, p5fadeaway);
@@ -965,15 +968,22 @@ function beyonceGrainDraw(){
     grainQueue.forEach(function(grain){
         
         if(grain[0] > 0) {
-            var midiF =  69 + 12 * Math.log2(grain[0]/440);
+            var midiF =  freq2midi(grain[0]);
             var bufferId = grain[2];
             if(!bufferIds.has(bufferId)){
                 bufferIdMap[bufferId] = bufferIds.size;
                 bufferIds.add(bufferId);
             }
 
-            var bufInd = bufferIdMap[bufferId]
-            var ballSize = 30 * (bufInd === 0 ? sliderVals[1] : sliderVals[3]);
+            var bufInd = bufferIdMap[bufferId];
+
+            var filterSlider = bufInd === 0 ? sliderVals[0] : sliderVals[2];
+            var fliterFreq = 10**(filterSlider*4+1)*2.2;
+            var filterMidi = freq2midi(fliterFreq);
+            var qVal = bufInd === 0 ? sliderVals[2] : sliderVals[5];
+
+            
+            var ballSize = 30 * (bufInd === 0 ? sliderVals[1] : sliderVals[4]);
             var xyDev = {x: pitchDeviations[bufInd][0] * p5w/16, y: pitchDeviations[bufInd][1] * p5h/16}
             var c = bufferColors[bufInd];
 

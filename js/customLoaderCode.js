@@ -722,17 +722,21 @@ customLoaderMap['beyonceGrain'] = function(){
         if(videos[0]) videos[0].currentTime = msg.args[0] * videos[0].duration;
         // console.log(msg);
     });
+    osc.on("/2/pos", function(msg){
+        if(videos[2]) videos[2].currentTime = msg.args[0] * videos[2].duration;
+        // console.log(msg);
+    });
     osc.on("/1/volres", function(msg){
         setSliderVal(0, msg.args[1]);
         setSliderVal(1, msg.args[0]);
         // console.log(msg);
     });
-    osc.on("/2/volres", function(msg){
-        setSliderVal(2, msg.args[1]);
-        setSliderVal(3, msg.args[0]);
+    osc.on("/1/q", function(msg){
+        setSliderVal(2, msg.args[0]);
         // console.log(msg);
     });
-    osc.on("/1/q", function(msg){
+    osc.on("/2/volres", function(msg){
+        setSliderVal(3, msg.args[1]);
         setSliderVal(4, msg.args[0]);
         // console.log(msg);
     });
@@ -743,6 +747,9 @@ customLoaderMap['beyonceGrain'] = function(){
     osc.on("/2/pos", function(msg){
         if(videos[1]) videos[1].currentTime = msg.args[0] * videos[1].currentTime;
         // console.log(msg);
+    });
+    osc.on("/voiceVolumes", function(msg){
+        voiceVolumes = msg.args;
     });
     arrayOf(16).forEach((el, i) => {
         osc.on("/1/playrate/1/"+(i+1), function(msg){
@@ -769,6 +776,7 @@ customLoaderMap['beyonceGrain'] = function(){
     connectOSC(false);
     blobVideoLoad(0, 5, "halo.mp4", false, {'postLoadFunc': () => setTimeout(() => videos[0].pause(), 200)});
     blobVideoLoad(1, 6, "halo.mp4"); 
+    blobVideoLoad(2, 7, "halo.mp4", false, {'postLoadFunc': () => setTimeout(() => videos[2].pause(), 200)});
 }
 
 customLoaderMap['fogShip_slider'] = function(){
@@ -824,7 +832,14 @@ customLoaderMap['kevin'] = function(){
 
 customLoaderMap['hedberg'] = function(){
     loadImageToTexture(5, "hedberg.jpg");
-    doFaceTracking();
+    blobVideoLoad(0, 5, "hedberg.mp4", true);
+    osc.on("/mouthData", function(msg){
+        var mouthData = JSON.parse(msg.args[0]);
+        handleMouthData(mouthData);
+    });
+    var handleMouthData = function(mouthData){
+
+    }
 }
 
 

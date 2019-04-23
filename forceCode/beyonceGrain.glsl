@@ -221,12 +221,32 @@ void main () {
     vec3 p5flat = texture2D(channel1,stN).rgb;
     vec3 halo = texture2D(channel5, stN).rgb;
     vec3 halo2 = texture2D(channel6, stN).rgb;
+    vec3 halo3 = texture2D(channel7, stN).rgb;
+    
+    
+    
+    
+    float scaleR = 40. + (1.-sliderVals[2])*60.;
+    float speedR = 0.25;
+    vec2 noiseR = vec2(snoise(vec3(stN*scaleR, time*speedR)), snoise(vec3(stN*scaleR+1., time*speedR)));
+    vec2 stNr = rotate(stN, cent, sliderVals[0]*PI);
+    p5.r = texture2D(channel1, stNr + noiseR/(scaleR)).r;
+    
+    float scaleG = 40. + (1.-sliderVals[5])*60.;
+    float speedG = 0.25;
+    vec2 noiseG = vec2(snoise(vec3(stN*scaleG, time*speedG)), snoise(vec3(stN*scaleG+1., time*speedG)));
+    vec2 stNg = rotate(stN, cent, sliderVals[3]*PI);
+    p5.g = texture2D(channel1, stNg + noiseG/(scaleG)).g;
     
     
     float p5warp = max(p5.r, p5.g);
     vec3 p5halo = texture2D(channel5, mix(stN, rowColN, p5warp)).rgb;
     vec3 p5vid = p5.r > p5.g ? qSatShift(p5halo, sliderVals[4], sliderVals[0]) : 1.-qSatShift(p5halo, sliderVals[5], sliderVals[2]);
-    p5vid = p5warp < 0.1 ? black : p5vid;
+    vec3 haloSat = hsv2rgb(hsv2rgb(halo) + vec3(0., 10.3, 0));
+    vec3 hsvHalo = hsv2rgb(halo);
+    vec3 haloLum = vec3(pow(lum(halo3).r+0.4, 5.));
+    p5vid = p5.r > p5.g ? haloLum*orange : haloLum*blue;
+    p5vid = p5warp < 0.1 ? halo : p5vid;
     // p5vid
     
     
