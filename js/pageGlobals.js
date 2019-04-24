@@ -54,6 +54,8 @@ var capturer = new CCapture( { format: 'webm' } );
 
 mTime = Date.now();
 
+var frameCount = 0;
+
 $( document ).ready(function() {
 
     var shaderString = window.location.href.split("?")[1].split("&")[0];
@@ -1123,7 +1125,10 @@ $( document ).ready(function() {
 
     function renderLoop2()
     {   
+        frameCount++;
         requestAnimationFrame(renderLoop2);
+
+        if(playAtHalfRate && frameCount%2 == 0) return;
 
         if (gl === null) return;
 

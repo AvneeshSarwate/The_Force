@@ -3,6 +3,7 @@ var customLoaderUniforms = "";
 function setup(){}
 function draw(){}
 
+var playAtHalfRate = false;
 
 var customLoaderMap = {};
 
@@ -657,6 +658,8 @@ customLoaderMap['yoyoPortAuthority2'] = function(){
 }
 
 customLoaderMap['guitarPaintBrush'] = function(){
+    // playAtHalfRate = true;
+
     setup = guitarPaintSetup;
     draw = guitarPaintDraw;
     customLoaderUniforms = `
@@ -664,10 +667,12 @@ customLoaderMap['guitarPaintBrush'] = function(){
     uniform vec2 brushPositions[4];
     uniform float fftValues[50];
     uniform float numLoopsPlaying;
+    uniform vec2 droneNotes;
     `;
 
     var fftValues = arrayOf(50);
     var numLoopsPlaying = 0;
+    var droneNotes = [-1, -1];
 
     customLoaderUniformSet = function(time, mProgram){
         var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngles");
@@ -681,6 +686,8 @@ customLoaderMap['guitarPaintBrush'] = function(){
         if(fftValuesU) gl.uniform1fv(fftValuesU, fftValues);
         var numLoopsPlayingU = gl.getUniformLocation(mProgram, "numLoopsPlaying");
         if(numLoopsPlayingU) gl.uniform1f(numLoopsPlayingU, numLoopsPlaying);
+        var droneNotesU = gl.getUniformLocation(mProgram, "droneNotes");
+        if(droneNotesU) gl.uniform2f(droneNotesU, droneNotes[0], droneNotes[1]);
     }
 
     sliderCallbacks[0] = function(sliderVal){brushAngles = arrayOf(4).map(i => sliderVal*2*PI)};
@@ -707,6 +714,9 @@ customLoaderMap['guitarPaintBrush'] = function(){
     osc.on("/numLoopsPlaying", function(msg){
         numLoopsPlaying = msg.args[0];
         console.log("numLoopsPlaying", numLoopsPlaying);
+    });
+    osc.on("/droneNotes", function(msg){
+        droneNotes[msg.args[0]] = msg.args[1];
     });
 
     ignoreAudioForShader = true;
