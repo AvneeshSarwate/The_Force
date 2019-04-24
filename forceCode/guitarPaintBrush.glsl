@@ -168,7 +168,7 @@ void main () {
     
     //decide whether to use n2 or n3 or what combination 
     // n3 = quant(n3,10.);
-    vec3 c1 = droneNotes.x < 0. ? black : hsv2rgb(vec3(sliderVals[10] + mod(droneNotes.x, 12.)/12. * 0.3, 1., 1.)) ;
+    vec3 c1 = droneNotes.x < 0. ? black : hsv2rgb(vec3(sliderVals[10] + mod(droneNotes.x, 12.)/12. * 0.3, 1., 1.))/2.;
     vec3 c2 = droneNotes.y < 0. ? black : hsv2rgb(vec3(sliderVals[10] + mod(droneNotes.y, 12.)/12. * 0.3, 1., 1.));
 
     
