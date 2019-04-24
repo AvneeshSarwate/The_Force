@@ -147,9 +147,12 @@ void main () {
     float brushW = 0.1 * sliderVals[3];
     
     
+    float loopBlend = min(numLoopsPlaying/5., 1.);
+
     float dev = 100.;
     // vec2 n1 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
-    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev, snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.+35.))/dev);
+    float warpZoom = mix(sliderVals[4], 0.02, loopBlend);
+    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*warpZoom, time*sliderVals[5]*10.))/dev, snoise(vec3(stN*100.*warpZoom, time*sliderVals[5]*10.+35.))/dev);
     float dev2 = 10.;
     vec2 n3 = stN + vec2(snoise(vec3(stN*10.*sliderVals[9], time*sliderVals[5]*10.)), snoise(vec3(stN*10.*sliderVals[9], time*sliderVals[5]*10.+35.)))/dev2;
     
@@ -176,12 +179,13 @@ void main () {
     vec3 bgCol = /*vec3(distance(stN, n3)*dev)*/mix(c1, c2,  sinN(pow(quant(bgN.x, pow(sliderVals[12], 2.5)*1000.), 0.01+sinN(time))*10.*PI));
     
     
-    
-    vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
+    float trailWarpMix = mix(sliderVals[6], 1., loopBlend);
+    vec4 bb = texture(backbuffer, mix(stN, n2, trailWarpMix));
     
     
     vec3 cc;
-    float decay = 0.002 + (1.-sliderVals[8])*.05;
+    float decayScale = mix(sliderVals[8], 1., loopBlend);
+    float decay = 0.002 + (1.-decayScale)*.05;
     float feedback;
     float lastFeedback = bb.a;
     

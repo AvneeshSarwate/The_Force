@@ -10,7 +10,7 @@ var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase',
 var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno", "hedberg"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
-var ignoreCameraShaders = new Set(["guitarPaintBrush"]);
+var ignoreCameraShaders = new Set([""]);
 
 function videoUploadResponder(){}
 function audioFilesSelected(){}
@@ -663,9 +663,11 @@ customLoaderMap['guitarPaintBrush'] = function(){
     uniform float brushAngles[4];
     uniform vec2 brushPositions[4];
     uniform float fftValues[50];
+    uniform float numLoopsPlaying;
     `;
 
     var fftValues = arrayOf(50);
+    var numLoopsPlaying = 0;
 
     customLoaderUniformSet = function(time, mProgram){
         var brushAnglesU = gl.getUniformLocation(mProgram, "brushAngles");
@@ -677,6 +679,8 @@ customLoaderMap['guitarPaintBrush'] = function(){
         if(brushAnglesU) gl.uniform1fv(brushAnglesU, brushAngles);
         var fftValuesU = gl.getUniformLocation(mProgram, "fftValues");
         if(fftValuesU) gl.uniform1fv(fftValuesU, fftValues);
+        var numLoopsPlayingU = gl.getUniformLocation(mProgram, "numLoopsPlaying");
+        if(numLoopsPlayingU) gl.uniform1f(numLoopsPlayingU, numLoopsPlaying);
     }
 
     sliderCallbacks[0] = function(sliderVal){brushAngles = arrayOf(4).map(i => sliderVal*2*PI)};
@@ -699,6 +703,10 @@ customLoaderMap['guitarPaintBrush'] = function(){
     });
     osc.on("/fftValues", function(msg){
         fftValues = msg.args;
+    });
+    osc.on("/numLoopsPlaying", function(msg){
+        numLoopsPlaying = msg.args[0];
+        console.log("numLoopsPlaying", numLoopsPlaying);
     });
 
     ignoreAudioForShader = true;
