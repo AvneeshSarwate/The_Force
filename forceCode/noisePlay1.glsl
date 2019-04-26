@@ -6,6 +6,24 @@ vec3 _hash33(vec3 p3)
     return -1.0 + 2.0 * fract(vec3((p3.x + p3.y)*p3.z, (p3.x+p3.z)*p3.y, (p3.y+p3.z)*p3.x));
 }
 
+// quantize and input number [0, 1] to quantLevels levels
+float quant(float num, float quantLevels){
+    float roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec3 quant(vec3 num, float quantLevels){
+    vec3 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
+// same as above but for vectors, applying the quantization to each element
+vec2 quant(vec2 num, float quantLevels){
+    vec2 roundPart = floor(fract(num*quantLevels)*2.);
+    return (floor(num*quantLevels)+roundPart)/quantLevels;
+}
+
 bool inBound(float target, float range, float query){
     return target - range <= query && query <= target + range;
 }
@@ -87,27 +105,29 @@ void main(){
     
     // float n1 = noise2(hash(vec3(4, 5, 6)) + time/10. + stN.x)*.75 + 0.5;
     // float n2 = noise2(hash(vec3(4, 5, 6)) + time/9. + stN.x + 0.5)*.75 + 0.5;
-    bool drawLine = false;
-    float th = 0.02;
-    float tm = time+1000.;
-    vec3 lineCol = white;
-    float topLine = 0.;
     vec2 stN = uvN();
-    for(float i = 1.; i < 20.; i++){
+    bool drawLine = false;
+    float th = 0.02 + sinN(time+stN.x)/10.;
+    float tm = time/50.+10000000.*quant(mod(stN.x+time/9., 1.), 4.)+400.;
+    vec3 lineCol = white;
+    float topLine = 10.;
+    
+    for(float i = 1.; i < 10.; i++){
         if(i == 1.) stN = uvN() + vec2(0, sin(tm*+stN.x*100.)/10.);
         float noiseVal = noise2(hash(vec3(4, 5, 6)) + tm/60. * (10.+i/500. * sin(tm*.5+i/30.*PI2)) + stN.x)*.75 + 0.5;
-        float t = th * sinN(tm + i/30. * PI2);
+        float t = th * sinN(tm/1.01 + i/30. * PI2);
         bool drawThisLine = inBound(noiseVal, t, stN.y);
         drawLine = drawLine || drawThisLine;
         if(drawThisLine) topLine = i;
-        lineCol = white*sinN(tm+topLine/30.*PI2);
+        lineCol = white*sinN(tm/1.1+topLine/30.*PI2);
     }
     
     // vec3 col = inBound(n1, 0.01, stN.y) || inBound(n2, 0.01, stN.y) ? white : black;
     vec3 col = drawLine ? lineCol : black;
     vec4 bb = texture(backbuffer, uvN());
     
-    col = vec3(pow(mix(col, bb.rgb, pow(sinN(time+topLine/30.*PI2), 0.07)).x, .95 + sigmoid(sin(time/10.+topLine/30.*PI2)*8.4)*0.05) );
+    float mixVal = pow(sinN(time+topLine/30.*PI2), 0.07);
+    col = vec3(pow(mix(col, bb.rgb, mixVal*0.9).x, .95 + sigmoid(sin(time/10.+topLine/30.*PI2)*8.4)*0.05) );
     
-    fragColor = vec4(col, 1);//vec4(c, feedback);
+    fragColor = vec4(quant(col, 200.), 1);//vec4(c, feedback);
 }
