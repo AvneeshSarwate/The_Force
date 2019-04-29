@@ -949,6 +949,8 @@ var bufferColors = [[255, 0, 0], [0, 255, 0]];
 var numVoices = 5;
 var p5fadeaway = 5;
 var pitchDeviations = [[0, 0], [0, 0]]; //per voice, pitch/playrate
+var totalPitchDev = [0, 0];
+var lastPitchDevValues = [[0, 0], [0, 0]]
 var noteSizes = [10, 10];
 var freq2midi = freq => 69 + 12 * Math.log2(freq/440)
 var voiceVolumes = [0, 0];
@@ -983,7 +985,7 @@ function beyonceGrainDraw(){
             var qVal = bufInd === 0 ? sliderVals[2] : sliderVals[5];
 
             
-            var ballSize = 30 * (bufInd === 0 ? sliderVals[1] : sliderVals[4]);
+            var ballSize = 50 * (bufInd === 0 ? sliderVals[1] : sliderVals[4])**0.3;
             var xyDev = {x: pitchDeviations[bufInd][0] * p5w/16, y: pitchDeviations[bufInd][1] * p5h/16}
             var c = bufferColors[bufInd];
 
@@ -994,7 +996,7 @@ function beyonceGrainDraw(){
             var p = {x:rangeFrac, y:grain[1]/numVoices - 0.5/numVoices};
 
             p = coordWarp(p, time/1., 0.4, 20);
-            ellipse(mod(p.x*p5w + xyDev.x, p5w), mod(p.y*p5h + xyDev.y, p5h), ballSize, ballSize);
+            ellipse(mod(p.x*p5w, p5w), mod(p.y*p5h, p5h), ballSize, ballSize);
         }
 
     });

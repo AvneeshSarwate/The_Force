@@ -734,6 +734,15 @@ customLoaderMap['lightLine_slider'] = function(){
 customLoaderMap['beyonceGrain'] = function(){
     setup = beyonceGrainSetup;
     draw = beyonceGrainDraw;
+    customLoaderUniforms = `
+    uniform vec2 totalPitchDev;
+    `;
+    customLoaderUniformSet = function(time, mProgram){
+        var totalPitchDevU = gl.getUniformLocation(mProgram, "totalPitchDev");
+        if(totalPitchDevU) gl.uniform2f(totalPitchDevU, totalPitchDev[0], totalPitchDev[1]);
+    }
+
+    var deepcopy = obj => JSON.parse(JSON.stringify(obj));
     osc.on("/grainPitch", function(msg){
         grainQueue.push(msg.args);
     });
@@ -770,18 +779,32 @@ customLoaderMap['beyonceGrain'] = function(){
     osc.on("/voiceVolumes", function(msg){
         voiceVolumes = msg.args;
     });
+    //TODO clean terrible use of closure
+    var caluclateTotalPitchDev = function(){
+        var newDev = [pitchDeviations[0][0]+pitchDeviations[0][1], pitchDeviations[1][0]+pitchDeviations[1][1]];
+        var lastDev = [lastPitchDevValues[0][0]+lastPitchDevValues[0][1], lastPitchDevValues[1][0]+lastPitchDevValues[1][1]];
+        totalPitchDev = [totalPitchDev[0]+Math.sign(newDev[0]-lastDev[0]), totalPitchDev[1]+Math.sign(newDev[1]-lastDev[1])];
+    }
     arrayOf(16).forEach((el, i) => {
         osc.on("/1/playrate/1/"+(i+1), function(msg){
+            lastPitchDevValues = deepcopy(pitchDeviations);
             pitchDeviations[0][0] = (i+1) - 11;
+            caluclateTotalPitchDev();
         });
         osc.on("/1/pitch/1/"+(i+1), function(msg){
+            lastPitchDevValues = deepcopy(pitchDeviations);
             pitchDeviations[0][1] = (i+1) - 11;
+            caluclateTotalPitchDev();
         });
         osc.on("/2/playrate/1/"+(i+1), function(msg){
+            lastPitchDevValues = deepcopy(pitchDeviations);
             pitchDeviations[1][0] = (i+1) - 11;
+            caluclateTotalPitchDev();
         });
         osc.on("/2/pitch/1/"+(i+1), function(msg){
+            lastPitchDevValues = deepcopy(pitchDeviations);
             pitchDeviations[1][1] = (i+1) - 11;
+            caluclateTotalPitchDev();
         });
     });
 

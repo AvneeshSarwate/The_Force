@@ -237,14 +237,16 @@ void main () {
     float scaleR = 40. + (1.-sliderVals[2])*60.;
     float speedR = 0.25;
     vec2 noiseR = vec2(snoise(vec3(stN*scaleR, time*speedR)), snoise(vec3(stN*scaleR+1., time*speedR)));
-    vec2 stNr = rotate(stN, cent, sliderVals[0]*PI);
-    p5.r = texture2D(channel1, stNr + noiseR/(scaleR)).r;
+    vec2 stNr = rotate(stN, cent, sliderVals[0]*PI) + noiseR/(scaleR);
+    stNr.x = mod(stNr.x + totalPitchDev[0]/16., 1.);
+    p5.r = texture2D(channel1, stNr).r;
     
     float scaleG = 40. + (1.-sliderVals[5])*60.;
     float speedG = 0.25;
     vec2 noiseG = vec2(snoise(vec3(stN*scaleG, time*speedG)), snoise(vec3(stN*scaleG+1., time*speedG)));
-    vec2 stNg = rotate(stN, cent, sliderVals[3]*PI);
-    p5.g = texture2D(channel1, stNg + noiseG/(scaleG)).g;
+    vec2 stNg = rotate(stN, cent, sliderVals[3]*PI)  + noiseG/(scaleG);
+    stNg.x = mod(stNg.x + totalPitchDev[1]/16., 1.);
+    p5.g = texture2D(channel1, stNg).g;
     
     
     float p5warp = max(p5.r, p5.g);
