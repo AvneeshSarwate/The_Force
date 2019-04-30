@@ -253,9 +253,9 @@ void main () {
     vec2 rotN = rotate(stN, vec2(0.5), PI);
     vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
     vec2 rowColN2 = rowColWave(stN, 1000., time/4., 0.03);
-    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells/(10. + sinN(rowColN.x*PI+time/1.5)*100.);
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells/(10. + sinN(rowColN.x*PI+time/1.5)*30.);
     // vec2 warpCoord = mix(stN, coordWarp(rowColN2, time/5.).xy, .8);
-    vec3 bt = ballTwist(stN, time/5.);
+    vec3 bt = ballTwist(quant(hashN, 30.), time/5.);
     vec2 mb = multiBallCondition(bt.xy, time);
     
     vec3 cc;
@@ -295,7 +295,7 @@ void main () {
     float blendTime = sinN(btr.y*PI+time);
     col = vec3(sigmoid( (mix(bb.r, col.x, 0.1)-0.5)*40.* blendTime));
     float glitchTimeSlice =  sinN(time/3.)*0.01;
-    if(glitchTimeSlice + 0.3 > blendTime && blendTime > glitchTimeSlice) col = texture2D(backbuffer, mix(stN, vec2(col.x, bb.x), 0.5)).rgb;
+    // if(glitchTimeSlice + 0.3 > blendTime && blendTime > glitchTimeSlice) col = texture2D(backbuffer, mix(stN, vec2(col.x, bb.x), 0.5)).rgb;
     
     
     gl_FragColor = vec4(vec3(col), feedback);

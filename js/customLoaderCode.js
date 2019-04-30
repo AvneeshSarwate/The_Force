@@ -744,7 +744,9 @@ customLoaderMap['beyonceGrain'] = function(){
 
     var deepcopy = obj => JSON.parse(JSON.stringify(obj));
     osc.on("/grainPitch", function(msg){
-        grainQueue.push(msg.args);
+        if(msg.args[0] != 0) {
+            grainQueue.push(msg.args);
+        }
     });
     osc.on("/1/pos", function(msg){
         if(videos[0]) videos[0].currentTime = msg.args[0] * videos[0].duration;
