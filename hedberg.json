@@ -1,0 +1,5025 @@
+{
+  "@type": "type.googleapis.com/google.cloud.speech.v1.LongRunningRecognizeResponse",
+  "results": [
+    {
+      "alternatives": [
+        {
+          "confidence": 0.79948986,
+          "transcript": "start elevator applied for man I do that",
+          "words": [
+            {
+              "endTime": "12.800s",
+              "startTime": "12.100s",
+              "word": "start"
+            },
+            {
+              "endTime": "13s",
+              "startTime": "12.800s",
+              "word": "elevator"
+            },
+            {
+              "endTime": "14.500s",
+              "startTime": "13s",
+              "word": "applied"
+            },
+            {
+              "endTime": "14.600s",
+              "startTime": "14.500s",
+              "word": "for"
+            },
+            {
+              "endTime": "14.900s",
+              "startTime": "14.600s",
+              "word": "man"
+            },
+            {
+              "endTime": "15.100s",
+              "startTime": "14.900s",
+              "word": "I"
+            },
+            {
+              "endTime": "15.300s",
+              "startTime": "15.100s",
+              "word": "do"
+            },
+            {
+              "endTime": "15.600s",
+              "startTime": "15.300s",
+              "word": "that"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.93248,
+          "transcript": " this is my microphone and right here so if it actually was silly is suggesting to its Newfound freedom",
+          "words": [
+            {
+              "endTime": "17s",
+              "startTime": "16.500s",
+              "word": "this"
+            },
+            {
+              "endTime": "17.100s",
+              "startTime": "17s",
+              "word": "is"
+            },
+            {
+              "endTime": "17.300s",
+              "startTime": "17.100s",
+              "word": "my"
+            },
+            {
+              "endTime": "18s",
+              "startTime": "17.300s",
+              "word": "microphone"
+            },
+            {
+              "endTime": "18.200s",
+              "startTime": "18s",
+              "word": "and"
+            },
+            {
+              "endTime": "18.500s",
+              "startTime": "18.200s",
+              "word": "right"
+            },
+            {
+              "endTime": "18.600s",
+              "startTime": "18.500s",
+              "word": "here"
+            },
+            {
+              "endTime": "18.900s",
+              "startTime": "18.600s",
+              "word": "so"
+            },
+            {
+              "endTime": "19s",
+              "startTime": "18.900s",
+              "word": "if"
+            },
+            {
+              "endTime": "19.100s",
+              "startTime": "19s",
+              "word": "it"
+            },
+            {
+              "endTime": "19.300s",
+              "startTime": "19.100s",
+              "word": "actually"
+            },
+            {
+              "endTime": "19.600s",
+              "startTime": "19.300s",
+              "word": "was"
+            },
+            {
+              "endTime": "20s",
+              "startTime": "19.600s",
+              "word": "silly"
+            },
+            {
+              "endTime": "21.200s",
+              "startTime": "20s",
+              "word": "is"
+            },
+            {
+              "endTime": "22.600s",
+              "startTime": "21.200s",
+              "word": "suggesting"
+            },
+            {
+              "endTime": "22.700s",
+              "startTime": "22.600s",
+              "word": "to"
+            },
+            {
+              "endTime": "23s",
+              "startTime": "22.700s",
+              "word": "its"
+            },
+            {
+              "endTime": "23.400s",
+              "startTime": "23s",
+              "word": "Newfound"
+            },
+            {
+              "endTime": "24s",
+              "startTime": "23.400s",
+              "word": "freedom"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.6624093,
+          "transcript": " headline",
+          "words": [
+            {
+              "endTime": "27.300s",
+              "startTime": "26.300s",
+              "word": "headline"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9482899,
+          "transcript": " I performed in Nashville Tennessee last week I just got back this morning and it was my second time at the club down there",
+          "words": [
+            {
+              "endTime": "30.500s",
+              "startTime": "30.200s",
+              "word": "I"
+            },
+            {
+              "endTime": "31.200s",
+              "startTime": "30.500s",
+              "word": "performed"
+            },
+            {
+              "endTime": "31.300s",
+              "startTime": "31.200s",
+              "word": "in"
+            },
+            {
+              "endTime": "32.100s",
+              "startTime": "31.300s",
+              "word": "Nashville"
+            },
+            {
+              "endTime": "32.500s",
+              "startTime": "32.100s",
+              "word": "Tennessee"
+            },
+            {
+              "endTime": "32.800s",
+              "startTime": "32.500s",
+              "word": "last"
+            },
+            {
+              "endTime": "33s",
+              "startTime": "32.800s",
+              "word": "week"
+            },
+            {
+              "endTime": "33.100s",
+              "startTime": "33s",
+              "word": "I"
+            },
+            {
+              "endTime": "33.300s",
+              "startTime": "33.100s",
+              "word": "just"
+            },
+            {
+              "endTime": "33.400s",
+              "startTime": "33.300s",
+              "word": "got"
+            },
+            {
+              "endTime": "33.600s",
+              "startTime": "33.400s",
+              "word": "back"
+            },
+            {
+              "endTime": "34.100s",
+              "startTime": "33.600s",
+              "word": "this"
+            },
+            {
+              "endTime": "34.300s",
+              "startTime": "34.100s",
+              "word": "morning"
+            },
+            {
+              "endTime": "34.900s",
+              "startTime": "34.300s",
+              "word": "and"
+            },
+            {
+              "endTime": "35.300s",
+              "startTime": "34.900s",
+              "word": "it"
+            },
+            {
+              "endTime": "35.300s",
+              "startTime": "35.300s",
+              "word": "was"
+            },
+            {
+              "endTime": "35.500s",
+              "startTime": "35.300s",
+              "word": "my"
+            },
+            {
+              "endTime": "35.800s",
+              "startTime": "35.500s",
+              "word": "second"
+            },
+            {
+              "endTime": "35.800s",
+              "startTime": "35.800s",
+              "word": "time"
+            },
+            {
+              "endTime": "37s",
+              "startTime": "35.800s",
+              "word": "at"
+            },
+            {
+              "endTime": "37.100s",
+              "startTime": "37s",
+              "word": "the"
+            },
+            {
+              "endTime": "37.300s",
+              "startTime": "37.100s",
+              "word": "club"
+            },
+            {
+              "endTime": "37.700s",
+              "startTime": "37.300s",
+              "word": "down"
+            },
+            {
+              "endTime": "37.800s",
+              "startTime": "37.700s",
+              "word": "there"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.95977706,
+          "transcript": " and it wasn't by popular demand it was because of rotation",
+          "words": [
+            {
+              "endTime": "39.200s",
+              "startTime": "38.700s",
+              "word": "and"
+            },
+            {
+              "endTime": "39.300s",
+              "startTime": "39.200s",
+              "word": "it"
+            },
+            {
+              "endTime": "39.500s",
+              "startTime": "39.300s",
+              "word": "wasn't"
+            },
+            {
+              "endTime": "39.700s",
+              "startTime": "39.500s",
+              "word": "by"
+            },
+            {
+              "endTime": "40.100s",
+              "startTime": "39.700s",
+              "word": "popular"
+            },
+            {
+              "endTime": "40.200s",
+              "startTime": "40.100s",
+              "word": "demand"
+            },
+            {
+              "endTime": "41.700s",
+              "startTime": "40.200s",
+              "word": "it"
+            },
+            {
+              "endTime": "41.800s",
+              "startTime": "41.700s",
+              "word": "was"
+            },
+            {
+              "endTime": "42.300s",
+              "startTime": "41.800s",
+              "word": "because"
+            },
+            {
+              "endTime": "42.400s",
+              "startTime": "42.300s",
+              "word": "of"
+            },
+            {
+              "endTime": "43.500s",
+              "startTime": "42.400s",
+              "word": "rotation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8543926,
+          "transcript": " that's what brought me back",
+          "words": [
+            {
+              "endTime": "44.700s",
+              "startTime": "44.400s",
+              "word": "that's"
+            },
+            {
+              "endTime": "44.800s",
+              "startTime": "44.700s",
+              "word": "what"
+            },
+            {
+              "endTime": "44.900s",
+              "startTime": "44.800s",
+              "word": "brought"
+            },
+            {
+              "endTime": "45s",
+              "startTime": "44.900s",
+              "word": "me"
+            },
+            {
+              "endTime": "45.200s",
+              "startTime": "45s",
+              "word": "back"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.86936444,
+          "transcript": " did radio interviews I",
+          "words": [
+            {
+              "endTime": "47s",
+              "startTime": "46.600s",
+              "word": "did"
+            },
+            {
+              "endTime": "47.300s",
+              "startTime": "47s",
+              "word": "radio"
+            },
+            {
+              "endTime": "47.800s",
+              "startTime": "47.300s",
+              "word": "interviews"
+            },
+            {
+              "endTime": "47.900s",
+              "startTime": "47.800s",
+              "word": "I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.92790484,
+          "transcript": " I walked into the studio to do interview the DJ's first question was who are you I had to say this guy really deep",
+          "words": [
+            {
+              "endTime": "49.500s",
+              "startTime": "49.200s",
+              "word": "I"
+            },
+            {
+              "endTime": "49.800s",
+              "startTime": "49.500s",
+              "word": "walked"
+            },
+            {
+              "endTime": "49.900s",
+              "startTime": "49.800s",
+              "word": "into"
+            },
+            {
+              "endTime": "50s",
+              "startTime": "49.900s",
+              "word": "the"
+            },
+            {
+              "endTime": "50.400s",
+              "startTime": "50s",
+              "word": "studio"
+            },
+            {
+              "endTime": "50.500s",
+              "startTime": "50.400s",
+              "word": "to"
+            },
+            {
+              "endTime": "50.600s",
+              "startTime": "50.500s",
+              "word": "do"
+            },
+            {
+              "endTime": "51s",
+              "startTime": "50.600s",
+              "word": "interview"
+            },
+            {
+              "endTime": "51.100s",
+              "startTime": "51s",
+              "word": "the"
+            },
+            {
+              "endTime": "51.400s",
+              "startTime": "51.100s",
+              "word": "DJ's"
+            },
+            {
+              "endTime": "51.700s",
+              "startTime": "51.400s",
+              "word": "first"
+            },
+            {
+              "endTime": "52.100s",
+              "startTime": "51.700s",
+              "word": "question"
+            },
+            {
+              "endTime": "52.300s",
+              "startTime": "52.100s",
+              "word": "was"
+            },
+            {
+              "endTime": "53.200s",
+              "startTime": "52.300s",
+              "word": "who"
+            },
+            {
+              "endTime": "53.400s",
+              "startTime": "53.200s",
+              "word": "are"
+            },
+            {
+              "endTime": "53.600s",
+              "startTime": "53.400s",
+              "word": "you"
+            },
+            {
+              "endTime": "55.400s",
+              "startTime": "53.600s",
+              "word": "I"
+            },
+            {
+              "endTime": "55.600s",
+              "startTime": "55.400s",
+              "word": "had"
+            },
+            {
+              "endTime": "55.600s",
+              "startTime": "55.600s",
+              "word": "to"
+            },
+            {
+              "endTime": "55.800s",
+              "startTime": "55.600s",
+              "word": "say"
+            },
+            {
+              "endTime": "57.500s",
+              "startTime": "55.800s",
+              "word": "this"
+            },
+            {
+              "endTime": "57.700s",
+              "startTime": "57.500s",
+              "word": "guy"
+            },
+            {
+              "endTime": "57.800s",
+              "startTime": "57.700s",
+              "word": "really"
+            },
+            {
+              "endTime": "58.200s",
+              "startTime": "57.800s",
+              "word": "deep"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9451971,
+          "transcript": " what did I drive to the wrong station",
+          "words": [
+            {
+              "endTime": "61.500s",
+              "startTime": "61.100s",
+              "word": "what"
+            },
+            {
+              "endTime": "61.500s",
+              "startTime": "61.500s",
+              "word": "did"
+            },
+            {
+              "endTime": "61.600s",
+              "startTime": "61.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "61.900s",
+              "startTime": "61.600s",
+              "word": "drive"
+            },
+            {
+              "endTime": "62s",
+              "startTime": "61.900s",
+              "word": "to"
+            },
+            {
+              "endTime": "62.100s",
+              "startTime": "62s",
+              "word": "the"
+            },
+            {
+              "endTime": "62.300s",
+              "startTime": "62.100s",
+              "word": "wrong"
+            },
+            {
+              "endTime": "62.600s",
+              "startTime": "62.300s",
+              "word": "station"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.92348206,
+          "transcript": " Arena Stage is it like to use a frequency number to count down the days of summer like I got found 107 will celebrate 207 days of summer you know AM stations can do this for am 1610 celebrating the 1600 10 days",
+          "words": [
+            {
+              "endTime": "67.500s",
+              "startTime": "66.900s",
+              "word": "Arena"
+            },
+            {
+              "endTime": "67.700s",
+              "startTime": "67.500s",
+              "word": "Stage"
+            },
+            {
+              "endTime": "67.900s",
+              "startTime": "67.700s",
+              "word": "is"
+            },
+            {
+              "endTime": "67.900s",
+              "startTime": "67.900s",
+              "word": "it"
+            },
+            {
+              "endTime": "68.100s",
+              "startTime": "67.900s",
+              "word": "like"
+            },
+            {
+              "endTime": "68.200s",
+              "startTime": "68.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "68.300s",
+              "startTime": "68.200s",
+              "word": "use"
+            },
+            {
+              "endTime": "68.300s",
+              "startTime": "68.300s",
+              "word": "a"
+            },
+            {
+              "endTime": "68.800s",
+              "startTime": "68.300s",
+              "word": "frequency"
+            },
+            {
+              "endTime": "69s",
+              "startTime": "68.800s",
+              "word": "number"
+            },
+            {
+              "endTime": "69.100s",
+              "startTime": "69s",
+              "word": "to"
+            },
+            {
+              "endTime": "69.400s",
+              "startTime": "69.100s",
+              "word": "count"
+            },
+            {
+              "endTime": "69.500s",
+              "startTime": "69.400s",
+              "word": "down"
+            },
+            {
+              "endTime": "69.700s",
+              "startTime": "69.500s",
+              "word": "the"
+            },
+            {
+              "endTime": "69.800s",
+              "startTime": "69.700s",
+              "word": "days"
+            },
+            {
+              "endTime": "70.100s",
+              "startTime": "69.800s",
+              "word": "of"
+            },
+            {
+              "endTime": "70.300s",
+              "startTime": "70.100s",
+              "word": "summer"
+            },
+            {
+              "endTime": "70.700s",
+              "startTime": "70.300s",
+              "word": "like"
+            },
+            {
+              "endTime": "71.200s",
+              "startTime": "70.700s",
+              "word": "I"
+            },
+            {
+              "endTime": "71.400s",
+              "startTime": "71.200s",
+              "word": "got"
+            },
+            {
+              "endTime": "71.600s",
+              "startTime": "71.400s",
+              "word": "found"
+            },
+            {
+              "endTime": "72.200s",
+              "startTime": "71.600s",
+              "word": "107"
+            },
+            {
+              "endTime": "72.300s",
+              "startTime": "72.200s",
+              "word": "will"
+            },
+            {
+              "endTime": "72.600s",
+              "startTime": "72.300s",
+              "word": "celebrate"
+            },
+            {
+              "endTime": "73.300s",
+              "startTime": "72.600s",
+              "word": "207"
+            },
+            {
+              "endTime": "73.500s",
+              "startTime": "73.300s",
+              "word": "days"
+            },
+            {
+              "endTime": "73.600s",
+              "startTime": "73.500s",
+              "word": "of"
+            },
+            {
+              "endTime": "73.800s",
+              "startTime": "73.600s",
+              "word": "summer"
+            },
+            {
+              "endTime": "74s",
+              "startTime": "73.800s",
+              "word": "you"
+            },
+            {
+              "endTime": "74.200s",
+              "startTime": "74s",
+              "word": "know"
+            },
+            {
+              "endTime": "75.400s",
+              "startTime": "74.200s",
+              "word": "AM"
+            },
+            {
+              "endTime": "75.800s",
+              "startTime": "75.400s",
+              "word": "stations"
+            },
+            {
+              "endTime": "75.900s",
+              "startTime": "75.800s",
+              "word": "can"
+            },
+            {
+              "endTime": "76.100s",
+              "startTime": "75.900s",
+              "word": "do"
+            },
+            {
+              "endTime": "76.200s",
+              "startTime": "76.100s",
+              "word": "this"
+            },
+            {
+              "endTime": "79.500s",
+              "startTime": "76.200s",
+              "word": "for"
+            },
+            {
+              "endTime": "80s",
+              "startTime": "79.500s",
+              "word": "am"
+            },
+            {
+              "endTime": "80.700s",
+              "startTime": "80s",
+              "word": "1610"
+            },
+            {
+              "endTime": "82.400s",
+              "startTime": "80.700s",
+              "word": "celebrating"
+            },
+            {
+              "endTime": "82.400s",
+              "startTime": "82.400s",
+              "word": "the"
+            },
+            {
+              "endTime": "83s",
+              "startTime": "82.400s",
+              "word": "1600"
+            },
+            {
+              "endTime": "83.400s",
+              "startTime": "83s",
+              "word": "10"
+            },
+            {
+              "endTime": "83.900s",
+              "startTime": "83.400s",
+              "word": "days"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8915457,
+          "transcript": " are the next four and a half years",
+          "words": [
+            {
+              "endTime": "85.200s",
+              "startTime": "84.800s",
+              "word": "are"
+            },
+            {
+              "endTime": "85.300s",
+              "startTime": "85.200s",
+              "word": "the"
+            },
+            {
+              "endTime": "85.600s",
+              "startTime": "85.300s",
+              "word": "next"
+            },
+            {
+              "endTime": "86.500s",
+              "startTime": "85.600s",
+              "word": "four"
+            },
+            {
+              "endTime": "86.800s",
+              "startTime": "86.500s",
+              "word": "and"
+            },
+            {
+              "endTime": "86.800s",
+              "startTime": "86.800s",
+              "word": "a"
+            },
+            {
+              "endTime": "87s",
+              "startTime": "86.800s",
+              "word": "half"
+            },
+            {
+              "endTime": "87.100s",
+              "startTime": "87s",
+              "word": "years"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.67693347,
+          "transcript": " NBA along party go slow",
+          "words": [
+            {
+              "endTime": "94.900s",
+              "startTime": "94.400s",
+              "word": "NBA"
+            },
+            {
+              "endTime": "95.200s",
+              "startTime": "94.900s",
+              "word": "along"
+            },
+            {
+              "endTime": "95.600s",
+              "startTime": "95.200s",
+              "word": "party"
+            },
+            {
+              "endTime": "97.200s",
+              "startTime": "95.600s",
+              "word": "go"
+            },
+            {
+              "endTime": "98.500s",
+              "startTime": "97.200s",
+              "word": "slow"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9161896,
+          "transcript": " black people Flash the peace sign these days on the school to flash the peace sign but I think it's cooler to express peace verbally",
+          "words": [
+            {
+              "endTime": "100.500s",
+              "startTime": "100.100s",
+              "word": "black"
+            },
+            {
+              "endTime": "100.800s",
+              "startTime": "100.500s",
+              "word": "people"
+            },
+            {
+              "endTime": "101.900s",
+              "startTime": "100.800s",
+              "word": "Flash"
+            },
+            {
+              "endTime": "102.100s",
+              "startTime": "101.900s",
+              "word": "the"
+            },
+            {
+              "endTime": "102.400s",
+              "startTime": "102.100s",
+              "word": "peace"
+            },
+            {
+              "endTime": "102.700s",
+              "startTime": "102.400s",
+              "word": "sign"
+            },
+            {
+              "endTime": "102.800s",
+              "startTime": "102.700s",
+              "word": "these"
+            },
+            {
+              "endTime": "103.100s",
+              "startTime": "102.800s",
+              "word": "days"
+            },
+            {
+              "endTime": "103.300s",
+              "startTime": "103.100s",
+              "word": "on"
+            },
+            {
+              "endTime": "104.400s",
+              "startTime": "103.300s",
+              "word": "the"
+            },
+            {
+              "endTime": "104.800s",
+              "startTime": "104.400s",
+              "word": "school"
+            },
+            {
+              "endTime": "104.900s",
+              "startTime": "104.800s",
+              "word": "to"
+            },
+            {
+              "endTime": "105.200s",
+              "startTime": "104.900s",
+              "word": "flash"
+            },
+            {
+              "endTime": "105.400s",
+              "startTime": "105.200s",
+              "word": "the"
+            },
+            {
+              "endTime": "105.700s",
+              "startTime": "105.400s",
+              "word": "peace"
+            },
+            {
+              "endTime": "105.900s",
+              "startTime": "105.700s",
+              "word": "sign"
+            },
+            {
+              "endTime": "106s",
+              "startTime": "105.900s",
+              "word": "but"
+            },
+            {
+              "endTime": "106s",
+              "startTime": "106s",
+              "word": "I"
+            },
+            {
+              "endTime": "106.200s",
+              "startTime": "106s",
+              "word": "think"
+            },
+            {
+              "endTime": "106.300s",
+              "startTime": "106.200s",
+              "word": "it's"
+            },
+            {
+              "endTime": "106.800s",
+              "startTime": "106.300s",
+              "word": "cooler"
+            },
+            {
+              "endTime": "107.100s",
+              "startTime": "106.800s",
+              "word": "to"
+            },
+            {
+              "endTime": "107.600s",
+              "startTime": "107.100s",
+              "word": "express"
+            },
+            {
+              "endTime": "107.900s",
+              "startTime": "107.600s",
+              "word": "peace"
+            },
+            {
+              "endTime": "108.400s",
+              "startTime": "107.900s",
+              "word": "verbally"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9818084,
+          "transcript": " Hey Brother",
+          "words": [
+            {
+              "endTime": "109.800s",
+              "startTime": "109.300s",
+              "word": "Hey"
+            },
+            {
+              "endTime": "109.900s",
+              "startTime": "109.800s",
+              "word": "Brother"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.78817916,
+          "transcript": " 2",
+          "words": [
+            {
+              "endTime": "111.700s",
+              "startTime": "111.200s",
+              "word": "2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8907464,
+          "transcript": " pieces of hard concept did I tell you I was home last week and I heard I heard a gunshot outside my apartment then I saw two guys run by my window so I can call the police but then I got to take I said hey you maybe it's just the race",
+          "words": [
+            {
+              "endTime": "119.400s",
+              "startTime": "118.800s",
+              "word": "pieces"
+            },
+            {
+              "endTime": "119.500s",
+              "startTime": "119.400s",
+              "word": "of"
+            },
+            {
+              "endTime": "119.700s",
+              "startTime": "119.500s",
+              "word": "hard"
+            },
+            {
+              "endTime": "120s",
+              "startTime": "119.700s",
+              "word": "concept"
+            },
+            {
+              "endTime": "120.200s",
+              "startTime": "120s",
+              "word": "did"
+            },
+            {
+              "endTime": "120.300s",
+              "startTime": "120.200s",
+              "word": "I"
+            },
+            {
+              "endTime": "120.700s",
+              "startTime": "120.300s",
+              "word": "tell"
+            },
+            {
+              "endTime": "120.900s",
+              "startTime": "120.700s",
+              "word": "you"
+            },
+            {
+              "endTime": "121.600s",
+              "startTime": "120.900s",
+              "word": "I"
+            },
+            {
+              "endTime": "121.800s",
+              "startTime": "121.600s",
+              "word": "was"
+            },
+            {
+              "endTime": "122s",
+              "startTime": "121.800s",
+              "word": "home"
+            },
+            {
+              "endTime": "122.100s",
+              "startTime": "122s",
+              "word": "last"
+            },
+            {
+              "endTime": "122.500s",
+              "startTime": "122.100s",
+              "word": "week"
+            },
+            {
+              "endTime": "122.600s",
+              "startTime": "122.500s",
+              "word": "and"
+            },
+            {
+              "endTime": "122.700s",
+              "startTime": "122.600s",
+              "word": "I"
+            },
+            {
+              "endTime": "122.800s",
+              "startTime": "122.700s",
+              "word": "heard"
+            },
+            {
+              "endTime": "122.900s",
+              "startTime": "122.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "122.900s",
+              "startTime": "122.900s",
+              "word": "heard"
+            },
+            {
+              "endTime": "124.100s",
+              "startTime": "122.900s",
+              "word": "a"
+            },
+            {
+              "endTime": "124.500s",
+              "startTime": "124.100s",
+              "word": "gunshot"
+            },
+            {
+              "endTime": "125s",
+              "startTime": "124.500s",
+              "word": "outside"
+            },
+            {
+              "endTime": "125.200s",
+              "startTime": "125s",
+              "word": "my"
+            },
+            {
+              "endTime": "125.300s",
+              "startTime": "125.200s",
+              "word": "apartment"
+            },
+            {
+              "endTime": "125.800s",
+              "startTime": "125.300s",
+              "word": "then"
+            },
+            {
+              "endTime": "125.900s",
+              "startTime": "125.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "126s",
+              "startTime": "125.900s",
+              "word": "saw"
+            },
+            {
+              "endTime": "126.300s",
+              "startTime": "126s",
+              "word": "two"
+            },
+            {
+              "endTime": "126.500s",
+              "startTime": "126.300s",
+              "word": "guys"
+            },
+            {
+              "endTime": "126.800s",
+              "startTime": "126.500s",
+              "word": "run"
+            },
+            {
+              "endTime": "126.900s",
+              "startTime": "126.800s",
+              "word": "by"
+            },
+            {
+              "endTime": "127.100s",
+              "startTime": "126.900s",
+              "word": "my"
+            },
+            {
+              "endTime": "127.400s",
+              "startTime": "127.100s",
+              "word": "window"
+            },
+            {
+              "endTime": "128.500s",
+              "startTime": "127.400s",
+              "word": "so"
+            },
+            {
+              "endTime": "128.600s",
+              "startTime": "128.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "128.700s",
+              "startTime": "128.600s",
+              "word": "can"
+            },
+            {
+              "endTime": "129s",
+              "startTime": "128.700s",
+              "word": "call"
+            },
+            {
+              "endTime": "129.100s",
+              "startTime": "129s",
+              "word": "the"
+            },
+            {
+              "endTime": "129.200s",
+              "startTime": "129.100s",
+              "word": "police"
+            },
+            {
+              "endTime": "130s",
+              "startTime": "129.200s",
+              "word": "but"
+            },
+            {
+              "endTime": "130.100s",
+              "startTime": "130s",
+              "word": "then"
+            },
+            {
+              "endTime": "130.200s",
+              "startTime": "130.100s",
+              "word": "I"
+            },
+            {
+              "endTime": "130.300s",
+              "startTime": "130.200s",
+              "word": "got"
+            },
+            {
+              "endTime": "130.400s",
+              "startTime": "130.300s",
+              "word": "to"
+            },
+            {
+              "endTime": "130.800s",
+              "startTime": "130.400s",
+              "word": "take"
+            },
+            {
+              "endTime": "131.100s",
+              "startTime": "130.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "131.300s",
+              "startTime": "131.100s",
+              "word": "said"
+            },
+            {
+              "endTime": "131.300s",
+              "startTime": "131.300s",
+              "word": "hey"
+            },
+            {
+              "endTime": "131.600s",
+              "startTime": "131.300s",
+              "word": "you"
+            },
+            {
+              "endTime": "131.900s",
+              "startTime": "131.600s",
+              "word": "maybe"
+            },
+            {
+              "endTime": "132.100s",
+              "startTime": "131.900s",
+              "word": "it's"
+            },
+            {
+              "endTime": "132.500s",
+              "startTime": "132.100s",
+              "word": "just"
+            },
+            {
+              "endTime": "132.700s",
+              "startTime": "132.500s",
+              "word": "the"
+            },
+            {
+              "endTime": "133.100s",
+              "startTime": "132.700s",
+              "word": "race"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9751537,
+          "transcript": " yeah that's what it is there's a lot of late-night track and field events by my house",
+          "words": [
+            {
+              "endTime": "138.700s",
+              "startTime": "138.300s",
+              "word": "yeah"
+            },
+            {
+              "endTime": "139.500s",
+              "startTime": "138.700s",
+              "word": "that's"
+            },
+            {
+              "endTime": "139.700s",
+              "startTime": "139.500s",
+              "word": "what"
+            },
+            {
+              "endTime": "139.700s",
+              "startTime": "139.700s",
+              "word": "it"
+            },
+            {
+              "endTime": "139.900s",
+              "startTime": "139.700s",
+              "word": "is"
+            },
+            {
+              "endTime": "141.100s",
+              "startTime": "139.900s",
+              "word": "there's"
+            },
+            {
+              "endTime": "141.200s",
+              "startTime": "141.100s",
+              "word": "a"
+            },
+            {
+              "endTime": "141.500s",
+              "startTime": "141.200s",
+              "word": "lot"
+            },
+            {
+              "endTime": "141.500s",
+              "startTime": "141.500s",
+              "word": "of"
+            },
+            {
+              "endTime": "141.800s",
+              "startTime": "141.500s",
+              "word": "late-night"
+            },
+            {
+              "endTime": "142.300s",
+              "startTime": "141.800s",
+              "word": "track"
+            },
+            {
+              "endTime": "142.400s",
+              "startTime": "142.300s",
+              "word": "and"
+            },
+            {
+              "endTime": "142.700s",
+              "startTime": "142.400s",
+              "word": "field"
+            },
+            {
+              "endTime": "143s",
+              "startTime": "142.700s",
+              "word": "events"
+            },
+            {
+              "endTime": "143.100s",
+              "startTime": "143s",
+              "word": "by"
+            },
+            {
+              "endTime": "143.300s",
+              "startTime": "143.100s",
+              "word": "my"
+            },
+            {
+              "endTime": "143.700s",
+              "startTime": "143.300s",
+              "word": "house"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.7756086,
+          "transcript": " nocturnal jocks",
+          "words": [
+            {
+              "endTime": "146.500s",
+              "startTime": "145.700s",
+              "word": "nocturnal"
+            },
+            {
+              "endTime": "147.100s",
+              "startTime": "146.500s",
+              "word": "jocks"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.88354856,
+          "transcript": " I live in a studio apartment one room when people come over at like to give him a tour of loosen up their neck",
+          "words": [
+            {
+              "endTime": "152.200s",
+              "startTime": "151.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "152.300s",
+              "startTime": "152.200s",
+              "word": "live"
+            },
+            {
+              "endTime": "152.400s",
+              "startTime": "152.300s",
+              "word": "in"
+            },
+            {
+              "endTime": "152.500s",
+              "startTime": "152.400s",
+              "word": "a"
+            },
+            {
+              "endTime": "152.700s",
+              "startTime": "152.500s",
+              "word": "studio"
+            },
+            {
+              "endTime": "153.400s",
+              "startTime": "152.700s",
+              "word": "apartment"
+            },
+            {
+              "endTime": "154.400s",
+              "startTime": "153.400s",
+              "word": "one"
+            },
+            {
+              "endTime": "154.400s",
+              "startTime": "154.400s",
+              "word": "room"
+            },
+            {
+              "endTime": "155.400s",
+              "startTime": "154.400s",
+              "word": "when"
+            },
+            {
+              "endTime": "155.600s",
+              "startTime": "155.400s",
+              "word": "people"
+            },
+            {
+              "endTime": "155.700s",
+              "startTime": "155.600s",
+              "word": "come"
+            },
+            {
+              "endTime": "155.800s",
+              "startTime": "155.700s",
+              "word": "over"
+            },
+            {
+              "endTime": "156s",
+              "startTime": "155.800s",
+              "word": "at"
+            },
+            {
+              "endTime": "156s",
+              "startTime": "156s",
+              "word": "like"
+            },
+            {
+              "endTime": "156.200s",
+              "startTime": "156s",
+              "word": "to"
+            },
+            {
+              "endTime": "156.400s",
+              "startTime": "156.200s",
+              "word": "give"
+            },
+            {
+              "endTime": "156.400s",
+              "startTime": "156.400s",
+              "word": "him"
+            },
+            {
+              "endTime": "156.500s",
+              "startTime": "156.400s",
+              "word": "a"
+            },
+            {
+              "endTime": "156.700s",
+              "startTime": "156.500s",
+              "word": "tour"
+            },
+            {
+              "endTime": "158.600s",
+              "startTime": "156.700s",
+              "word": "of"
+            },
+            {
+              "endTime": "159s",
+              "startTime": "158.600s",
+              "word": "loosen"
+            },
+            {
+              "endTime": "159.100s",
+              "startTime": "159s",
+              "word": "up"
+            },
+            {
+              "endTime": "159.300s",
+              "startTime": "159.100s",
+              "word": "their"
+            },
+            {
+              "endTime": "159.500s",
+              "startTime": "159.300s",
+              "word": "neck"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9705917,
+          "transcript": " I got a sliding glass door has a sticker says warning alarm system",
+          "words": [
+            {
+              "endTime": "165s",
+              "startTime": "164.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "165.200s",
+              "startTime": "165s",
+              "word": "got"
+            },
+            {
+              "endTime": "165.300s",
+              "startTime": "165.200s",
+              "word": "a"
+            },
+            {
+              "endTime": "165.600s",
+              "startTime": "165.300s",
+              "word": "sliding"
+            },
+            {
+              "endTime": "165.700s",
+              "startTime": "165.600s",
+              "word": "glass"
+            },
+            {
+              "endTime": "166s",
+              "startTime": "165.700s",
+              "word": "door"
+            },
+            {
+              "endTime": "166.300s",
+              "startTime": "166s",
+              "word": "has"
+            },
+            {
+              "endTime": "166.400s",
+              "startTime": "166.300s",
+              "word": "a"
+            },
+            {
+              "endTime": "166.900s",
+              "startTime": "166.400s",
+              "word": "sticker"
+            },
+            {
+              "endTime": "167.200s",
+              "startTime": "166.900s",
+              "word": "says"
+            },
+            {
+              "endTime": "167.700s",
+              "startTime": "167.200s",
+              "word": "warning"
+            },
+            {
+              "endTime": "168.200s",
+              "startTime": "167.700s",
+              "word": "alarm"
+            },
+            {
+              "endTime": "169s",
+              "startTime": "168.200s",
+              "word": "system"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9436427,
+          "transcript": " it's real simple alarm to it consists of a sticker",
+          "words": [
+            {
+              "endTime": "170.300s",
+              "startTime": "170s",
+              "word": "it's"
+            },
+            {
+              "endTime": "170.400s",
+              "startTime": "170.300s",
+              "word": "real"
+            },
+            {
+              "endTime": "170.600s",
+              "startTime": "170.400s",
+              "word": "simple"
+            },
+            {
+              "endTime": "171.100s",
+              "startTime": "170.600s",
+              "word": "alarm"
+            },
+            {
+              "endTime": "171.400s",
+              "startTime": "171.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "171.600s",
+              "startTime": "171.400s",
+              "word": "it"
+            },
+            {
+              "endTime": "172.200s",
+              "startTime": "171.600s",
+              "word": "consists"
+            },
+            {
+              "endTime": "172.500s",
+              "startTime": "172.200s",
+              "word": "of"
+            },
+            {
+              "endTime": "173.100s",
+              "startTime": "172.500s",
+              "word": "a"
+            },
+            {
+              "endTime": "173.700s",
+              "startTime": "173.100s",
+              "word": "sticker"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8170331,
+          "transcript": " I'm going to try to people with words I should be more intense than alarm system but maybe warning no air inside",
+          "words": [
+            {
+              "endTime": "178.700s",
+              "startTime": "178.300s",
+              "word": "I'm"
+            },
+            {
+              "endTime": "178.800s",
+              "startTime": "178.700s",
+              "word": "going"
+            },
+            {
+              "endTime": "178.900s",
+              "startTime": "178.800s",
+              "word": "to"
+            },
+            {
+              "endTime": "179s",
+              "startTime": "178.900s",
+              "word": "try"
+            },
+            {
+              "endTime": "179s",
+              "startTime": "179s",
+              "word": "to"
+            },
+            {
+              "endTime": "179.300s",
+              "startTime": "179s",
+              "word": "people"
+            },
+            {
+              "endTime": "179.400s",
+              "startTime": "179.300s",
+              "word": "with"
+            },
+            {
+              "endTime": "179.800s",
+              "startTime": "179.400s",
+              "word": "words"
+            },
+            {
+              "endTime": "179.900s",
+              "startTime": "179.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "180s",
+              "startTime": "179.900s",
+              "word": "should"
+            },
+            {
+              "endTime": "180.100s",
+              "startTime": "180s",
+              "word": "be"
+            },
+            {
+              "endTime": "180.300s",
+              "startTime": "180.100s",
+              "word": "more"
+            },
+            {
+              "endTime": "180.700s",
+              "startTime": "180.300s",
+              "word": "intense"
+            },
+            {
+              "endTime": "181.300s",
+              "startTime": "180.700s",
+              "word": "than"
+            },
+            {
+              "endTime": "181.600s",
+              "startTime": "181.300s",
+              "word": "alarm"
+            },
+            {
+              "endTime": "182.100s",
+              "startTime": "181.600s",
+              "word": "system"
+            },
+            {
+              "endTime": "182.200s",
+              "startTime": "182.100s",
+              "word": "but"
+            },
+            {
+              "endTime": "182.400s",
+              "startTime": "182.200s",
+              "word": "maybe"
+            },
+            {
+              "endTime": "182.900s",
+              "startTime": "182.400s",
+              "word": "warning"
+            },
+            {
+              "endTime": "184.100s",
+              "startTime": "182.900s",
+              "word": "no"
+            },
+            {
+              "endTime": "184.400s",
+              "startTime": "184.100s",
+              "word": "air"
+            },
+            {
+              "endTime": "184.700s",
+              "startTime": "184.400s",
+              "word": "inside"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9938145,
+          "transcript": " quicksand",
+          "words": [
+            {
+              "endTime": "190.600s",
+              "startTime": "189.600s",
+              "word": "quicksand"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.91619694,
+          "transcript": " monster",
+          "words": [
+            {
+              "endTime": "192.600s",
+              "startTime": "191.600s",
+              "word": "monster"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.67726314,
+          "transcript": " what's a question",
+          "words": [
+            {
+              "endTime": "195.900s",
+              "startTime": "195.600s",
+              "word": "what's"
+            },
+            {
+              "endTime": "195.900s",
+              "startTime": "195.900s",
+              "word": "a"
+            },
+            {
+              "endTime": "196.400s",
+              "startTime": "195.900s",
+              "word": "question"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9788742,
+          "transcript": " transportation is a good way to get around",
+          "words": [
+            {
+              "endTime": "199.500s",
+              "startTime": "198.500s",
+              "word": "transportation"
+            },
+            {
+              "endTime": "199.700s",
+              "startTime": "199.500s",
+              "word": "is"
+            },
+            {
+              "endTime": "199.700s",
+              "startTime": "199.700s",
+              "word": "a"
+            },
+            {
+              "endTime": "199.900s",
+              "startTime": "199.700s",
+              "word": "good"
+            },
+            {
+              "endTime": "200s",
+              "startTime": "199.900s",
+              "word": "way"
+            },
+            {
+              "endTime": "200.100s",
+              "startTime": "200s",
+              "word": "to"
+            },
+            {
+              "endTime": "200.300s",
+              "startTime": "200.100s",
+              "word": "get"
+            },
+            {
+              "endTime": "200.500s",
+              "startTime": "200.300s",
+              "word": "around"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8915027,
+          "transcript": " I walk a lot of my Walker fine if I don't walk I end up in one spot",
+          "words": [
+            {
+              "endTime": "204.200s",
+              "startTime": "203.900s",
+              "word": "I"
+            },
+            {
+              "endTime": "204.500s",
+              "startTime": "204.200s",
+              "word": "walk"
+            },
+            {
+              "endTime": "204.600s",
+              "startTime": "204.500s",
+              "word": "a"
+            },
+            {
+              "endTime": "204.700s",
+              "startTime": "204.600s",
+              "word": "lot"
+            },
+            {
+              "endTime": "204.900s",
+              "startTime": "204.700s",
+              "word": "of"
+            },
+            {
+              "endTime": "204.900s",
+              "startTime": "204.900s",
+              "word": "my"
+            },
+            {
+              "endTime": "205.300s",
+              "startTime": "204.900s",
+              "word": "Walker"
+            },
+            {
+              "endTime": "206.100s",
+              "startTime": "205.300s",
+              "word": "fine"
+            },
+            {
+              "endTime": "206.200s",
+              "startTime": "206.100s",
+              "word": "if"
+            },
+            {
+              "endTime": "206.200s",
+              "startTime": "206.200s",
+              "word": "I"
+            },
+            {
+              "endTime": "206.400s",
+              "startTime": "206.200s",
+              "word": "don't"
+            },
+            {
+              "endTime": "206.500s",
+              "startTime": "206.400s",
+              "word": "walk"
+            },
+            {
+              "endTime": "206.800s",
+              "startTime": "206.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "207.200s",
+              "startTime": "206.800s",
+              "word": "end"
+            },
+            {
+              "endTime": "207.200s",
+              "startTime": "207.200s",
+              "word": "up"
+            },
+            {
+              "endTime": "207.400s",
+              "startTime": "207.200s",
+              "word": "in"
+            },
+            {
+              "endTime": "207.500s",
+              "startTime": "207.400s",
+              "word": "one"
+            },
+            {
+              "endTime": "207.800s",
+              "startTime": "207.500s",
+              "word": "spot"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9058355,
+          "transcript": " I want my people to try to hand out flyers you know when someone tries to hand out a flyer it's kind of like the saying here",
+          "words": [
+            {
+              "endTime": "211.300s",
+              "startTime": "210.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "211.500s",
+              "startTime": "211.300s",
+              "word": "want"
+            },
+            {
+              "endTime": "211.600s",
+              "startTime": "211.500s",
+              "word": "my"
+            },
+            {
+              "endTime": "211.700s",
+              "startTime": "211.600s",
+              "word": "people"
+            },
+            {
+              "endTime": "211.900s",
+              "startTime": "211.700s",
+              "word": "to"
+            },
+            {
+              "endTime": "212.100s",
+              "startTime": "211.900s",
+              "word": "try"
+            },
+            {
+              "endTime": "212.100s",
+              "startTime": "212.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "212.400s",
+              "startTime": "212.100s",
+              "word": "hand"
+            },
+            {
+              "endTime": "212.500s",
+              "startTime": "212.400s",
+              "word": "out"
+            },
+            {
+              "endTime": "213.200s",
+              "startTime": "212.500s",
+              "word": "flyers"
+            },
+            {
+              "endTime": "213.300s",
+              "startTime": "213.200s",
+              "word": "you"
+            },
+            {
+              "endTime": "213.400s",
+              "startTime": "213.300s",
+              "word": "know"
+            },
+            {
+              "endTime": "213.600s",
+              "startTime": "213.400s",
+              "word": "when"
+            },
+            {
+              "endTime": "213.800s",
+              "startTime": "213.600s",
+              "word": "someone"
+            },
+            {
+              "endTime": "214.100s",
+              "startTime": "213.800s",
+              "word": "tries"
+            },
+            {
+              "endTime": "214.200s",
+              "startTime": "214.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "214.400s",
+              "startTime": "214.200s",
+              "word": "hand"
+            },
+            {
+              "endTime": "214.500s",
+              "startTime": "214.400s",
+              "word": "out"
+            },
+            {
+              "endTime": "214.600s",
+              "startTime": "214.500s",
+              "word": "a"
+            },
+            {
+              "endTime": "214.900s",
+              "startTime": "214.600s",
+              "word": "flyer"
+            },
+            {
+              "endTime": "215.300s",
+              "startTime": "214.900s",
+              "word": "it's"
+            },
+            {
+              "endTime": "215.500s",
+              "startTime": "215.300s",
+              "word": "kind"
+            },
+            {
+              "endTime": "215.500s",
+              "startTime": "215.500s",
+              "word": "of"
+            },
+            {
+              "endTime": "215.700s",
+              "startTime": "215.500s",
+              "word": "like"
+            },
+            {
+              "endTime": "215.800s",
+              "startTime": "215.700s",
+              "word": "the"
+            },
+            {
+              "endTime": "216.100s",
+              "startTime": "215.800s",
+              "word": "saying"
+            },
+            {
+              "endTime": "216.400s",
+              "startTime": "216.100s",
+              "word": "here"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.97612286,
+          "transcript": " you throw this away",
+          "words": [
+            {
+              "endTime": "217.900s",
+              "startTime": "217.400s",
+              "word": "you"
+            },
+            {
+              "endTime": "218s",
+              "startTime": "217.900s",
+              "word": "throw"
+            },
+            {
+              "endTime": "218.200s",
+              "startTime": "218s",
+              "word": "this"
+            },
+            {
+              "endTime": "218.300s",
+              "startTime": "218.200s",
+              "word": "away"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9398158,
+          "transcript": " clap I'm not used to that man",
+          "words": [
+            {
+              "endTime": "228.600s",
+              "startTime": "228.100s",
+              "word": "clap"
+            },
+            {
+              "endTime": "228.700s",
+              "startTime": "228.600s",
+              "word": "I'm"
+            },
+            {
+              "endTime": "228.800s",
+              "startTime": "228.700s",
+              "word": "not"
+            },
+            {
+              "endTime": "229s",
+              "startTime": "228.800s",
+              "word": "used"
+            },
+            {
+              "endTime": "229.100s",
+              "startTime": "229s",
+              "word": "to"
+            },
+            {
+              "endTime": "229.300s",
+              "startTime": "229.100s",
+              "word": "that"
+            },
+            {
+              "endTime": "229.500s",
+              "startTime": "229.300s",
+              "word": "man"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.95339054,
+          "transcript": " I was in a band for a while I was in the band for 7 years it was it a death metal band",
+          "words": [
+            {
+              "endTime": "232.600s",
+              "startTime": "232.300s",
+              "word": "I"
+            },
+            {
+              "endTime": "232.700s",
+              "startTime": "232.600s",
+              "word": "was"
+            },
+            {
+              "endTime": "232.800s",
+              "startTime": "232.700s",
+              "word": "in"
+            },
+            {
+              "endTime": "232.900s",
+              "startTime": "232.800s",
+              "word": "a"
+            },
+            {
+              "endTime": "233.200s",
+              "startTime": "232.900s",
+              "word": "band"
+            },
+            {
+              "endTime": "233.400s",
+              "startTime": "233.200s",
+              "word": "for"
+            },
+            {
+              "endTime": "233.500s",
+              "startTime": "233.400s",
+              "word": "a"
+            },
+            {
+              "endTime": "233.700s",
+              "startTime": "233.500s",
+              "word": "while"
+            },
+            {
+              "endTime": "233.700s",
+              "startTime": "233.700s",
+              "word": "I"
+            },
+            {
+              "endTime": "233.900s",
+              "startTime": "233.700s",
+              "word": "was"
+            },
+            {
+              "endTime": "234s",
+              "startTime": "233.900s",
+              "word": "in"
+            },
+            {
+              "endTime": "234.100s",
+              "startTime": "234s",
+              "word": "the"
+            },
+            {
+              "endTime": "234.400s",
+              "startTime": "234.100s",
+              "word": "band"
+            },
+            {
+              "endTime": "234.500s",
+              "startTime": "234.400s",
+              "word": "for"
+            },
+            {
+              "endTime": "234.800s",
+              "startTime": "234.500s",
+              "word": "7"
+            },
+            {
+              "endTime": "235.100s",
+              "startTime": "234.800s",
+              "word": "years"
+            },
+            {
+              "endTime": "235.200s",
+              "startTime": "235.100s",
+              "word": "it"
+            },
+            {
+              "endTime": "235.300s",
+              "startTime": "235.200s",
+              "word": "was"
+            },
+            {
+              "endTime": "235.500s",
+              "startTime": "235.300s",
+              "word": "it"
+            },
+            {
+              "endTime": "236.100s",
+              "startTime": "235.500s",
+              "word": "a"
+            },
+            {
+              "endTime": "236.400s",
+              "startTime": "236.100s",
+              "word": "death"
+            },
+            {
+              "endTime": "236.600s",
+              "startTime": "236.400s",
+              "word": "metal"
+            },
+            {
+              "endTime": "237.200s",
+              "startTime": "236.600s",
+              "word": "band"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8571514,
+          "transcript": " steambreather loudness or they hated us or they thought we were okay",
+          "words": [
+            {
+              "endTime": "239s",
+              "startTime": "238.500s",
+              "word": "steambreather"
+            },
+            {
+              "endTime": "239.600s",
+              "startTime": "239s",
+              "word": "loudness"
+            },
+            {
+              "endTime": "239.600s",
+              "startTime": "239.600s",
+              "word": "or"
+            },
+            {
+              "endTime": "239.700s",
+              "startTime": "239.600s",
+              "word": "they"
+            },
+            {
+              "endTime": "240.100s",
+              "startTime": "239.700s",
+              "word": "hated"
+            },
+            {
+              "endTime": "240.100s",
+              "startTime": "240.100s",
+              "word": "us"
+            },
+            {
+              "endTime": "241.100s",
+              "startTime": "240.100s",
+              "word": "or"
+            },
+            {
+              "endTime": "241.200s",
+              "startTime": "241.100s",
+              "word": "they"
+            },
+            {
+              "endTime": "241.400s",
+              "startTime": "241.200s",
+              "word": "thought"
+            },
+            {
+              "endTime": "241.500s",
+              "startTime": "241.400s",
+              "word": "we"
+            },
+            {
+              "endTime": "241.600s",
+              "startTime": "241.500s",
+              "word": "were"
+            },
+            {
+              "endTime": "241.900s",
+              "startTime": "241.600s",
+              "word": "okay"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9255033,
+          "transcript": " Flatline death metal bands have intense names like rigor mortis",
+          "words": [
+            {
+              "endTime": "248.200s",
+              "startTime": "247.500s",
+              "word": "Flatline"
+            },
+            {
+              "endTime": "248.500s",
+              "startTime": "248.200s",
+              "word": "death"
+            },
+            {
+              "endTime": "248.700s",
+              "startTime": "248.500s",
+              "word": "metal"
+            },
+            {
+              "endTime": "248.900s",
+              "startTime": "248.700s",
+              "word": "bands"
+            },
+            {
+              "endTime": "249.100s",
+              "startTime": "248.900s",
+              "word": "have"
+            },
+            {
+              "endTime": "249.600s",
+              "startTime": "249.100s",
+              "word": "intense"
+            },
+            {
+              "endTime": "250.100s",
+              "startTime": "249.600s",
+              "word": "names"
+            },
+            {
+              "endTime": "250.400s",
+              "startTime": "250.100s",
+              "word": "like"
+            },
+            {
+              "endTime": "251.100s",
+              "startTime": "250.400s",
+              "word": "rigor"
+            },
+            {
+              "endTime": "251.200s",
+              "startTime": "251.100s",
+              "word": "mortis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9043484,
+          "transcript": " or Mortuary or obituary we were that intense that we just went with injured",
+          "words": [
+            {
+              "endTime": "252.900s",
+              "startTime": "252.400s",
+              "word": "or"
+            },
+            {
+              "endTime": "253.200s",
+              "startTime": "252.900s",
+              "word": "Mortuary"
+            },
+            {
+              "endTime": "255s",
+              "startTime": "253.200s",
+              "word": "or"
+            },
+            {
+              "endTime": "255.300s",
+              "startTime": "255s",
+              "word": "obituary"
+            },
+            {
+              "endTime": "256.600s",
+              "startTime": "255.300s",
+              "word": "we"
+            },
+            {
+              "endTime": "256.800s",
+              "startTime": "256.600s",
+              "word": "were"
+            },
+            {
+              "endTime": "257s",
+              "startTime": "256.800s",
+              "word": "that"
+            },
+            {
+              "endTime": "257.500s",
+              "startTime": "257s",
+              "word": "intense"
+            },
+            {
+              "endTime": "257.600s",
+              "startTime": "257.500s",
+              "word": "that"
+            },
+            {
+              "endTime": "257.700s",
+              "startTime": "257.600s",
+              "word": "we"
+            },
+            {
+              "endTime": "257.800s",
+              "startTime": "257.700s",
+              "word": "just"
+            },
+            {
+              "endTime": "258s",
+              "startTime": "257.800s",
+              "word": "went"
+            },
+            {
+              "endTime": "258.200s",
+              "startTime": "258s",
+              "word": "with"
+            },
+            {
+              "endTime": "259.600s",
+              "startTime": "258.200s",
+              "word": "injured"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.80361235,
+          "transcript": " why don't we change it to a cappella as we're walking out of the pawn shop",
+          "words": [
+            {
+              "endTime": "262.700s",
+              "startTime": "262.400s",
+              "word": "why"
+            },
+            {
+              "endTime": "262.900s",
+              "startTime": "262.700s",
+              "word": "don't"
+            },
+            {
+              "endTime": "263s",
+              "startTime": "262.900s",
+              "word": "we"
+            },
+            {
+              "endTime": "263.300s",
+              "startTime": "263s",
+              "word": "change"
+            },
+            {
+              "endTime": "263.400s",
+              "startTime": "263.300s",
+              "word": "it"
+            },
+            {
+              "endTime": "263.500s",
+              "startTime": "263.400s",
+              "word": "to"
+            },
+            {
+              "endTime": "263.600s",
+              "startTime": "263.500s",
+              "word": "a"
+            },
+            {
+              "endTime": "264.200s",
+              "startTime": "263.600s",
+              "word": "cappella"
+            },
+            {
+              "endTime": "265.600s",
+              "startTime": "264.200s",
+              "word": "as"
+            },
+            {
+              "endTime": "265.800s",
+              "startTime": "265.600s",
+              "word": "we're"
+            },
+            {
+              "endTime": "266s",
+              "startTime": "265.800s",
+              "word": "walking"
+            },
+            {
+              "endTime": "266.300s",
+              "startTime": "266s",
+              "word": "out"
+            },
+            {
+              "endTime": "266.400s",
+              "startTime": "266.300s",
+              "word": "of"
+            },
+            {
+              "endTime": "266.500s",
+              "startTime": "266.400s",
+              "word": "the"
+            },
+            {
+              "endTime": "267.200s",
+              "startTime": "266.500s",
+              "word": "pawn"
+            },
+            {
+              "endTime": "267.700s",
+              "startTime": "267.200s",
+              "word": "shop"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9642791,
+          "transcript": " you became a death metal barbershop quartet",
+          "words": [
+            {
+              "endTime": "276.200s",
+              "startTime": "275.800s",
+              "word": "you"
+            },
+            {
+              "endTime": "276.400s",
+              "startTime": "276.200s",
+              "word": "became"
+            },
+            {
+              "endTime": "276.500s",
+              "startTime": "276.400s",
+              "word": "a"
+            },
+            {
+              "endTime": "276.800s",
+              "startTime": "276.500s",
+              "word": "death"
+            },
+            {
+              "endTime": "277s",
+              "startTime": "276.800s",
+              "word": "metal"
+            },
+            {
+              "endTime": "277.700s",
+              "startTime": "277s",
+              "word": "barbershop"
+            },
+            {
+              "endTime": "278.600s",
+              "startTime": "277.700s",
+              "word": "quartet"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.911777,
+          "transcript": " Shopper I shop for things I was looking for some glue recently but I'll just one store had was super glue it sounded way too overwhelming I didn't have any pretty good glue",
+          "words": [
+            {
+              "endTime": "285.700s",
+              "startTime": "282s",
+              "word": "Shopper"
+            },
+            {
+              "endTime": "286.200s",
+              "startTime": "285.700s",
+              "word": "I"
+            },
+            {
+              "endTime": "286.700s",
+              "startTime": "286.200s",
+              "word": "shop"
+            },
+            {
+              "endTime": "286.800s",
+              "startTime": "286.700s",
+              "word": "for"
+            },
+            {
+              "endTime": "287s",
+              "startTime": "286.800s",
+              "word": "things"
+            },
+            {
+              "endTime": "287.200s",
+              "startTime": "287s",
+              "word": "I"
+            },
+            {
+              "endTime": "287.400s",
+              "startTime": "287.200s",
+              "word": "was"
+            },
+            {
+              "endTime": "287.600s",
+              "startTime": "287.400s",
+              "word": "looking"
+            },
+            {
+              "endTime": "287.800s",
+              "startTime": "287.600s",
+              "word": "for"
+            },
+            {
+              "endTime": "288s",
+              "startTime": "287.800s",
+              "word": "some"
+            },
+            {
+              "endTime": "288.300s",
+              "startTime": "288s",
+              "word": "glue"
+            },
+            {
+              "endTime": "288.900s",
+              "startTime": "288.300s",
+              "word": "recently"
+            },
+            {
+              "endTime": "289.800s",
+              "startTime": "288.900s",
+              "word": "but"
+            },
+            {
+              "endTime": "289.900s",
+              "startTime": "289.800s",
+              "word": "I'll"
+            },
+            {
+              "endTime": "290s",
+              "startTime": "289.900s",
+              "word": "just"
+            },
+            {
+              "endTime": "290.300s",
+              "startTime": "290s",
+              "word": "one"
+            },
+            {
+              "endTime": "290.500s",
+              "startTime": "290.300s",
+              "word": "store"
+            },
+            {
+              "endTime": "290.600s",
+              "startTime": "290.500s",
+              "word": "had"
+            },
+            {
+              "endTime": "290.900s",
+              "startTime": "290.600s",
+              "word": "was"
+            },
+            {
+              "endTime": "291.300s",
+              "startTime": "290.900s",
+              "word": "super"
+            },
+            {
+              "endTime": "291.400s",
+              "startTime": "291.300s",
+              "word": "glue"
+            },
+            {
+              "endTime": "292.700s",
+              "startTime": "291.400s",
+              "word": "it"
+            },
+            {
+              "endTime": "293.100s",
+              "startTime": "292.700s",
+              "word": "sounded"
+            },
+            {
+              "endTime": "293.200s",
+              "startTime": "293.100s",
+              "word": "way"
+            },
+            {
+              "endTime": "293.300s",
+              "startTime": "293.200s",
+              "word": "too"
+            },
+            {
+              "endTime": "294.300s",
+              "startTime": "293.300s",
+              "word": "overwhelming"
+            },
+            {
+              "endTime": "295.800s",
+              "startTime": "294.300s",
+              "word": "I"
+            },
+            {
+              "endTime": "296.100s",
+              "startTime": "295.800s",
+              "word": "didn't"
+            },
+            {
+              "endTime": "296.200s",
+              "startTime": "296.100s",
+              "word": "have"
+            },
+            {
+              "endTime": "296.400s",
+              "startTime": "296.200s",
+              "word": "any"
+            },
+            {
+              "endTime": "297.600s",
+              "startTime": "296.400s",
+              "word": "pretty"
+            },
+            {
+              "endTime": "297.800s",
+              "startTime": "297.600s",
+              "word": "good"
+            },
+            {
+              "endTime": "298.100s",
+              "startTime": "297.800s",
+              "word": "glue"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.92606467,
+          "transcript": " I don't want to hang from a steel beam",
+          "words": [
+            {
+              "endTime": "301.100s",
+              "startTime": "300.700s",
+              "word": "I"
+            },
+            {
+              "endTime": "301.300s",
+              "startTime": "301.100s",
+              "word": "don't"
+            },
+            {
+              "endTime": "301.400s",
+              "startTime": "301.300s",
+              "word": "want"
+            },
+            {
+              "endTime": "301.500s",
+              "startTime": "301.400s",
+              "word": "to"
+            },
+            {
+              "endTime": "301.900s",
+              "startTime": "301.500s",
+              "word": "hang"
+            },
+            {
+              "endTime": "302.100s",
+              "startTime": "301.900s",
+              "word": "from"
+            },
+            {
+              "endTime": "302.200s",
+              "startTime": "302.100s",
+              "word": "a"
+            },
+            {
+              "endTime": "302.500s",
+              "startTime": "302.200s",
+              "word": "steel"
+            },
+            {
+              "endTime": "302.700s",
+              "startTime": "302.500s",
+              "word": "beam"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.96778584,
+          "transcript": " I just want to put some back together",
+          "words": [
+            {
+              "endTime": "306.400s",
+              "startTime": "306.100s",
+              "word": "I"
+            },
+            {
+              "endTime": "306.600s",
+              "startTime": "306.400s",
+              "word": "just"
+            },
+            {
+              "endTime": "306.700s",
+              "startTime": "306.600s",
+              "word": "want"
+            },
+            {
+              "endTime": "306.700s",
+              "startTime": "306.700s",
+              "word": "to"
+            },
+            {
+              "endTime": "307s",
+              "startTime": "306.700s",
+              "word": "put"
+            },
+            {
+              "endTime": "307.100s",
+              "startTime": "307s",
+              "word": "some"
+            },
+            {
+              "endTime": "307.600s",
+              "startTime": "307.100s",
+              "word": "back"
+            },
+            {
+              "endTime": "307.800s",
+              "startTime": "307.600s",
+              "word": "together"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8873961,
+          "transcript": " I had another line but it's too late you clap too long the rhythm is over",
+          "words": [
+            {
+              "endTime": "319.700s",
+              "startTime": "319.400s",
+              "word": "I"
+            },
+            {
+              "endTime": "320s",
+              "startTime": "319.700s",
+              "word": "had"
+            },
+            {
+              "endTime": "320.200s",
+              "startTime": "320s",
+              "word": "another"
+            },
+            {
+              "endTime": "320.500s",
+              "startTime": "320.200s",
+              "word": "line"
+            },
+            {
+              "endTime": "320.700s",
+              "startTime": "320.500s",
+              "word": "but"
+            },
+            {
+              "endTime": "320.800s",
+              "startTime": "320.700s",
+              "word": "it's"
+            },
+            {
+              "endTime": "320.900s",
+              "startTime": "320.800s",
+              "word": "too"
+            },
+            {
+              "endTime": "321s",
+              "startTime": "320.900s",
+              "word": "late"
+            },
+            {
+              "endTime": "321.200s",
+              "startTime": "321s",
+              "word": "you"
+            },
+            {
+              "endTime": "321.500s",
+              "startTime": "321.200s",
+              "word": "clap"
+            },
+            {
+              "endTime": "321.700s",
+              "startTime": "321.500s",
+              "word": "too"
+            },
+            {
+              "endTime": "322.100s",
+              "startTime": "321.700s",
+              "word": "long"
+            },
+            {
+              "endTime": "323.500s",
+              "startTime": "322.100s",
+              "word": "the"
+            },
+            {
+              "endTime": "323.900s",
+              "startTime": "323.500s",
+              "word": "rhythm"
+            },
+            {
+              "endTime": "324s",
+              "startTime": "323.900s",
+              "word": "is"
+            },
+            {
+              "endTime": "324.600s",
+              "startTime": "324s",
+              "word": "over"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.95638484,
+          "transcript": " open up a chain of pizza restaurants called Mitch's Pizzeria not because I excel at making pizza I just think Pizza Hut is cocky and they need to be taken out there advertising that they're going to accept all competitors coupons so if mrs. Pizzeria was going on at printable coupon and said unlimited free pizza",
+          "words": [
+            {
+              "endTime": "329.500s",
+              "startTime": "328.800s",
+              "word": "open"
+            },
+            {
+              "endTime": "329.600s",
+              "startTime": "329.500s",
+              "word": "up"
+            },
+            {
+              "endTime": "329.600s",
+              "startTime": "329.600s",
+              "word": "a"
+            },
+            {
+              "endTime": "329.900s",
+              "startTime": "329.600s",
+              "word": "chain"
+            },
+            {
+              "endTime": "330s",
+              "startTime": "329.900s",
+              "word": "of"
+            },
+            {
+              "endTime": "330.400s",
+              "startTime": "330s",
+              "word": "pizza"
+            },
+            {
+              "endTime": "331.100s",
+              "startTime": "330.400s",
+              "word": "restaurants"
+            },
+            {
+              "endTime": "331.400s",
+              "startTime": "331.100s",
+              "word": "called"
+            },
+            {
+              "endTime": "331.800s",
+              "startTime": "331.400s",
+              "word": "Mitch's"
+            },
+            {
+              "endTime": "332.400s",
+              "startTime": "331.800s",
+              "word": "Pizzeria"
+            },
+            {
+              "endTime": "333.400s",
+              "startTime": "332.400s",
+              "word": "not"
+            },
+            {
+              "endTime": "333.700s",
+              "startTime": "333.400s",
+              "word": "because"
+            },
+            {
+              "endTime": "333.800s",
+              "startTime": "333.700s",
+              "word": "I"
+            },
+            {
+              "endTime": "334.200s",
+              "startTime": "333.800s",
+              "word": "excel"
+            },
+            {
+              "endTime": "334.300s",
+              "startTime": "334.200s",
+              "word": "at"
+            },
+            {
+              "endTime": "334.500s",
+              "startTime": "334.300s",
+              "word": "making"
+            },
+            {
+              "endTime": "334.800s",
+              "startTime": "334.500s",
+              "word": "pizza"
+            },
+            {
+              "endTime": "335.100s",
+              "startTime": "334.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "335.300s",
+              "startTime": "335.100s",
+              "word": "just"
+            },
+            {
+              "endTime": "335.600s",
+              "startTime": "335.300s",
+              "word": "think"
+            },
+            {
+              "endTime": "336.600s",
+              "startTime": "335.600s",
+              "word": "Pizza"
+            },
+            {
+              "endTime": "336.700s",
+              "startTime": "336.600s",
+              "word": "Hut"
+            },
+            {
+              "endTime": "336.900s",
+              "startTime": "336.700s",
+              "word": "is"
+            },
+            {
+              "endTime": "337.400s",
+              "startTime": "336.900s",
+              "word": "cocky"
+            },
+            {
+              "endTime": "337.900s",
+              "startTime": "337.400s",
+              "word": "and"
+            },
+            {
+              "endTime": "338s",
+              "startTime": "337.900s",
+              "word": "they"
+            },
+            {
+              "endTime": "338.100s",
+              "startTime": "338s",
+              "word": "need"
+            },
+            {
+              "endTime": "338.200s",
+              "startTime": "338.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "338.200s",
+              "startTime": "338.200s",
+              "word": "be"
+            },
+            {
+              "endTime": "338.400s",
+              "startTime": "338.200s",
+              "word": "taken"
+            },
+            {
+              "endTime": "338.700s",
+              "startTime": "338.400s",
+              "word": "out"
+            },
+            {
+              "endTime": "340.900s",
+              "startTime": "338.700s",
+              "word": "there"
+            },
+            {
+              "endTime": "341.100s",
+              "startTime": "340.900s",
+              "word": "advertising"
+            },
+            {
+              "endTime": "341.600s",
+              "startTime": "341.100s",
+              "word": "that"
+            },
+            {
+              "endTime": "341.700s",
+              "startTime": "341.600s",
+              "word": "they're"
+            },
+            {
+              "endTime": "341.800s",
+              "startTime": "341.700s",
+              "word": "going"
+            },
+            {
+              "endTime": "341.900s",
+              "startTime": "341.800s",
+              "word": "to"
+            },
+            {
+              "endTime": "342.200s",
+              "startTime": "341.900s",
+              "word": "accept"
+            },
+            {
+              "endTime": "342.500s",
+              "startTime": "342.200s",
+              "word": "all"
+            },
+            {
+              "endTime": "343.200s",
+              "startTime": "342.500s",
+              "word": "competitors"
+            },
+            {
+              "endTime": "343.400s",
+              "startTime": "343.200s",
+              "word": "coupons"
+            },
+            {
+              "endTime": "344.100s",
+              "startTime": "343.400s",
+              "word": "so"
+            },
+            {
+              "endTime": "344.800s",
+              "startTime": "344.100s",
+              "word": "if"
+            },
+            {
+              "endTime": "345.300s",
+              "startTime": "344.800s",
+              "word": "mrs."
+            },
+            {
+              "endTime": "345.900s",
+              "startTime": "345.300s",
+              "word": "Pizzeria"
+            },
+            {
+              "endTime": "346s",
+              "startTime": "345.900s",
+              "word": "was"
+            },
+            {
+              "endTime": "346.200s",
+              "startTime": "346s",
+              "word": "going"
+            },
+            {
+              "endTime": "346.300s",
+              "startTime": "346.200s",
+              "word": "on"
+            },
+            {
+              "endTime": "346.400s",
+              "startTime": "346.300s",
+              "word": "at"
+            },
+            {
+              "endTime": "346.800s",
+              "startTime": "346.400s",
+              "word": "printable"
+            },
+            {
+              "endTime": "347.200s",
+              "startTime": "346.800s",
+              "word": "coupon"
+            },
+            {
+              "endTime": "347.400s",
+              "startTime": "347.200s",
+              "word": "and"
+            },
+            {
+              "endTime": "347.700s",
+              "startTime": "347.400s",
+              "word": "said"
+            },
+            {
+              "endTime": "349.100s",
+              "startTime": "347.700s",
+              "word": "unlimited"
+            },
+            {
+              "endTime": "349.400s",
+              "startTime": "349.100s",
+              "word": "free"
+            },
+            {
+              "endTime": "349.900s",
+              "startTime": "349.400s",
+              "word": "pizza"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.4119475,
+          "transcript": " Muhammad Ali",
+          "words": [
+            {
+              "endTime": "357.900s",
+              "startTime": "357.200s",
+              "word": "Muhammad"
+            },
+            {
+              "endTime": "358.100s",
+              "startTime": "357.900s",
+              "word": "Ali"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.91997904,
+          "transcript": " special note coupon not good at any of the Mitch's Pizza locations",
+          "words": [
+            {
+              "endTime": "361.800s",
+              "startTime": "361.300s",
+              "word": "special"
+            },
+            {
+              "endTime": "362s",
+              "startTime": "361.800s",
+              "word": "note"
+            },
+            {
+              "endTime": "362.400s",
+              "startTime": "362s",
+              "word": "coupon"
+            },
+            {
+              "endTime": "362.600s",
+              "startTime": "362.400s",
+              "word": "not"
+            },
+            {
+              "endTime": "362.800s",
+              "startTime": "362.600s",
+              "word": "good"
+            },
+            {
+              "endTime": "363s",
+              "startTime": "362.800s",
+              "word": "at"
+            },
+            {
+              "endTime": "363.200s",
+              "startTime": "363s",
+              "word": "any"
+            },
+            {
+              "endTime": "363.200s",
+              "startTime": "363.200s",
+              "word": "of"
+            },
+            {
+              "endTime": "363.400s",
+              "startTime": "363.200s",
+              "word": "the"
+            },
+            {
+              "endTime": "363.700s",
+              "startTime": "363.400s",
+              "word": "Mitch's"
+            },
+            {
+              "endTime": "363.900s",
+              "startTime": "363.700s",
+              "word": "Pizza"
+            },
+            {
+              "endTime": "364.500s",
+              "startTime": "363.900s",
+              "word": "locations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9774678,
+          "transcript": " free pizza oven with purchase",
+          "words": [
+            {
+              "endTime": "369.100s",
+              "startTime": "368.700s",
+              "word": "free"
+            },
+            {
+              "endTime": "369.700s",
+              "startTime": "369.100s",
+              "word": "pizza"
+            },
+            {
+              "endTime": "370.100s",
+              "startTime": "369.700s",
+              "word": "oven"
+            },
+            {
+              "endTime": "370.300s",
+              "startTime": "370.100s",
+              "word": "with"
+            },
+            {
+              "endTime": "370.800s",
+              "startTime": "370.300s",
+              "word": "purchase"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8273684,
+          "transcript": " of a small Coke",
+          "words": [
+            {
+              "endTime": "376.400s",
+              "startTime": "376s",
+              "word": "of"
+            },
+            {
+              "endTime": "376.500s",
+              "startTime": "376.400s",
+              "word": "a"
+            },
+            {
+              "endTime": "376.800s",
+              "startTime": "376.500s",
+              "word": "small"
+            },
+            {
+              "endTime": "377.200s",
+              "startTime": "376.800s",
+              "word": "Coke"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.98244995,
+          "transcript": " I was born in Minnesota that's where I was raised Minnesota",
+          "words": [
+            {
+              "endTime": "382.800s",
+              "startTime": "382.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "383s",
+              "startTime": "382.800s",
+              "word": "was"
+            },
+            {
+              "endTime": "383.200s",
+              "startTime": "383s",
+              "word": "born"
+            },
+            {
+              "endTime": "383.400s",
+              "startTime": "383.200s",
+              "word": "in"
+            },
+            {
+              "endTime": "383.700s",
+              "startTime": "383.400s",
+              "word": "Minnesota"
+            },
+            {
+              "endTime": "384.300s",
+              "startTime": "383.700s",
+              "word": "that's"
+            },
+            {
+              "endTime": "384.600s",
+              "startTime": "384.300s",
+              "word": "where"
+            },
+            {
+              "endTime": "384.700s",
+              "startTime": "384.600s",
+              "word": "I"
+            },
+            {
+              "endTime": "384.800s",
+              "startTime": "384.700s",
+              "word": "was"
+            },
+            {
+              "endTime": "385.200s",
+              "startTime": "384.800s",
+              "word": "raised"
+            },
+            {
+              "endTime": "385.800s",
+              "startTime": "385.200s",
+              "word": "Minnesota"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.91846013,
+          "transcript": " that's why I left you because you",
+          "words": [
+            {
+              "endTime": "388.300s",
+              "startTime": "387.900s",
+              "word": "that's"
+            },
+            {
+              "endTime": "388.500s",
+              "startTime": "388.300s",
+              "word": "why"
+            },
+            {
+              "endTime": "388.500s",
+              "startTime": "388.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "388.600s",
+              "startTime": "388.500s",
+              "word": "left"
+            },
+            {
+              "endTime": "389s",
+              "startTime": "388.600s",
+              "word": "you"
+            },
+            {
+              "endTime": "389.100s",
+              "startTime": "389s",
+              "word": "because"
+            },
+            {
+              "endTime": "389.400s",
+              "startTime": "389.100s",
+              "word": "you"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9263037,
+          "transcript": " stupid but when I was 18 I was kind of sick of living there so my friend Tim and I we packed up his Volare we move from Minnesota to Florida we wanted to move to Texas but the front end alignment was bad",
+          "words": [
+            {
+              "endTime": "396.400s",
+              "startTime": "394s",
+              "word": "stupid"
+            },
+            {
+              "endTime": "397.200s",
+              "startTime": "396.400s",
+              "word": "but"
+            },
+            {
+              "endTime": "397.300s",
+              "startTime": "397.200s",
+              "word": "when"
+            },
+            {
+              "endTime": "397.300s",
+              "startTime": "397.300s",
+              "word": "I"
+            },
+            {
+              "endTime": "397.400s",
+              "startTime": "397.300s",
+              "word": "was"
+            },
+            {
+              "endTime": "397.800s",
+              "startTime": "397.400s",
+              "word": "18"
+            },
+            {
+              "endTime": "397.900s",
+              "startTime": "397.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "398.100s",
+              "startTime": "397.900s",
+              "word": "was"
+            },
+            {
+              "endTime": "398.300s",
+              "startTime": "398.100s",
+              "word": "kind"
+            },
+            {
+              "endTime": "398.300s",
+              "startTime": "398.300s",
+              "word": "of"
+            },
+            {
+              "endTime": "398.600s",
+              "startTime": "398.300s",
+              "word": "sick"
+            },
+            {
+              "endTime": "398.600s",
+              "startTime": "398.600s",
+              "word": "of"
+            },
+            {
+              "endTime": "398.800s",
+              "startTime": "398.600s",
+              "word": "living"
+            },
+            {
+              "endTime": "399s",
+              "startTime": "398.800s",
+              "word": "there"
+            },
+            {
+              "endTime": "399.100s",
+              "startTime": "399s",
+              "word": "so"
+            },
+            {
+              "endTime": "399.200s",
+              "startTime": "399.100s",
+              "word": "my"
+            },
+            {
+              "endTime": "399.600s",
+              "startTime": "399.200s",
+              "word": "friend"
+            },
+            {
+              "endTime": "399.700s",
+              "startTime": "399.600s",
+              "word": "Tim"
+            },
+            {
+              "endTime": "399.800s",
+              "startTime": "399.700s",
+              "word": "and"
+            },
+            {
+              "endTime": "399.900s",
+              "startTime": "399.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "400s",
+              "startTime": "399.900s",
+              "word": "we"
+            },
+            {
+              "endTime": "400.300s",
+              "startTime": "400s",
+              "word": "packed"
+            },
+            {
+              "endTime": "400.400s",
+              "startTime": "400.300s",
+              "word": "up"
+            },
+            {
+              "endTime": "400.600s",
+              "startTime": "400.400s",
+              "word": "his"
+            },
+            {
+              "endTime": "401.200s",
+              "startTime": "400.600s",
+              "word": "Volare"
+            },
+            {
+              "endTime": "402.600s",
+              "startTime": "401.200s",
+              "word": "we"
+            },
+            {
+              "endTime": "402.900s",
+              "startTime": "402.600s",
+              "word": "move"
+            },
+            {
+              "endTime": "403s",
+              "startTime": "402.900s",
+              "word": "from"
+            },
+            {
+              "endTime": "403.200s",
+              "startTime": "403s",
+              "word": "Minnesota"
+            },
+            {
+              "endTime": "403.900s",
+              "startTime": "403.200s",
+              "word": "to"
+            },
+            {
+              "endTime": "404.200s",
+              "startTime": "403.900s",
+              "word": "Florida"
+            },
+            {
+              "endTime": "405.600s",
+              "startTime": "404.200s",
+              "word": "we"
+            },
+            {
+              "endTime": "405.900s",
+              "startTime": "405.600s",
+              "word": "wanted"
+            },
+            {
+              "endTime": "405.900s",
+              "startTime": "405.900s",
+              "word": "to"
+            },
+            {
+              "endTime": "406.100s",
+              "startTime": "405.900s",
+              "word": "move"
+            },
+            {
+              "endTime": "406.200s",
+              "startTime": "406.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "406.800s",
+              "startTime": "406.200s",
+              "word": "Texas"
+            },
+            {
+              "endTime": "407s",
+              "startTime": "406.800s",
+              "word": "but"
+            },
+            {
+              "endTime": "407.200s",
+              "startTime": "407s",
+              "word": "the"
+            },
+            {
+              "endTime": "407.500s",
+              "startTime": "407.200s",
+              "word": "front"
+            },
+            {
+              "endTime": "407.800s",
+              "startTime": "407.500s",
+              "word": "end"
+            },
+            {
+              "endTime": "408.300s",
+              "startTime": "407.800s",
+              "word": "alignment"
+            },
+            {
+              "endTime": "408.500s",
+              "startTime": "408.300s",
+              "word": "was"
+            },
+            {
+              "endTime": "409s",
+              "startTime": "408.500s",
+              "word": "bad"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.8417774,
+          "transcript": " I hooked up with a roommate down there is there was Eddie",
+          "words": [
+            {
+              "endTime": "415.400s",
+              "startTime": "415.100s",
+              "word": "I"
+            },
+            {
+              "endTime": "415.700s",
+              "startTime": "415.400s",
+              "word": "hooked"
+            },
+            {
+              "endTime": "415.700s",
+              "startTime": "415.700s",
+              "word": "up"
+            },
+            {
+              "endTime": "415.900s",
+              "startTime": "415.700s",
+              "word": "with"
+            },
+            {
+              "endTime": "415.900s",
+              "startTime": "415.900s",
+              "word": "a"
+            },
+            {
+              "endTime": "416.300s",
+              "startTime": "415.900s",
+              "word": "roommate"
+            },
+            {
+              "endTime": "416.600s",
+              "startTime": "416.300s",
+              "word": "down"
+            },
+            {
+              "endTime": "416.800s",
+              "startTime": "416.600s",
+              "word": "there"
+            },
+            {
+              "endTime": "416.800s",
+              "startTime": "416.800s",
+              "word": "is"
+            },
+            {
+              "endTime": "417s",
+              "startTime": "416.800s",
+              "word": "there"
+            },
+            {
+              "endTime": "417s",
+              "startTime": "417s",
+              "word": "was"
+            },
+            {
+              "endTime": "417.500s",
+              "startTime": "417s",
+              "word": "Eddie"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.934591,
+          "transcript": " hey was kind of slow on the mental draw I was writing a letter when that I had a problem I say Eddie how do you abbreviate Arkansas do you say I don't know just start spelling it then quit",
+          "words": [
+            {
+              "endTime": "418.800s",
+              "startTime": "418.500s",
+              "word": "hey"
+            },
+            {
+              "endTime": "419.100s",
+              "startTime": "418.800s",
+              "word": "was"
+            },
+            {
+              "endTime": "419.300s",
+              "startTime": "419.100s",
+              "word": "kind"
+            },
+            {
+              "endTime": "419.300s",
+              "startTime": "419.300s",
+              "word": "of"
+            },
+            {
+              "endTime": "419.700s",
+              "startTime": "419.300s",
+              "word": "slow"
+            },
+            {
+              "endTime": "419.800s",
+              "startTime": "419.700s",
+              "word": "on"
+            },
+            {
+              "endTime": "419.900s",
+              "startTime": "419.800s",
+              "word": "the"
+            },
+            {
+              "endTime": "420.300s",
+              "startTime": "419.900s",
+              "word": "mental"
+            },
+            {
+              "endTime": "420.600s",
+              "startTime": "420.300s",
+              "word": "draw"
+            },
+            {
+              "endTime": "421.800s",
+              "startTime": "420.600s",
+              "word": "I"
+            },
+            {
+              "endTime": "422s",
+              "startTime": "421.800s",
+              "word": "was"
+            },
+            {
+              "endTime": "422.200s",
+              "startTime": "422s",
+              "word": "writing"
+            },
+            {
+              "endTime": "422.300s",
+              "startTime": "422.200s",
+              "word": "a"
+            },
+            {
+              "endTime": "422.400s",
+              "startTime": "422.300s",
+              "word": "letter"
+            },
+            {
+              "endTime": "422.600s",
+              "startTime": "422.400s",
+              "word": "when"
+            },
+            {
+              "endTime": "422.800s",
+              "startTime": "422.600s",
+              "word": "that"
+            },
+            {
+              "endTime": "422.800s",
+              "startTime": "422.800s",
+              "word": "I"
+            },
+            {
+              "endTime": "423s",
+              "startTime": "422.800s",
+              "word": "had"
+            },
+            {
+              "endTime": "423s",
+              "startTime": "423s",
+              "word": "a"
+            },
+            {
+              "endTime": "423.300s",
+              "startTime": "423s",
+              "word": "problem"
+            },
+            {
+              "endTime": "423.500s",
+              "startTime": "423.300s",
+              "word": "I"
+            },
+            {
+              "endTime": "423.700s",
+              "startTime": "423.500s",
+              "word": "say"
+            },
+            {
+              "endTime": "423.900s",
+              "startTime": "423.700s",
+              "word": "Eddie"
+            },
+            {
+              "endTime": "424.600s",
+              "startTime": "423.900s",
+              "word": "how"
+            },
+            {
+              "endTime": "424.700s",
+              "startTime": "424.600s",
+              "word": "do"
+            },
+            {
+              "endTime": "424.800s",
+              "startTime": "424.700s",
+              "word": "you"
+            },
+            {
+              "endTime": "424.900s",
+              "startTime": "424.800s",
+              "word": "abbreviate"
+            },
+            {
+              "endTime": "425.400s",
+              "startTime": "424.900s",
+              "word": "Arkansas"
+            },
+            {
+              "endTime": "426.900s",
+              "startTime": "425.400s",
+              "word": "do"
+            },
+            {
+              "endTime": "426.900s",
+              "startTime": "426.900s",
+              "word": "you"
+            },
+            {
+              "endTime": "427s",
+              "startTime": "426.900s",
+              "word": "say"
+            },
+            {
+              "endTime": "427.100s",
+              "startTime": "427s",
+              "word": "I"
+            },
+            {
+              "endTime": "427.200s",
+              "startTime": "427.100s",
+              "word": "don't"
+            },
+            {
+              "endTime": "427.300s",
+              "startTime": "427.200s",
+              "word": "know"
+            },
+            {
+              "endTime": "428.400s",
+              "startTime": "427.300s",
+              "word": "just"
+            },
+            {
+              "endTime": "428.900s",
+              "startTime": "428.400s",
+              "word": "start"
+            },
+            {
+              "endTime": "429.500s",
+              "startTime": "428.900s",
+              "word": "spelling"
+            },
+            {
+              "endTime": "429.700s",
+              "startTime": "429.500s",
+              "word": "it"
+            },
+            {
+              "endTime": "430s",
+              "startTime": "429.700s",
+              "word": "then"
+            },
+            {
+              "endTime": "430.400s",
+              "startTime": "430s",
+              "word": "quit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.95549273,
+          "transcript": " I used to do acid on occasion when I was on acid it was strange I would see things like like beams of light and hear sounds that sound like car horns",
+          "words": [
+            {
+              "endTime": "442.800s",
+              "startTime": "442.500s",
+              "word": "I"
+            },
+            {
+              "endTime": "443.100s",
+              "startTime": "442.800s",
+              "word": "used"
+            },
+            {
+              "endTime": "443.200s",
+              "startTime": "443.100s",
+              "word": "to"
+            },
+            {
+              "endTime": "443.400s",
+              "startTime": "443.200s",
+              "word": "do"
+            },
+            {
+              "endTime": "444.800s",
+              "startTime": "443.400s",
+              "word": "acid"
+            },
+            {
+              "endTime": "445s",
+              "startTime": "444.800s",
+              "word": "on"
+            },
+            {
+              "endTime": "445.600s",
+              "startTime": "445s",
+              "word": "occasion"
+            },
+            {
+              "endTime": "447.300s",
+              "startTime": "445.600s",
+              "word": "when"
+            },
+            {
+              "endTime": "447.400s",
+              "startTime": "447.300s",
+              "word": "I"
+            },
+            {
+              "endTime": "447.500s",
+              "startTime": "447.400s",
+              "word": "was"
+            },
+            {
+              "endTime": "447.700s",
+              "startTime": "447.500s",
+              "word": "on"
+            },
+            {
+              "endTime": "448.100s",
+              "startTime": "447.700s",
+              "word": "acid"
+            },
+            {
+              "endTime": "448.400s",
+              "startTime": "448.100s",
+              "word": "it"
+            },
+            {
+              "endTime": "448.600s",
+              "startTime": "448.400s",
+              "word": "was"
+            },
+            {
+              "endTime": "449.100s",
+              "startTime": "448.600s",
+              "word": "strange"
+            },
+            {
+              "endTime": "449.400s",
+              "startTime": "449.100s",
+              "word": "I"
+            },
+            {
+              "endTime": "449.600s",
+              "startTime": "449.400s",
+              "word": "would"
+            },
+            {
+              "endTime": "449.800s",
+              "startTime": "449.600s",
+              "word": "see"
+            },
+            {
+              "endTime": "450.100s",
+              "startTime": "449.800s",
+              "word": "things"
+            },
+            {
+              "endTime": "450.600s",
+              "startTime": "450.100s",
+              "word": "like"
+            },
+            {
+              "endTime": "450.900s",
+              "startTime": "450.600s",
+              "word": "like"
+            },
+            {
+              "endTime": "451.300s",
+              "startTime": "450.900s",
+              "word": "beams"
+            },
+            {
+              "endTime": "451.400s",
+              "startTime": "451.300s",
+              "word": "of"
+            },
+            {
+              "endTime": "451.500s",
+              "startTime": "451.400s",
+              "word": "light"
+            },
+            {
+              "endTime": "452.800s",
+              "startTime": "451.500s",
+              "word": "and"
+            },
+            {
+              "endTime": "453s",
+              "startTime": "452.800s",
+              "word": "hear"
+            },
+            {
+              "endTime": "453.200s",
+              "startTime": "453s",
+              "word": "sounds"
+            },
+            {
+              "endTime": "453.500s",
+              "startTime": "453.200s",
+              "word": "that"
+            },
+            {
+              "endTime": "453.900s",
+              "startTime": "453.500s",
+              "word": "sound"
+            },
+            {
+              "endTime": "454s",
+              "startTime": "453.900s",
+              "word": "like"
+            },
+            {
+              "endTime": "455.100s",
+              "startTime": "454s",
+              "word": "car"
+            },
+            {
+              "endTime": "455.600s",
+              "startTime": "455.100s",
+              "word": "horns"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.95766836,
+          "transcript": " we're on a so we will go into the woods cuz when you're in the woods tripping is less likely a chance to run into an authority figure",
+          "words": [
+            {
+              "endTime": "465.900s",
+              "startTime": "465.100s",
+              "word": "we're"
+            },
+            {
+              "endTime": "466.100s",
+              "startTime": "465.900s",
+              "word": "on"
+            },
+            {
+              "endTime": "466.200s",
+              "startTime": "466.100s",
+              "word": "a"
+            },
+            {
+              "endTime": "466.400s",
+              "startTime": "466.200s",
+              "word": "so"
+            },
+            {
+              "endTime": "466.500s",
+              "startTime": "466.400s",
+              "word": "we"
+            },
+            {
+              "endTime": "466.600s",
+              "startTime": "466.500s",
+              "word": "will"
+            },
+            {
+              "endTime": "466.700s",
+              "startTime": "466.600s",
+              "word": "go"
+            },
+            {
+              "endTime": "466.900s",
+              "startTime": "466.700s",
+              "word": "into"
+            },
+            {
+              "endTime": "467s",
+              "startTime": "466.900s",
+              "word": "the"
+            },
+            {
+              "endTime": "467.400s",
+              "startTime": "467s",
+              "word": "woods"
+            },
+            {
+              "endTime": "467.600s",
+              "startTime": "467.400s",
+              "word": "cuz"
+            },
+            {
+              "endTime": "467.800s",
+              "startTime": "467.600s",
+              "word": "when"
+            },
+            {
+              "endTime": "467.900s",
+              "startTime": "467.800s",
+              "word": "you're"
+            },
+            {
+              "endTime": "468s",
+              "startTime": "467.900s",
+              "word": "in"
+            },
+            {
+              "endTime": "468.100s",
+              "startTime": "468s",
+              "word": "the"
+            },
+            {
+              "endTime": "468.200s",
+              "startTime": "468.100s",
+              "word": "woods"
+            },
+            {
+              "endTime": "468.800s",
+              "startTime": "468.200s",
+              "word": "tripping"
+            },
+            {
+              "endTime": "468.900s",
+              "startTime": "468.800s",
+              "word": "is"
+            },
+            {
+              "endTime": "469.200s",
+              "startTime": "468.900s",
+              "word": "less"
+            },
+            {
+              "endTime": "469.300s",
+              "startTime": "469.200s",
+              "word": "likely"
+            },
+            {
+              "endTime": "469.600s",
+              "startTime": "469.300s",
+              "word": "a"
+            },
+            {
+              "endTime": "469.900s",
+              "startTime": "469.600s",
+              "word": "chance"
+            },
+            {
+              "endTime": "470s",
+              "startTime": "469.900s",
+              "word": "to"
+            },
+            {
+              "endTime": "470.200s",
+              "startTime": "470s",
+              "word": "run"
+            },
+            {
+              "endTime": "470.400s",
+              "startTime": "470.200s",
+              "word": "into"
+            },
+            {
+              "endTime": "470.500s",
+              "startTime": "470.400s",
+              "word": "an"
+            },
+            {
+              "endTime": "470.700s",
+              "startTime": "470.500s",
+              "word": "authority"
+            },
+            {
+              "endTime": "470.900s",
+              "startTime": "470.700s",
+              "word": "figure"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.75133747,
+          "transcript": " we ran into a bear",
+          "words": [
+            {
+              "endTime": "473.100s",
+              "startTime": "472.700s",
+              "word": "we"
+            },
+            {
+              "endTime": "473.400s",
+              "startTime": "473.100s",
+              "word": "ran"
+            },
+            {
+              "endTime": "473.500s",
+              "startTime": "473.400s",
+              "word": "into"
+            },
+            {
+              "endTime": "473.700s",
+              "startTime": "473.500s",
+              "word": "a"
+            },
+            {
+              "endTime": "474.100s",
+              "startTime": "473.700s",
+              "word": "bear"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.87974894,
+          "transcript": " is even more of a buzz kill Dwayne was standing at raising his right hand swearing to help prevent forest fires",
+          "words": [
+            {
+              "endTime": "477.200s",
+              "startTime": "476.800s",
+              "word": "is"
+            },
+            {
+              "endTime": "477.400s",
+              "startTime": "477.200s",
+              "word": "even"
+            },
+            {
+              "endTime": "477.600s",
+              "startTime": "477.400s",
+              "word": "more"
+            },
+            {
+              "endTime": "477.700s",
+              "startTime": "477.600s",
+              "word": "of"
+            },
+            {
+              "endTime": "477.800s",
+              "startTime": "477.700s",
+              "word": "a"
+            },
+            {
+              "endTime": "477.900s",
+              "startTime": "477.800s",
+              "word": "buzz"
+            },
+            {
+              "endTime": "478.500s",
+              "startTime": "477.900s",
+              "word": "kill"
+            },
+            {
+              "endTime": "480.700s",
+              "startTime": "478.500s",
+              "word": "Dwayne"
+            },
+            {
+              "endTime": "480.900s",
+              "startTime": "480.700s",
+              "word": "was"
+            },
+            {
+              "endTime": "481.200s",
+              "startTime": "480.900s",
+              "word": "standing"
+            },
+            {
+              "endTime": "481.300s",
+              "startTime": "481.200s",
+              "word": "at"
+            },
+            {
+              "endTime": "481.700s",
+              "startTime": "481.300s",
+              "word": "raising"
+            },
+            {
+              "endTime": "481.800s",
+              "startTime": "481.700s",
+              "word": "his"
+            },
+            {
+              "endTime": "482s",
+              "startTime": "481.800s",
+              "word": "right"
+            },
+            {
+              "endTime": "482.400s",
+              "startTime": "482s",
+              "word": "hand"
+            },
+            {
+              "endTime": "483.600s",
+              "startTime": "482.400s",
+              "word": "swearing"
+            },
+            {
+              "endTime": "483.700s",
+              "startTime": "483.600s",
+              "word": "to"
+            },
+            {
+              "endTime": "484s",
+              "startTime": "483.700s",
+              "word": "help"
+            },
+            {
+              "endTime": "484.200s",
+              "startTime": "484s",
+              "word": "prevent"
+            },
+            {
+              "endTime": "484.700s",
+              "startTime": "484.200s",
+              "word": "forest"
+            },
+            {
+              "endTime": "484.800s",
+              "startTime": "484.700s",
+              "word": "fires"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alternatives": [
+        {
+          "confidence": 0.9073487,
+          "transcript": " got in the way I got away from the berry put his arm around my shoulders and Mitch smoke is way more intense in person Chris stage appearances 12 man but I do know when you were doing that thing it's beginning to show you talk about my story but it sounded way more than I ever thought it was nice things are going pretty good for me either",
+          "words": [
+            {
+              "endTime": "493.500s",
+              "startTime": "492.400s",
+              "word": "got"
+            },
+            {
+              "endTime": "493.600s",
+              "startTime": "493.500s",
+              "word": "in"
+            },
+            {
+              "endTime": "493.600s",
+              "startTime": "493.600s",
+              "word": "the"
+            },
+            {
+              "endTime": "493.700s",
+              "startTime": "493.600s",
+              "word": "way"
+            },
+            {
+              "endTime": "494.100s",
+              "startTime": "493.700s",
+              "word": "I"
+            },
+            {
+              "endTime": "494.200s",
+              "startTime": "494.100s",
+              "word": "got"
+            },
+            {
+              "endTime": "494.300s",
+              "startTime": "494.200s",
+              "word": "away"
+            },
+            {
+              "endTime": "494.500s",
+              "startTime": "494.300s",
+              "word": "from"
+            },
+            {
+              "endTime": "494.600s",
+              "startTime": "494.500s",
+              "word": "the"
+            },
+            {
+              "endTime": "494.900s",
+              "startTime": "494.600s",
+              "word": "berry"
+            },
+            {
+              "endTime": "495.100s",
+              "startTime": "494.900s",
+              "word": "put"
+            },
+            {
+              "endTime": "495.200s",
+              "startTime": "495.100s",
+              "word": "his"
+            },
+            {
+              "endTime": "495.400s",
+              "startTime": "495.200s",
+              "word": "arm"
+            },
+            {
+              "endTime": "495.400s",
+              "startTime": "495.400s",
+              "word": "around"
+            },
+            {
+              "endTime": "495.700s",
+              "startTime": "495.400s",
+              "word": "my"
+            },
+            {
+              "endTime": "496.100s",
+              "startTime": "495.700s",
+              "word": "shoulders"
+            },
+            {
+              "endTime": "496.200s",
+              "startTime": "496.100s",
+              "word": "and"
+            },
+            {
+              "endTime": "496.500s",
+              "startTime": "496.200s",
+              "word": "Mitch"
+            },
+            {
+              "endTime": "497.500s",
+              "startTime": "496.500s",
+              "word": "smoke"
+            },
+            {
+              "endTime": "497.800s",
+              "startTime": "497.500s",
+              "word": "is"
+            },
+            {
+              "endTime": "498.200s",
+              "startTime": "497.800s",
+              "word": "way"
+            },
+            {
+              "endTime": "498.400s",
+              "startTime": "498.200s",
+              "word": "more"
+            },
+            {
+              "endTime": "498.600s",
+              "startTime": "498.400s",
+              "word": "intense"
+            },
+            {
+              "endTime": "499.200s",
+              "startTime": "498.600s",
+              "word": "in"
+            },
+            {
+              "endTime": "499.800s",
+              "startTime": "499.200s",
+              "word": "person"
+            },
+            {
+              "endTime": "504.700s",
+              "startTime": "499.800s",
+              "word": "Chris"
+            },
+            {
+              "endTime": "505.700s",
+              "startTime": "504.700s",
+              "word": "stage"
+            },
+            {
+              "endTime": "506s",
+              "startTime": "505.700s",
+              "word": "appearances"
+            },
+            {
+              "endTime": "506.800s",
+              "startTime": "506s",
+              "word": "12"
+            },
+            {
+              "endTime": "507s",
+              "startTime": "506.800s",
+              "word": "man"
+            },
+            {
+              "endTime": "507.200s",
+              "startTime": "507s",
+              "word": "but"
+            },
+            {
+              "endTime": "507.300s",
+              "startTime": "507.200s",
+              "word": "I"
+            },
+            {
+              "endTime": "507.500s",
+              "startTime": "507.300s",
+              "word": "do"
+            },
+            {
+              "endTime": "507.600s",
+              "startTime": "507.500s",
+              "word": "know"
+            },
+            {
+              "endTime": "507.700s",
+              "startTime": "507.600s",
+              "word": "when"
+            },
+            {
+              "endTime": "507.800s",
+              "startTime": "507.700s",
+              "word": "you"
+            },
+            {
+              "endTime": "507.900s",
+              "startTime": "507.800s",
+              "word": "were"
+            },
+            {
+              "endTime": "508s",
+              "startTime": "507.900s",
+              "word": "doing"
+            },
+            {
+              "endTime": "508.100s",
+              "startTime": "508s",
+              "word": "that"
+            },
+            {
+              "endTime": "508.400s",
+              "startTime": "508.100s",
+              "word": "thing"
+            },
+            {
+              "endTime": "508.600s",
+              "startTime": "508.400s",
+              "word": "it's"
+            },
+            {
+              "endTime": "508.800s",
+              "startTime": "508.600s",
+              "word": "beginning"
+            },
+            {
+              "endTime": "508.900s",
+              "startTime": "508.800s",
+              "word": "to"
+            },
+            {
+              "endTime": "509s",
+              "startTime": "508.900s",
+              "word": "show"
+            },
+            {
+              "endTime": "509.300s",
+              "startTime": "509s",
+              "word": "you"
+            },
+            {
+              "endTime": "509.600s",
+              "startTime": "509.300s",
+              "word": "talk"
+            },
+            {
+              "endTime": "509.800s",
+              "startTime": "509.600s",
+              "word": "about"
+            },
+            {
+              "endTime": "510s",
+              "startTime": "509.800s",
+              "word": "my"
+            },
+            {
+              "endTime": "510.400s",
+              "startTime": "510s",
+              "word": "story"
+            },
+            {
+              "endTime": "510.600s",
+              "startTime": "510.400s",
+              "word": "but"
+            },
+            {
+              "endTime": "510.700s",
+              "startTime": "510.600s",
+              "word": "it"
+            },
+            {
+              "endTime": "511s",
+              "startTime": "510.700s",
+              "word": "sounded"
+            },
+            {
+              "endTime": "511.900s",
+              "startTime": "511s",
+              "word": "way"
+            },
+            {
+              "endTime": "512.100s",
+              "startTime": "511.900s",
+              "word": "more"
+            },
+            {
+              "endTime": "512.200s",
+              "startTime": "512.100s",
+              "word": "than"
+            },
+            {
+              "endTime": "512.900s",
+              "startTime": "512.200s",
+              "word": "I"
+            },
+            {
+              "endTime": "513s",
+              "startTime": "512.900s",
+              "word": "ever"
+            },
+            {
+              "endTime": "513.300s",
+              "startTime": "513s",
+              "word": "thought"
+            },
+            {
+              "endTime": "513.500s",
+              "startTime": "513.300s",
+              "word": "it"
+            },
+            {
+              "endTime": "513.600s",
+              "startTime": "513.500s",
+              "word": "was"
+            },
+            {
+              "endTime": "516.600s",
+              "startTime": "513.600s",
+              "word": "nice"
+            },
+            {
+              "endTime": "516.800s",
+              "startTime": "516.600s",
+              "word": "things"
+            },
+            {
+              "endTime": "516.900s",
+              "startTime": "516.800s",
+              "word": "are"
+            },
+            {
+              "endTime": "517.200s",
+              "startTime": "516.900s",
+              "word": "going"
+            },
+            {
+              "endTime": "517.300s",
+              "startTime": "517.200s",
+              "word": "pretty"
+            },
+            {
+              "endTime": "517.500s",
+              "startTime": "517.300s",
+              "word": "good"
+            },
+            {
+              "endTime": "517.700s",
+              "startTime": "517.500s",
+              "word": "for"
+            },
+            {
+              "endTime": "517.800s",
+              "startTime": "517.700s",
+              "word": "me"
+            },
+            {
+              "endTime": "517.900s",
+              "startTime": "517.800s",
+              "word": "either"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -874,20 +874,77 @@ customLoaderMap['kevin'] = function(){
     blobVideoLoad(3, 8, "Attempt4.mov", true);
 }
 
+var logHedberg = false;
 customLoaderMap['hedberg'] = function(){
     loadImageToTexture(5, "hedberg.jpg");
     blobVideoLoad(0, 5, "hedberg.mp4", true);
+
+
+    var lastTimeMouthClosed = -1;
+    var lastTimeMouthOpened = -1;
+    var lastMouthState = "neither";
+    var lastClearState = "closed";
+    customLoaderUniforms = `
+    uniform float timeSinceMouthClosed;
+    uniform float timeSinceMouthOpened;
+    `;
+
+    customLoaderUniformSet = function(time, mProgram){
+        var timeSinceMouthClosedU = gl.getUniformLocation(mProgram, "timeSinceMouthClosed");
+        if(timeSinceMouthClosedU) gl.uniform1f(timeSinceMouthClosedU, Date.now()/1000 - lastTimeMouthClosed);
+        var timeSinceMouthOpenU = gl.getUniformLocation(mProgram, "timeSinceMouthOpen");
+        if(timeSinceMouthOpenU) gl.uniform1f(timeSinceMouthOpenU, Date.now()/1000 - lastTimeMouthOpened);
+    }
+
+
     osc.on("/mouthData", function(msg){
         var mouthData = JSON.parse(msg.args[0]);
         handleMouthData(mouthData);
     });
+    
     var handleMouthData = function(mouthData){
-        console.log(mouthData);
+        if(!videos[0]) return;
+        var openFrac = -1;
         if(mouthData.openDist > 0 && mouthData.closedDist > 0){
-            var openFrac = (parseFloat(mouthData.avg) - mouthData.closedDist) / (mouthData.openDist - mouthData.closedDist);
-            videos[0].playbackRate = openFrac >= 0.5 ? openFrac * 2 * 16 : Math.max(1/16, openFrac * 2);
+            openFrac = (parseFloat(mouthData.avg) - mouthData.closedDist) / (mouthData.openDist - mouthData.closedDist);
+            videos[0].playbackRate = openFrac >= 0.5 ? Math.min(openFrac**2 * 4, 4) : Math.max(1/16, openFrac * 2);
         }
-    }
+        
+        if(lastMouthState != "open" && mouthData.state == "open"){
+            if(lastClearState == "closed"){
+                videos[0].currentTime = sentenceList[Math.floor(Math.random()*sentenceList.length)].start;
+                videos[0].play();
+                console.log("hedberg play");
+            }
+            lastClearState = "open";
+
+        }else if(lastMouthState != "closed" && mouthData.state == "closed"){
+            if(lastClearState == "open"){
+                videos[0].pause();
+                console.log("hedberg pause");
+            }
+            lastClearState = "closed";
+
+        }else if(lastMouthState != "neither" && mouthData.state == "neither"){
+
+        }
+
+        lastMouthState = mouthData.state;
+        if(logHedberg) console.log(openFrac, mouthData);
+    };
+
+
+    var wordList = [{start: 0, end: 0}];
+    var sentenceList = [{start: 0, end: 0}];
+    $.get("hedberg.json", function(result){
+        var hedbergJson = result;
+        wordlist = hedbergJson.results.map(r => r.alternatives[0].words).flat(1)
+            .map(w => ({word:w.word, start: parseFloat(w.startTime.slice(0, -1)), end: parseFloat(w.endTime.slice(0, -1))}));
+
+        sentenceList = hedbergJson.results.map(r => ({start: parseFloat(r.alternatives[0].words[0].startTime),
+            end: parseFloat(r.alternatives[0].words.slice(-1)[0].startTime)}))
+        console.log(result);
+    });
     connectOSC(false);
 }
 
