@@ -37,8 +37,12 @@ void main () {
     vec2 stN = uvN();
 
     vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).rgb;
-    vec3 hedberg = texture2D(channel5, mix(stN, cam.xy, bands.y/3.)).rgb;
+    vec3 hedberg = texture2D(channel5, stN).rgb;
+    vec3 hedbergWarp = texture2D(channel5, mix(stN, cam.xy, bands.y/3.)).rgb;
+    vec3 bb = texture2D(backbuffer, mix(stN, cam.xy, 0.005)).rgb;
     
+    vec3 cc = mix(hedbergWarp, bb, 0.8);
     
-    gl_FragColor = vec4(vec3(hedberg), 1);
+    float blendVal = timeSinceNeutral > timeSinceMouthClosed ? 0. : timeSinceMouthClosed;
+    gl_FragColor = vec4(vec3(mix(hedbergWarp, cc, blendVal/10.)), 1);
 }

@@ -882,11 +882,13 @@ customLoaderMap['hedberg'] = function(){
 
     var lastTimeMouthClosed = -1;
     var lastTimeMouthOpened = -1;
+    var lastTimeNeutral = -1;
     var lastMouthState = "neither";
     var lastClearState = "closed";
     customLoaderUniforms = `
     uniform float timeSinceMouthClosed;
     uniform float timeSinceMouthOpened;
+    uniform float timeSinceNeutral;
     `;
 
     customLoaderUniformSet = function(time, mProgram){
@@ -894,6 +896,8 @@ customLoaderMap['hedberg'] = function(){
         if(timeSinceMouthClosedU) gl.uniform1f(timeSinceMouthClosedU, Date.now()/1000 - lastTimeMouthClosed);
         var timeSinceMouthOpenU = gl.getUniformLocation(mProgram, "timeSinceMouthOpen");
         if(timeSinceMouthOpenU) gl.uniform1f(timeSinceMouthOpenU, Date.now()/1000 - lastTimeMouthOpened);
+        var timeSinceNeutralU = gl.getUniformLocation(mProgram, "timeSinceNeutral");
+        if(timeSinceNeutralU) gl.uniform1f(timeSinceNeutralU, Date.now()/1000 - lastTimeNeutral);
     }
 
 
@@ -907,7 +911,8 @@ customLoaderMap['hedberg'] = function(){
         var openFrac = -1;
         if(mouthData.openDist > 0 && mouthData.closedDist > 0){
             openFrac = (parseFloat(mouthData.avg) - mouthData.closedDist) / (mouthData.openDist - mouthData.closedDist);
-            videos[0].playbackRate = openFrac >= 0.5 ? Math.min(openFrac**2 * 4, 4) : Math.max(1/16, openFrac * 2);
+            // videos[0].playbackRate = openFrac >= 0.5 ? Math.min(openFrac**2 * 4, 4) : Math.max(1/16, openFrac * 2);
+            videos[0].playbackRate = Math.max(1/16, Math.min(openFrac**2, 16));
         }
         
         if(lastMouthState != "open" && mouthData.state == "open"){
@@ -915,6 +920,7 @@ customLoaderMap['hedberg'] = function(){
                 videos[0].currentTime = sentenceList[Math.floor(Math.random()*sentenceList.length)].start;
                 videos[0].play();
                 console.log("hedberg play");
+                lastTimeMouthClosed = Date.now()/1000;
             }
             lastClearState = "open";
 
@@ -922,11 +928,12 @@ customLoaderMap['hedberg'] = function(){
             if(lastClearState == "open"){
                 videos[0].pause();
                 console.log("hedberg pause");
+                lastTimeMouthOpened = Date.now()/1000;
             }
             lastClearState = "closed";
 
         }else if(lastMouthState != "neither" && mouthData.state == "neither"){
-
+            lastTimeNeutral = Date.now()/1000;
         }
 
         lastMouthState = mouthData.state;
