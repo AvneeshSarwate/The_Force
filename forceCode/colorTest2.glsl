@@ -607,7 +607,7 @@ void main () {
     vec2 warpN = mix(rotate(uvN(), vec2(0.5), sin(randWalk/100.)*0.1), stN, 1.);
     warpN = rotate(stN, cent, time/5.5+stN.y);
     vec3 warpCoord = coordWarp(stN, time/10.);
-    warpN = mix(stN, warpCoord.xy, 0.5*pow(sinN(time * quant(stN.y, 100.)*PI*(1.0+sinN(time*.99)*0.05)), 10.));
+    warpN = mix(stN, warpCoord.xy, 0.5*pow(sinN(time * quant(stN.y, 5.)+PI*(1.0+sinN(time*.99)*0.05)), 10.));
 
     
     vec3 cc;
