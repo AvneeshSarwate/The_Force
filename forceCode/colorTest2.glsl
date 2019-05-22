@@ -670,7 +670,7 @@ void main () {
     col2.z = 0.2 + col2.z * 0.6;
     cc = hsluvToRgb(mix(col1, col2, mod(quant(stN.y + time * quant(stN.y, 20.), 10.) + stN.x, 1.)));
     cc = hsluvToRgb(mix(col1, col2, mod(quant(stN.x, 3.)+time/10. * (quant(stN.y, 5.)+1.), 1.)));
-    cc = mix(bb.rgb, cc, 0.1);
+    cc = mix(bb.rgb, cc, 0.02 + sinN(time/5.5)*.08);
     
     // vec3 bbN = texture2D(backbuffer, stN).rgb;
     // cc = mix(bbN, cc, 1.42);
