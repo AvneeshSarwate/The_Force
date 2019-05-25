@@ -267,6 +267,12 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+float minDistToBorder(vec2 stN){
+    float vert = min(stN.y, abs(1.-stN.y));
+    float hor = min(stN.x, abs(1.-stN.x));
+    return min(vert, hor);
+}
+
 void main () {
     vec2 stN = uvN();
     vec3 c;
@@ -277,8 +283,14 @@ void main () {
     float timeVal = time+3000.;
     stN = quant(stN, 200.);
     vec2 nn = uvN();
-    timeVal = mod(quant(distance(nn, cent), 6.)*6., 2.) == 1. ? timeVal : 0.;
+    // timeVal = mod(quant(distance(nn, cent), 6.)*6., 2.) == 1. ? timeVal/5. : timeVal/10.;
+    vec2 st = uv();
+    st = rotate(st, vec2(0), PI/4.); //todo - not exactly right - changes when screen resized
+    float angle = st.x > 0. ? atan(st.y/st.x) : atan(st.y/st.x)+PI;
+    angle = (angle + PI/2.)/PI2;
     c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
+    float quantVal = 6.;
+    c = mod(quant(minDistToBorder(nn)*2., quantVal)*quantVal, 2.) == 1. ? c : white;
     
     
     vec3 cc;
@@ -316,5 +328,5 @@ void main () {
     
     //todo - don't forget to make these lines linear lenses
     
-    gl_FragColor = vec4(vec3(c), feedback);
+    gl_FragColor = vec4(vec3(angle), feedback);
 }
