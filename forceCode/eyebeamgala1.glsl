@@ -288,9 +288,13 @@ void main () {
     st = rotate(st, vec2(0), PI/4.); //todo - not exactly right - changes when screen resized
     float angle = st.x > 0. ? atan(st.y/st.x) : atan(st.y/st.x)+PI;
     angle = (angle + PI/2.)/PI2;
-    c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
-    float quantVal = 6.;
-    c = mod(quant(minDistToBorder(nn)*2., quantVal)*quantVal, 2.) == 1. ? c : white;
+    vec3 cam = texture2D(channel0, vec2(1.-nn.x, nn.y)).rgb;
+    
+    vec2 transN = mix(stN, quant(cam.rg, 200.), 0.1 * pow(sinN(time/5.), 2.));
+    c = inStripeX2(transN, timeVal/10. * (.5 + stN.x)) * inStripeY2(transN, timeVal/7. * (.5 + stN.y));
+    float quantVal = 10.; 2. + quant(sinN(time+nn.x*PI), 11.)*11.;
+    float minDist = minDistToBorder(nn);
+    c = mod(quant(sinN(minDist*2.+time/4.) , quantVal)*quantVal, 2.) == 1. ? c : white;
     
     
     vec3 cc;
@@ -328,5 +332,5 @@ void main () {
     
     //todo - don't forget to make these lines linear lenses
     
-    gl_FragColor = vec4(vec3(angle), feedback);
+    gl_FragColor = vec4(vec3(c), feedback);
 }
