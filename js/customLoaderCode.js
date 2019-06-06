@@ -959,11 +959,10 @@ customLoaderMap['hedberg'] = function(){
 customLoaderMap["eyebeamSVG"] = function(){
 
     var svgTexture = loadImageToTexture(5, 'data:image/svg+xml;base64,');
+    window.svgTexture = svgTexture;
     customLoaderUniformSet = function(time, mProgram){
         updateVideoTexture(gl, svgTexture.globject, svgTexture.image);
     }
-
-    document.body
 
     setup = svgP5setup;
     draw = bindDrawFunc(svgTexture.image);

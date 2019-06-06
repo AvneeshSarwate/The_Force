@@ -136,9 +136,9 @@ var spin = () => letters.map( (p, i) => setTimeout(() => p.animate(500*2, "=").r
 
 
 
-
+var imgUpdate = true;
 function renderSVGtoImage(svgImg){
-    var svg = document.querySelector('svg');
+    var svg = svgDoc.node;
     
     // get svg data
     var xml = new XMLSerializer().serializeToString(svg);
@@ -151,7 +151,7 @@ function renderSVGtoImage(svgImg){
     var image64 = b64Start + svg64;
 
     // set it as the source of the img element
-    svgImg.src = image64;
+    if(imgUpdate) svgImg.src = image64;
 }
 
 function svgP5setup(){
