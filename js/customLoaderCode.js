@@ -7,7 +7,7 @@ var playAtHalfRate = false;
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin']);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG"]);
 var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno", "hedberg"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
@@ -47,6 +47,7 @@ function loadImageToTexture(slotID, imageUrl){
     texture.image.src = imageUrl;
     mInputs[slotID] = texture;
     createInputStr();
+    return texture;
 }
 
 
@@ -955,5 +956,17 @@ customLoaderMap['hedberg'] = function(){
     connectOSC(false);
 }
 
+customLoaderMap["eyebeamSVG"] = function(){
+
+    var svgTexture = loadImageToTexture(5, 'data:image/svg+xml;base64,');
+    customLoaderUniformSet = function(time, mProgram){
+        updateVideoTexture(gl, svgTexture.globject, svgTexture.image);
+    }
+
+    document.body
+
+    setup = svgP5setup;
+    draw = bindDrawFunc(svgTexture.image);
+}
 
 // 
