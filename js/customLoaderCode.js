@@ -959,9 +959,20 @@ customLoaderMap['hedberg'] = function(){
 customLoaderMap["eyebeamSVG"] = function(){
 
     var svgTexture = loadImageToTexture(5, 'data:image/svg+xml;base64,');
+    
     window.svgTexture = svgTexture;
+    svgCanvas = document.createElement("canvas")//new Canvas(mCanvas.width, mCanvas.height);
+    svgCanvas.width = mCanvas.width;
+    svgCanvas.height = mCanvas.height;
+    var svgContext = svgCanvas.getContext("2d");
+    document.body.append(svgCanvas);
+
+
     customLoaderUniformSet = function(time, mProgram){
-        updateVideoTexture(gl, svgTexture.globject, svgTexture.image);
+        svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height);
+        svgContext.drawImage(svgTexture.image, 0, 0);
+        updateVideoTexture(gl, svgTexture.globject, svgCanvas, "svg");
+        // mInputs[5] = svgTexture;
     }
 
     setup = svgP5setup;

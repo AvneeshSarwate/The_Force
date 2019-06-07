@@ -27,7 +27,7 @@ var gammaValues = [1.0, 1.0, 1.0, 1.0];
 var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU = null;
 var lastNoteOnTimeU, lastNoteOffTimeU, lastNoteValueU; 
 
-
+var svgCanvas;
 
 var vjNoteUniforms = Array.from(new Array(10), () => null);
 var vjLastNoteUniforms = Array.from(new Array(5), () => null);
@@ -664,7 +664,7 @@ function createVideoSnapshotTexture(gl, video){
     return texture;
 }
 
-function updateVideoTexture(gl, texture, video) {
+function updateVideoTexture(gl, texture, video, debugFlag) {
     const level = 0;
     const internalFormat = gl.RGBA;
     const srcFormat = gl.RGBA;
@@ -672,6 +672,12 @@ function updateVideoTexture(gl, texture, video) {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
                     srcFormat, srcType, video);
+    if(debugFlag == "svg"){
+        x = 5;
+    }
+    if(debugFlag == "p5"){
+        x = 5;
+    }
 }
 
 function handleTextureLoaded(image, texture) {
@@ -763,6 +769,11 @@ function createKeyboardTexture(ctx, texture) {
 function resizeGLCanvas(width, height) {
     mCanvas.width = width / quality;
     mCanvas.height = height / quality;
+
+    if(svgCanvas) {
+        svgCanvas.width = mCanvas.width;
+        svgCanvas.height = mCanvas.height;
+    }
 
     mCanvas.style.width = width + 'px';
     mCanvas.style.height = height + 'px';

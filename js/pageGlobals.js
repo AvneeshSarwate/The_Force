@@ -1176,7 +1176,7 @@ $( document ).ready(function() {
                     mInputs[3] = texture; //channel3 is hardcoded as webcam snapshot
                 }
                 if(p5Canvas) {
-                    updateVideoTexture(gl, p5SnapTexture, p5Canvas);
+                    updateVideoTexture(gl, p5SnapTexture, p5Canvas, "p5");
                 } else {
                     p5Canvas = $("#defaultCanvas0")[0];
                     $("#defaultCanvas0").hide();
