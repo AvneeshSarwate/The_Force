@@ -676,5 +676,5 @@ void main () {
     // cc = mix(bbN, cc, 1.42);
     // cc = mix(bbN, cc, 0.5);
     
-    gl_FragColor = vec4(cc, feedback);
+    gl_FragColor = vec4(cc*sinN(bb.a*2.)*1.1, 1.*getShimmer());
 }
