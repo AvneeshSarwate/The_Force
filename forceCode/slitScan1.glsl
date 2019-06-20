@@ -199,6 +199,43 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+float getShimmer(){
+    float t2 = time/5. + 1000.;
+    vec2 stN = uvN();
+    stN.y += 0.001 + sinN(time+stN.x*PI)*0.0015 * sinN(time+stN.x*PI*10.)*0.0015;
+    float numCells = 400.;
+
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
+
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.01;
+    float feedback;
+    vec4 bb = texture2D(backbuffer, hashN);
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
+    condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+    return feedback;
+}
+
 vec2 drops(vec2 stN2, float t2, float numRipples){
     
     vec2 stN0 = stN2;
@@ -233,13 +270,18 @@ void main () {
     vec2 cent = vec2(0.5);
     float t1 = time * 0.41;
     stN = coordWarp(stN, t1).xy;
-    vec3 col = distance(stN, mix(vec2(sinN(t1), cosN(t1)), cent, 0.5+sinN(t1)/2.)) < 0.1+sinN(t1*0.1)*0.1 ? black : white;
+    float shimmer = getShimmer();
+    vec3 col = distance(stN, mix(vec2(sinN(t1), cosN(t1)), cent, 0.5+sinN(t1)/2.)) < 0.1+sinN(t1*0.1)*0.1 ? vec3(shimmer) : black;
+    float fdbk = col.x;
+    // col = vec3(pow(col.x+.5, 5.));
     vec4 bb = texture2D(backbuffer, nn);
-    float slitW = 0.05;
-    float slitTime = t1*0.11;
-    stN = rotate(stN, cent+vec2(sin(t1*0.31), cos(t1*0.31))*0.1, t1*10.);
-    float modVal = .5;
-    col = mix(col, bb.rgb, 1.-float(mod(slitTime, modVal) < stN.x && stN.x < mod(slitTime, modVal) + slitW ));
+    float slitW = 0.01;
+    float slitTime = sinN(time);t1*0.11;
+    stN = rotate(stN, cent+vec2(sin(t1*0.31), cos(t1*0.31))*0.1, t1*0.21);
+    float modVal = 1.;
+    float slitCondition = float(mod(slitTime, modVal) < stN.x && stN.x < mod(slitTime, modVal) + slitW );
+    col = mix(bb.rgb, col, fdbk);
+    col = mix(black, col, float(bb.a != 0.));
     
-    gl_FragColor = vec4(col, 1.);
+    gl_FragColor = vec4(col, mix(shimmer, 0., slitCondition));
 }
