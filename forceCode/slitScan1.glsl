@@ -229,15 +229,17 @@ vec2 drops(vec2 stN2, float t2, float numRipples){
 
 void main () {
     vec2 stN = uvN();
+    vec2 nn = uvN();
     vec2 cent = vec2(0.5);
-   
-    vec3 col = distance(stN, mix(vec2(sinN(time), cosN(time)), cent, 0.5+sinN(time)/2.)) < 0.1+sinN(time*0.1)*0.1 ? black : white;
-    vec4 bb = texture2D(backbuffer, stN);
+    float t1 = time * 0.41;
+    stN = coordWarp(stN, t1).xy;
+    vec3 col = distance(stN, mix(vec2(sinN(t1), cosN(t1)), cent, 0.5+sinN(t1)/2.)) < 0.1+sinN(t1*0.1)*0.1 ? black : white;
+    vec4 bb = texture2D(backbuffer, nn);
     float slitW = 0.05;
-    float slitTime = time/4.;
-    stN = rotate(stN, cent, time*10.);
-    stN = coordWarp(stN, time).xy;
-    col = mix(col, bb.rgb, 1.-float(mod(slitTime*2., 1.) < stN.x && stN.x < mod(slitTime*2., 1.) + slitW ));
+    float slitTime = t1*0.11;
+    stN = rotate(stN, cent+vec2(sin(t1*0.31), cos(t1*0.31))*0.1, t1*10.);
+    float modVal = .5;
+    col = mix(col, bb.rgb, 1.-float(mod(slitTime, modVal) < stN.x && stN.x < mod(slitTime, modVal) + slitW ));
     
     gl_FragColor = vec4(col, 1.);
 }
