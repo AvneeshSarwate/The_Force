@@ -1028,6 +1028,19 @@ customLoaderMap['preBurningMan'] = function(){
 
     sliderConfig = guitarPaintSliders;
 
+    navigator.mediaDevices.enumerateDevices().then(function(deviceList){
+            var cameras = deviceList.filter(device => device.kind == "videoinput");
+            var camSelector = $("#cameraSelector");
+            for(var i = 0; i < cameras.length; i++){
+                camSelector.append("<option value=\""+i+"\">cameara "+i+"</option>")
+            }
+            camSelector.change(function(event){
+                camcam = camSelector;
+                changeWebcamSelection(parseInt(camSelector.val()));
+                console.log(event);
+            })
+        });
+
     ignoreAudioForShader = true;
     connectOSC(false);
 }

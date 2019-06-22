@@ -265,6 +265,43 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+float getShimmer(){
+    float t2 = time/5. + 1000.;
+    vec2 stN = uvN();
+    stN.y += 0.001 + sinN(time+stN.x*PI)*0.0015 * sinN(time+stN.x*PI*10.)*0.0015;
+    float numCells = 400.;
+
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells;
+
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.01;
+    float feedback;
+    vec4 bb = texture(backbuffer, hashN);
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
+    condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+    return feedback;
+}
+
 
 out vec4 fragColor;
 void main () {
@@ -315,7 +352,15 @@ void main () {
     // col = mix(bb.rgb, col, 0.025);
     vec3 fftCol = vec3(fftValues[int(quant(stN.x, 49.)*50.)]/255.);
     vec3 midiCol = vec3(midiCC[int(quant(stN.x, 8.)*8.)]/127.);
+    
+    // float modVal = 1.;
+    // float slitTime = time/4.;
+    // float fdbk = bb.a;
+    // float slitW = 0.05;
+    // stN = mix(stN, coordWarp(stN, time).xy, 0.9);
+    // float slitCondition = float(mod(slitTime, modVal) < stN.x && stN.x < mod(slitTime, modVal) + slitW );
+    // col = mix(bb.rgb, col, slitCondition);
 
     
-    fragColor = vec4(midiCol, feedback);
+    fragColor = vec4(col, feedback);
 }
