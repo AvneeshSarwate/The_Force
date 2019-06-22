@@ -265,6 +265,8 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+
+out vec4 fragColor;
 void main () {
     float t2 = time/5. + 1000.;
     
@@ -274,7 +276,7 @@ void main () {
     vec2 stN = uvN();
     float numCells = 400.;
     
-    vec3 cam = texture2D(channel0, vec2(1.-stN.x, stN.y)).rgb;
+    vec3 cam = texture(channel0, vec2(1.-stN.x, stN.y)).rgb;
 
     vec2 hashN = stN + (cam.xy-0.5)/numCells;(hash(vec3(stN, t2)).xy + -0.5)/numCells;
 
@@ -283,7 +285,7 @@ void main () {
     float decay = 0.999;
     float decay2 = 0.01;
     float feedback;
-    vec4 bb = texture2D(backbuffer, hashN);
+    vec4 bb = texture(backbuffer, hashN);
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
@@ -311,7 +313,9 @@ void main () {
     vec2 cent = vec2(0.5);
     // col = quant(col, 1.);
     // col = mix(bb.rgb, col, 0.025);
+    vec3 fftCol = vec3(fftValues[int(quant(stN.x, 49.)*50.)]/255.);
+    vec3 midiCol = vec3(midiCC[int(quant(stN.x, 8.)*8.)]/127.);
 
     
-    gl_FragColor = vec4(col, feedback);
+    fragColor = vec4(midiCol, feedback);
 }

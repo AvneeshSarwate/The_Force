@@ -7,7 +7,7 @@ var playAtHalfRate = false;
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG"]);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG", "preBurningMan"]);
 var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno", "hedberg"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
@@ -1001,6 +1001,35 @@ customLoaderMap["eyebeamSVG"] = function(){
 
     setup = svgP5setup;
     draw = bindDrawFunc(svgImg);
+}
+
+customLoaderMap['preBurningMan'] = function(){
+    // playAtHalfRate = true;
+
+    setup = guitarPaintSetup;
+    draw = guitarPaintDraw;
+    customLoaderUniforms = `
+    uniform float fftValues[50];
+    `;
+
+    var fftValues = arrayOf(50);
+
+    customLoaderUniformSet = function(time, mProgram){
+        var fftValuesU = gl.getUniformLocation(mProgram, "fftValues");
+        if(fftValuesU) gl.uniform1fv(fftValuesU, fftValues);
+    }
+
+    osc.on("/enterFullscreen", function(msg){
+        enterFullscreen();
+    });
+    osc.on("/fftValues", function(msg){
+        fftValues = msg.args;
+    });
+
+    sliderConfig = guitarPaintSliders;
+
+    ignoreAudioForShader = true;
+    connectOSC(false);
 }
 
 // 
