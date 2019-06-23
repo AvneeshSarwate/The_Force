@@ -84,6 +84,21 @@ vec3 ballTwist(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+vec3 ballTwist2(vec2 stN, float t2, float numBalls, float intensity, float size){ 
+    vec2 warp = stN;
+    
+    float rad = size;
+    
+    for (float i = 0.0; i < 100.; i++) {
+        if(i == numBalls) break;
+        vec2 p = vec2(sinN(t2* rand(i+1.) * 1.3 + i), cosN(t2 * rand(i+1.) * 1.1 + i));
+        // warp = length(p - stN) <= rad ? mix(p, warp, length(stN - p)/rad)  : warp;
+        warp = length(p - stN) <= rad ? rotate(warp, p, (1.-length(stN - p)/rad)  * 10.5 * intensity * sinN(1.-length(stN - p)/rad * PI)) : warp;
+    }
+    
+    return vec3(warp, distance(warp, stN));
+}
+
 vec4 colormap_hsv2rgb(float h, float s, float v) {
     float r = v;
     float g = v;
@@ -302,6 +317,209 @@ float getShimmer(){
     return feedback;
 }
 
+vec4 clock() {
+    vec2 stN = uvN();
+    vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
+    vec3 cam = texture(channel0, camPos).rgb; 
+    vec3 snap = texture(channel3, camPos).rgb;
+    vec2 nn = uvN();
+    float centT = time/5.;
+    vec2 cent0 = vec2(0.5);
+    vec2 cent = vec2(0.5) + vec2(sin(centT), cos(centT))/5.;
+    
+    float t2 = time/2.; //time is the uniform for global time
+    
+    //the fragment color variable name (slightly different from shader toy)
+    float noiseT = time/2.;
+    stN = rotate(stN, cent0, time/10.);
+    vec2 warpN = stN + vec2(snoise(vec3(stN, noiseT)), snoise(vec3(stN, noiseT+4.)))/4.; //play with warp amount
+    vec2 warpN2 = stN + vec2(snoise(vec3(stN, noiseT/2.)), snoise(vec3(stN, noiseT/2.+4.)))/4.;
+    // warpN = mod(warpN, 0.2 + sinN(time/5.5)); wrap(warpN, 0., 1.);
+    // warpN2 = mod(warpN2, 0.2 + sinN(time/5.5)); wrap(warpN2, 0., 1.);
+    stN = mix(stN, warpN, distance(stN, cent)*2.);
+    vec2 stN2 = mix(stN, warpN2, distance(stN, cent)*2.);
+    
+    float width = 0.001 + 0.001 * pow(distance(nn, cent), 1.)*500.;
+    vec3 col = stN.y < 0.5 && stN.y > 0.1 && stN.x > .5-width && stN.x < 0.5+width ? black : white;
+    
+    
+    
+    vec3 c;
+    vec2 bbN = mix(nn, stN2, distance(nn, vec2(0.5))/(10. + cosN(time/2.3)*1000.) ); //play with warp feedback mix
+    vec4 bb = texture(backbuffer, bbN);
+    vec4 bb0 = texture(backbuffer, nn);
+    float fb2;
+    float feedback; 
+    if(col == white){
+        feedback = bb.a * 0.97;
+        fb2 = bb0.a * 0.97;
+    } 
+    else{
+        feedback = 1.;
+        fb2 = 1.;
+    } 
+    
+    feedback  = mix(feedback, fb2, sinN(time/5.));
+    vec3 lowFdbkCol = vec3(feedback); vec3(cosN(feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent))));
+    float cc = feedback < 0.4 ? 0.: sinN(-time*10. + feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent)));
+    
+    cc = pow(cc, 1. + 200. * pow(sinN(time/2.), 10.)); //play with pulsed line resolution
+    
+    return vec4(vec3(cc), feedback);//vec4(c, feedback);
+}
+
+vec4 traffic () {
+    vec2 stN = uvN();
+    vec3 c;
+
+    //take 1
+    // stN = rowColWave(stN, 100., -time, 0.05);
+    // stN = coordWarp(stN, time).xy;
+    // float t2 = time / 4.;
+    // for(int i = 0; i < 2; i++) {
+    //     stN = wrap(rotate(stN, vec2(0.5), t2+0.1) * rotate(stN, vec2(0.5), t2), 0., 1.);
+    // }
+    // stN = wrap(vec2(tan(stN.x+time/8.), tan(stN.y+time/10.)), 0., 1.);
+    
+    // stN = xLens(stN, time/20.);
+    // stN = yLens(stN, time/30.);
+    
+    
+    
+    float zoom = 2.;
+    // stN = rowColWave(stN, time, 1000., .1);
+    // stN = mix(rotate(stN, vec2(0.5), time/420. * distance(stN, vec2(0.5)) * 0.  ), vec2(0.5), 4.);
+    vec3 cam = texture(channel0, stN).rgb;
+    float t2 = 3.* PI; 
+    float t3 = time/5.;
+    float t4 = time;
+    float rad = 0.0;
+    vec2 warp1 = vec2(-1., 1.);
+    vec2 warp2 = vec2(0.5, 0.);
+    vec2 warpXY = mix(warp1, warp2, 0.);
+    stN = mix(stN, rotate(stN, vec2(0.5) + sin(t4)*rad, t3), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * warpXY.x*2.);
+    stN = mix(stN, rotate(stN, vec2(0.5) + cos(t4)*rad, t3), sinN(stN.y*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * warpXY.y *2.);
+    // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN((distance(stN, vec2(0.5))+0.01)*PI*(1.+sinN(t2/2.)*5.) + t2*3.) * sin(time)*2.);
+    // t2 = time;
+    // stN = mix(stN, rotate(stN, vec2(0.5), t2), sinN(stN.x*PI*(1.+sinN(t2/2.)*5.) + t2*3.));
+    // stN = rotate(stN, vec2(0.5), abs(stN.x-0.5) * abs(stN.y-0.5));
+
+    
+    //take2
+    float timeVal = time+3000.;
+    stN = quant(stN, 200.);
+    vec2 stN2 = rotate(stN, vec2(0.5), time/2.);
+    c = inStripeX2(stN, timeVal/10. * (.5 + stN.x)) * inStripeY2(stN, timeVal/7. * (.5 + stN.y));
+    
+    vec3 cc;
+    float decay = 0.97;
+    float feedback;
+    vec4 bb = texture(backbuffer, vec2(stN.x, stN.y));
+    float lastFeedback = bb.a;
+    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
+    bool condition = c == black; 
+    vec3 trail = black; // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = white;
+    
+    
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < 1.1) {
+            feedback = 1.;
+            cc = trail; 
+        } 
+        // else {
+        //     feedback = lastFeedback * decay;
+        //     c = mix(snap, bb, lastFeedback);
+        // }
+    }
+    else {
+        feedback = lastFeedback * decay;
+        if(lastFeedback > 0.4) {
+            cc = mix(foreGround, trail, lastFeedback); 
+        } else {
+            feedback = 0.;
+            cc = foreGround;
+        }
+    }
+    cc = mix(cc, bb.rgb, sinN(time/14.)*0.95);
+    
+    //todo - don't forget to make these lines linear lenses
+    
+    return vec4(c, feedback);
+}
+
+vec4 lightLine_slider () {
+    float timeSwing = sinN(time + midiCC[8]*15.)*midiCC[7];
+    float t2 = midiCC[1] * 20. + timeSwing;
+    
+    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    // mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+    vec2 cent = vec2(0.5);
+    float time1 = midiCC[0] * 60. + timeSwing;
+
+    vec2 stN = uvN();
+    float numCells = 400.;
+    vec3 warp = ballTwist2(stN, time1/2., 20., midiCC[5], midiCC[6]);
+    vec3 warpSink = vec3(0.);
+    // warpSink = coordWarp(stN, time/20., 3.);
+    warpSink = ballTwist2(coordWarp(stN, time1/6.).xy, time1/30., 30., midiCC[5], midiCC[6]);
+    // vec3 warp2 = coordWarp(stN, time +4.);
+    stN = mix(stN, warp.xy, 0.025);
+    vec2 texN = vec2(0.);
+    texN =(hash(vec3(stN, t2)).xy + -0.5)/numCells;
+    // texN = vec2(sin(stN.x*numCells), cos(stN.y*numCells))/numCells;
+    vec2 hashN = stN + texN;
+
+
+    float height = 0.5;
+    float thickness = 0.03;
+    
+    vec3 warp2 = coordWarp(warp.xy, time1/2.);
+    bool lineCond = abs(warp2.y - height) < thickness;
+    // if(mouseN.z > 0.) cent = mouseN.xy;
+    bool ballCond = distance(warp2.xy, cent) < sinN(t2/2.)*0.3 && distance(warp2.xy, cent) > sinN(t2/2.)*0.2;
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.05 * midiCC[2];
+    float feedback;
+    vec4 bb = texture(backbuffer, mix(hashN, warpSink.xy, (midiCC[9]-0.5)*0.2));
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = ballCond;
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+
+    float col = sinN((1.-feedback)*PI*5.);
+    
+    // col = sigmoid((col-0.5)*5.);
+    col = mix(bb.r, col, midiCC[3]);
+    vec3 c = vec3(feedback < midiCC[4] ? 0. : col);
+    
+    // c.xy = rotate(c.xy, cent, warp.x*3.);
+    // c.yz = rotate(c.yz, cent, warp.y*3.);
+    // c.zx = rotate(c.zx, cent, warp.z*3.);
+    // c = mix(bb.rgb, col, 0.01);
+    
+    
+    return vec4(c, feedback);
+}
+
 
 out vec4 fragColor;
 void main () {
@@ -360,7 +578,10 @@ void main () {
     // stN = mix(stN, coordWarp(stN, time).xy, 0.9);
     // float slitCondition = float(mod(slitTime, modVal) < stN.x && stN.x < mod(slitTime, modVal) + slitW );
     // col = mix(bb.rgb, col, slitCondition);
-
+    //   col = circleSlice(uvN()*rotate(uvN(), cent, time/4.), time/5., randWalk);
     
-    fragColor = vec4(col, feedback);
+    
+    fragColor = lightLine_slider();vec4(col, feedback);
 }
+
+//clock, traffic, lightLine_slider - 7 is activeWobble
