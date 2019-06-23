@@ -520,6 +520,132 @@ vec4 lightLine_slider () {
     return vec4(c, feedback);
 }
 
+vec4 fogShip () {
+    float t2 = time + 1000.;
+    
+    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+
+    vec2 stN = uvN();
+    float numCells = 5.;
+    vec2 rotN = rotate(stN, vec2(0.5), PI);
+    vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
+    vec2 rowColN2 = rowColWave(stN, 1000., time/4., 0.03);
+    vec2 hashN = stN + (hash(vec3(stN, t2)).xy + -0.5)/numCells/(10. + sinN(rowColN.x*PI+time/1.5)*100.);
+    vec2 warpCoord = mix(stN, coordWarp(rowColN2, time/5.).xy, .8);
+    
+    vec3 cc;
+    float decay = 0.999;
+    float decay2 = 0.5;
+    float feedback;
+    vec4 bb = texture(backbuffer, mix(hashN, rotN, 0.01*pow(rotN.y, .02)));
+    float lastFeedback = bb.a;
+
+    // vec2 multBall = multiBallCondition(stN, t2/2.);
+    bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
+    condition = distance(warpCoord, stN) > 0.1; 1./(numCells*10.*(0.5+rowColN.y));
+
+    //   implement the trailing effectm using the alpha channel to track the state of decay 
+    if(condition){
+        if(lastFeedback < .9) {
+            feedback = 1. ;// * multBall.y;
+        } else {
+            // feedback = lastFeedback * decay;
+            feedback = lastFeedback - decay2;
+        }
+    }
+    else {
+        // feedback = lastFeedback * decay;
+        feedback = lastFeedback - decay2;
+    }
+    
+    vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
+    
+    vec3 col = vec3(feedback);
+    col = mix(bb.rgb, col, 0.1);
+    
+    vec2 cent = vec2(0.5);
+    
+    col = mix(bb.rgb, col, 0.1);
+    
+    return vec4(col, feedback);
+}
+
+float splits(vec2 stN){
+    
+    float xHigh = 1.;
+    float xLow = 0.;
+    float seed = 1.; quant(time/4., 1.);
+    
+    float yHigh = 1.;
+    float yLow = 0.;
+    
+    bool xSplit = false;
+    bool ySplit = false;
+    bool dark = false;
+    vec2 rotN = rotate(stN, vec2(0.5), time/5.);
+    for(int i = 0; i < 8; i++){
+        float phase = dark ? 0. : 1.;
+        float randSplit= 0.3 + rand(float(i)+phase + seed)*0.4 * sinN(time*mix(1., rotN.x, sinN(time+stN.y*PI)/300.) + float(i)*PI2/8.);
+        if(mod(float(i), 2.) == 0.) {
+            float xPos = mix(xLow, xHigh, randSplit);
+            if(stN.x <= xPos){
+                dark = !dark;
+                xHigh = xPos;
+            } else {
+                xLow = xPos;   
+            }
+        }
+        else {
+            float yPos = mix(yLow, yHigh, randSplit);
+            if(stN.y <= yPos){
+                dark = !dark;
+                yHigh = yPos;
+            } else {
+                yLow = yPos;   
+            }
+        }
+    }
+    
+    
+    float line = 0.005;
+    bool nearLine = abs(stN.x - xLow) < line || abs(stN.x - xHigh) < line || abs(stN.y - yLow) < line || abs(stN.y - yHigh) < line;
+    return (dark  || nearLine) ? 0. : 1. ;
+}
+
+vec4 tiles () {
+    vec2 stN = uvN();
+    vec2 cent = vec2(0.5);
+    vec3 warpN = ballTwist(stN, time);
+    vec3 warpN2 = coordWarp(stN, time/5.);
+    
+   
+    // c = mix(c, bb.rgb, 0.1);
+    
+    //todo - don't forget to make these lines linear lenses
+    float split = splits(mix(stN, stN.xy, warpN.z));
+    float shimmer = getShimmer();
+    float c = split == 1. ? shimmer : 1. - shimmer;
+    c = pow(c+0.4, .2 + sinN(time+warpN.x)*10.);
+    
+    vec4 bb = texture(backbuffer, stN);
+    stN = mix(stN, cent, sinN(time/3.));
+    vec2 warpM = mix(stN, warpN2.xy, 1.);
+    float xMix = quant(mod(time/5. +warpM.x + sinN(time/5.), 1.), 1.);
+    float yMix = quant(mod(time/5.5 +warpM.y + sinN(time/5. * 0.9), 1.), 1.);
+    split = mix(split, bb.x, xMix);
+    split = mix(split, bb.x, yMix);
+    
+    stN = uvN();
+    stN = rotate(stN, cent, 0.01*sin(time + sinN(time/1.15)*0.5 ));
+    
+    if(xMix + yMix != 0.) split = texture(backbuffer, vec2(stN.x, stN.y+0.01)).x * mix(1., shimmer, 0.03);
+    else if(split == 0.) split = mix(split, bb.x, 0.);
+    
+    
+    return vec4(vec3(split), shimmer);
+}
+
 
 out vec4 fragColor;
 void main () {
@@ -584,4 +710,4 @@ void main () {
     fragColor = lightLine_slider();vec4(col, feedback);
 }
 
-//clock, traffic, lightLine_slider - 7 is activeWobble
+//clock, traffic, lightLine_slider - 7 is activeWobble, fogShip
