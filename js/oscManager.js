@@ -67,7 +67,13 @@ function initOSC() {
 
     osc.on("/senselDraw", function(cMessage){
         senselDrawHandler(cMessage.args);
-    })
+    });
+
+    for(let i = 0; i < 16; i++){
+        osc.on("/senselDraw/"+i, function(cMessage){
+            senselDrawHandler(cMessage.args);
+        });
+    }
 
     setInterval(function(){
         takeSnapshot = true;
