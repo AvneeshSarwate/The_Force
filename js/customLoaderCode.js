@@ -1045,4 +1045,56 @@ customLoaderMap['preBurningMan'] = function(){
     connectOSC(false);
 }
 
+customLoaderMap['cosmicHaus'] = function(){
+    // playAtHalfRate = true;
+
+    setup = guitarPaintSetup;
+    draw = guitarPaintDraw;
+    customLoaderUniforms = `
+    uniform float fftValues[1024];
+    uniform float fftLogVals[10];
+    `;
+
+    var fftValues = arrayOf(1024);
+    var fftLogVals = arrayOf(10);
+
+    customLoaderUniformSet = function(time, mProgram){
+        var fftValuesU = gl.getUniformLocation(mProgram, "fftValues");
+        if(fftValuesU) gl.uniform1fv(fftValuesU, fftValues);
+        var fftLogValsU = gl.getUniformLocation(mProgram, "fftLogVals");
+        if(fftLogValsU) gl.uniform1fv(fftLogValsU, fftLogVals);
+    }
+
+    osc.on("/enterFullscreen", function(msg){
+        enterFullscreen();
+    });
+    osc.on("/fftValues", function(msg){
+        fftValues = msg.args;
+        fftLogVals = arrayOf(10);
+        fftValues.forEach((e, i) => {
+            let logInd = Math.floor(Math.log2(i+1));
+            fftLogVals[logInd] += e/2**logInd / 905;
+            fftValues[i] /= 905; 
+        });
+    });
+
+    sliderConfig = guitarPaintSliders;
+
+    navigator.mediaDevices.enumerateDevices().then(function(deviceList){
+            var cameras = deviceList.filter(device => device.kind == "videoinput");
+            var camSelector = $("#cameraSelector");
+            for(var i = 0; i < cameras.length; i++){
+                camSelector.append("<option value=\""+i+"\">cameara "+i+"</option>")
+            }
+            camSelector.change(function(event){
+                camcam = camSelector;
+                changeWebcamSelection(parseInt(camSelector.val()));
+                console.log(event);
+            })
+        });
+
+    ignoreAudioForShader = true;
+    connectOSC(false);
+}
+
 // 
