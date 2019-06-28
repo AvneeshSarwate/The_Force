@@ -49,7 +49,8 @@ function sensel(){
     // for(var i = 1; i < pointData.length; i += 4){
     //  ellipse(pointData[i+1] * drawXscale, pointData[i+2] * drawYscale, pointData[i+3] * pointScale, pointData[i+3] * pointScale);
     // }
-    if(lastPoints == pointData.toString()) return;
+    
+    // if(lastPoints == pointData.toString()) return;
     if(keyIsDown(DOWN_ARROW)) clear();
 
     var frameTouchData = formatTouchData(pointData);
@@ -113,8 +114,8 @@ function sensel(){
     });
 
     activeTouches = activeTouches.union(newTouches);
-    senselDrawCount++;
-    lastPoints = pointData.toString();
+    // senselDrawCount++;
+    // lastPoints = pointData.toString();
 }
 
 
