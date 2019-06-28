@@ -7,7 +7,7 @@ var playAtHalfRate = false;
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG", "preBurningMan"]);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG", "preBurningMan", "cosmicHaus"]);
 var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno", "hedberg"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
@@ -1051,12 +1051,12 @@ customLoaderMap['cosmicHaus'] = function(){
     setup = guitarPaintSetup;
     draw = guitarPaintDraw;
     customLoaderUniforms = `
-    uniform float fftValues[1024];
-    uniform float fftLogVals[10];
+    uniform float fftValues[512];
+    uniform float fftLogVals[9];
     `;
 
-    var fftValues = arrayOf(1024);
-    var fftLogVals = arrayOf(10);
+    var fftValues = arrayOf(512);
+    var fftLogVals = arrayOf(9);
 
     customLoaderUniformSet = function(time, mProgram){
         var fftValuesU = gl.getUniformLocation(mProgram, "fftValues");
