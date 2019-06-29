@@ -1052,17 +1052,21 @@ customLoaderMap['cosmicHaus'] = function(){
     draw = guitarPaintDraw;
     customLoaderUniforms = `
     uniform float fftValues[512];
+    uniform float fftSmallVals[512];
     uniform float fftLogVals[9];
     `;
 
     var fftValues = arrayOf(512);
     var fftLogVals = arrayOf(9);
+    var fftSmallVals = arrayOf(64);
 
     customLoaderUniformSet = function(time, mProgram){
         var fftValuesU = gl.getUniformLocation(mProgram, "fftValues");
         if(fftValuesU) gl.uniform1fv(fftValuesU, fftValues);
         var fftLogValsU = gl.getUniformLocation(mProgram, "fftLogVals");
         if(fftLogValsU) gl.uniform1fv(fftLogValsU, fftLogVals);
+        var fftSmallValsU = gl.getUniformLocation(mProgram, "fftSmallVals");
+        if(fftSmallValsU) gl.uniform1fv(fftLogValsU, fftSmallVals);
     }
 
     osc.on("/enterFullscreen", function(msg){
@@ -1074,7 +1078,8 @@ customLoaderMap['cosmicHaus'] = function(){
         fftValues.forEach((e, i) => {
             let logInd = Math.floor(Math.log2(i+1));
             fftLogVals[logInd] += e/2**logInd / 905;
-            fftValues[i] /= 905; 
+            fftValues[i] /= 905;
+            fftSmallVals[Math.floor(i/8)] += e/8; 
         });
     });
 
