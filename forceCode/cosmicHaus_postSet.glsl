@@ -579,6 +579,7 @@ vec3 lum(vec3 color){
 float getShimmer(){
     float t2 = time/5. + 1000.;
     vec2 stN = uvN();
+    stN = quant(stN, 1000.*midiCC[18]);
     stN.y += 0.001 + sinN(time+stN.x*PI)*0.0015 * sinN(time+stN.x*PI*10.)*0.0015;
     float numCells = 400.;
 
@@ -616,10 +617,8 @@ float getShimmer(){
 vec4 clock() {
     vec2 stN = uvN();
     vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
-    vec3 cam = texture(channel0, camPos).rgb; 
-    vec3 snap = texture(channel3, camPos).rgb;
     vec2 nn = uvN();
-    float centT = time/5.;
+    float centT = time/5. + midiCC[0]*2.;
     vec2 cent0 = vec2(0.5);
     vec2 cent = vec2(0.5) + vec2(sin(centT), cos(centT))/5.;
     
@@ -627,7 +626,7 @@ vec4 clock() {
     
     //the fragment color variable name (slightly different from shader toy)
     float noiseT = time/2.;
-    stN = rotate(stN, cent0, time/10.);
+    stN = rotate(stN, cent0, time/10.*midiCC[2]);
     vec2 warpN = stN + vec2(snoise(vec3(stN, noiseT)), snoise(vec3(stN, noiseT+4.)))/4.; //play with warp amount
     vec2 warpN2 = stN + vec2(snoise(vec3(stN, noiseT/2.)), snoise(vec3(stN, noiseT/2.+4.)))/4.;
     // warpN = mod(warpN, 0.2 + sinN(time/5.5)); wrap(warpN, 0., 1.);
@@ -642,7 +641,7 @@ vec4 clock() {
     
     vec3 c;
     vec2 bbN = mix(nn, stN2, distance(nn, vec2(0.5))/(10. + cosN(time/2.3)*1000.) ); //play with warp feedback mix
-    vec4 bb = texture(backbuffer, bbN);
+    vec4 bb = texture(backbuffer, mix(bbN, vec2(0.5), midiCC[4]));
     vec4 bb0 = texture(backbuffer, nn);
     float fb2;
     float feedback; 
@@ -752,9 +751,16 @@ vec4 lightLine_slider () {
     vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
     // mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
     vec2 cent = vec2(0.5);
-    float time1 = midiCC[0] * 60. + timeSwing;
+    float time1 = midiCC[0]*3. * midiCC[11]*10. + midiCC[12]*100. + midiCC[13]*10.+ timeSwing;
+    
+    vec3 hslScale = vec3(360, 100, 100);
+    vec3 hslCol = vec3(0.5, 1., .8);
+    vec3 rgbCol = hsluvToRgb(hslCol*hslScale);
+
+
 
     vec2 stN = uvN();
+    stN = mix(stN, cent, midiCC[10]/10.);
     float numCells = 400.;
     vec3 warp = ballTwist2(stN, time1/2., 20., midiCC[5], midiCC[6]);
     vec3 warpSink = vec3(0.);
@@ -879,8 +885,8 @@ float splits(vec2 stN){
     bool xSplit = false;
     bool ySplit = false;
     bool dark = false;
-    vec2 rotN = rotate(stN, vec2(0.5), time/5.);
-    for(int i = 0; i < 8; i++){
+    vec2 rotN = rotate(stN, vec2(0.5), time/5.+midiCC[11]);
+    for(int i = 0; i < 6; i++){
         float phase = dark ? 0. : 1.;
         float randSplit= 0.3 + rand(float(i)+phase + seed)*0.4 * sinN(time*mix(1., rotN.x, sinN(time+stN.y*PI)/300.) + float(i)*PI2/8.);
         if(mod(float(i), 2.) == 0.) {
@@ -912,6 +918,7 @@ float splits(vec2 stN){
 vec4 tiles () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
+    stN = mix(stN, cent, midiCC[10]);
     vec3 warpN = ballTwist(stN, time);
     vec3 warpN2 = coordWarp(stN, time/5.);
     
@@ -924,7 +931,7 @@ vec4 tiles () {
     float c = split == 1. ? shimmer : 1. - shimmer;
     c = pow(c+0.4, .2 + sinN(time+warpN.x)*10.);
     
-    vec4 bb = texture(backbuffer, stN);
+    vec4 bb = texture(backbuffer, mix(stN, warpN.xy, midiCC[1]));
     stN = mix(stN, cent, sinN(time/3.));
     vec2 warpM = mix(stN, warpN2.xy, 1.);
     float xMix = quant(mod(time/5. +warpM.x + sinN(time/5.), 1.), 1.);
@@ -952,13 +959,15 @@ void main () {
 
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
-    stN = mix(stN, cent, midiCC[3]);
+        vec2 warpN = coordWarp(stN, time).xy;
+    stN = quant(stN, 10.+pow(midiCC[5], 10.)*1000.);
+    stN = mix(stN, cent, midiCC[3]/10.);
     float numCells = 400.;
     
-    vec3 cam = texture(channel0, vec2(1.-stN.x, stN.y)).rgb;
-
-    vec2 hashN = stN + (cam.xy-0.5)/numCells;(hash(vec3(stN, t2)).xy + -0.5)/numCells;
-    vec2 warpN = coordWarp(stN, time).xy;
+    vec3 cam = red;texture(channel0, vec2(1.-stN.x, stN.y)).rgb;
+    float shim = getShimmer();
+    vec2 hashN = stN + vec2(shim, mod(shim+0.3, 1.));// (cam.xy-0.5)/numCells;(hash(vec3(stN, t2)).xy + -0.5)/numCells;
+    
 
     
     vec3 cc;
@@ -990,34 +999,43 @@ void main () {
     
     vec3 col = vec3(feedback);
     
+    vec3 hslScale = vec3(360, 100, 100);
+    vec3 hslCol = vec3(0.5, 1., .8);
+    vec3 rgbCol = hsluvToRgb(hslCol*hslScale);
+    stN = rotate(hashN, cent, midiCC[1]*PI2);
+    float n = 9.;
+    int ind = int(quant0(stN.x, n)*n);
+    float logVal = fftLogVals[ind]*10.;
+    float n2 = 20.;
+    int ind2 = int(quant0(mix(stN.x, warpN.x, midiCC[0]*1.), n2)*n2);
+    float fftVal = fftValues[ind2]*10.;
+    float n3 = 10. + sinN(time/1.5)*20.;
+    int ind3 = int(quant0(mix(stN.x, warpN.x, midiCC[0]*1.), n3)*n3);
+    float fftSmall = fftValues[ind3]*10.;
+    
     // col = quant(col, 1.);
     // col = mix(bb.rgb, col, 0.025);
     vec3 fftCol = vec3(fftValues[int(quant(stN.x, 49.)*50.)]/255.);
     vec3 midiCol = vec3(midiCC[int(quant(stN.x, 8.)*8.)]/127.);
     
     // float modVal = 1.;
-    // float slitTime = time/4.;
+    // float slitTime = time/2.;
     // float fdbk = bb.a;
-    // float slitW = 0.05;
+    // float slitW = midiCC[2];
     // stN = mix(stN, coordWarp(stN, time).xy, 0.9);
     // float slitCondition = float(mod(slitTime, modVal) < stN.x && stN.x < mod(slitTime, modVal) + slitW );
-    // col = mix(bb.rgb, col, slitCondition);
+    // col = mix(bb.rgb, vec3(fftSmall*100.), slitCondition);
     // col = circleSlice(uvN()*rotate(uvN(), cent, time/4.), time/5., randWalk);
     
-    vec3 hslScale = vec3(360, 100, 100);
-    vec3 hslCols = hsluvToRgb(hslScale);
-    stN = rotate(hashN, cent, midiCC[1]*PI2);
-    float n = 9.;
-    int ind = int(quant0(stN.x, n)*n);
-    float logVal = fftLogVals[ind]*10.;
-    float n2 = 20.;
-    int ind2 = int(quant0(mix(stN.x, warpN.x, midiCC[0]*100.), n2)*n2);
-    float fftVal = fftValues[ind2]*10.;
-    float n3 = 80.;
-    int ind3 = int(quant0(stN.x, n3)*n3);
-    float fftSmall = fftValues[ind3]*10.;
     
-    fragColor = vec4(vec3(fftVal*40.)*feedback, feedback);
+    
+    vec3 col2 = mix(white, rgbCol, midiCC[4]) * vec3(fftSmall*30.);
+    vec4 lightLine = lightLine_slider();
+    vec4 tileLight = mix(lightLine, tiles(), midiCC[14]);
+    // vec4 clockV = clock();
+    vec4 doubleMix = mix(tileLight,  vec4(col2, feedback), midiCC[15]);
+    // vec4 clockLine = mix(clockV, lightLine, midiCC[18])*1.1;;
+    fragColor = vec4(quant(doubleMix.rgb, 100.*midiCC[18]), doubleMix.a)*1.09;
 }
 
 //clock, traffic, lightLine_slider - 7 is activeWobble, fogShip, tiles
