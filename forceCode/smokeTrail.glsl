@@ -57,8 +57,12 @@ vec3 coordWarp(vec2 stN, float t2){
 void ex3() {
     vec2 stN = uvN();
     vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
-    vec3 cam = texture2D(channel0, camPos).rgb; 
-    vec3 snap = texture2D(channel3, camPos).rgb;
+    vec2 hashN = hash(vec3(stN, time)).xy - 0.5;
+    vec2 hashN2 = hash(vec3(stN, time*1.1)).xy - 0.5;
+    float lineW = 0.002;
+    vec3 cam = texture2D(channel0, camPos + hashN*lineW).rgb; 
+    vec3 snap = texture2D(channel3, camPos+ hashN2*lineW).rgb;
+    vec4 bbN = texture2D(backbuffer, stN);
     vec2 warpN = coordWarp(stN, time/5.).xy;
 
     vec3 c;
@@ -70,7 +74,7 @@ void ex3() {
         feedback = 1.;
     } 
     
-    gl_FragColor = vec4(feedback);//vec4(c, feedback);
+    gl_FragColor = vec4(mix(feedback, bbN.a, 0.5));//vec4(c, feedback);
 }
 
 
