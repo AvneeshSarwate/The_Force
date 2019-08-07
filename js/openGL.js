@@ -554,7 +554,7 @@ function setupWebcam() {
   const video = document.createElement('video');
 
 
-  var hasUserMedia = navigator.webkitGetUserMedia ? true : false;
+  var hasUserMedia = navigator.mediaDevices.getUserMedia ? true : false;
 
   var playing = false;
   var timeupdate = false;

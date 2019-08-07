@@ -230,7 +230,7 @@ function onMIDIMessage(event) {
 
         case 0xb0:
             midiData[event.data[1]] = event.data[2];
-            midiCC[midiNote] = midiVel;
+            midiCC[midiNote] = midiVel/127; //normalizing sliderVals 0-1
             eventKey = "cc";
             break;
     }
