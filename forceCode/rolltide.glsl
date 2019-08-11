@@ -267,12 +267,47 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
+float logisticSigmoid (float x, float a){
+  // n.b.: this Logistic Sigmoid has been normalized.
+
+  float epsilon = 0.0001;
+  float min_param_a = 0.0 + epsilon;
+  float max_param_a = 1.0 - epsilon;
+  a = max(min_param_a, min(max_param_a, a));
+  a = (1./(1.-a) - 1.);
+
+  float A = 1.0 / (1.0 + exp(0. -((x-0.5)*a*2.0)));
+  float B = 1.0 / (1.0 + exp(a));
+  float C = 1.0 / (1.0 + exp(0.-a)); 
+  float y = (A-B)/(C-B);
+  return y;
+}
+
+float stepTime(float t, float a){
+    return floor(t) + logisticSigmoid(fract(t), a);
+}
+
+float rand2(float f) {vec2 n = vec2(f); return (fract(1e4 * sin(17.0 * n.x + n.y * 0.1) * (0.1 + abs(sin(n.y * 13.0 + n.x))))-0.5)*0.002;}
+
+vec4 avgColorBB(vec2 nn, float dist){
+    vec4 c1 = texture2D(backbuffer, nn+vec2(0, dist)      +rand2(1.)).rgba;
+    vec4 c2 = texture2D(backbuffer, nn+vec2(0, -dist)     +rand2(2.)).rgba;
+    vec4 c3 = texture2D(backbuffer, nn+vec2(dist, 0)      +rand2(3.)).rgba;
+    vec4 c4 = texture2D(backbuffer, nn+vec2(-dist, 0)     +rand2(4.)).rgba;
+    vec4 c5 = texture2D(backbuffer, nn+vec2(dist, dist)   +rand2(5.)).rgba;
+    vec4 c6 = texture2D(backbuffer, nn+vec2(-dist, -dist) +rand2(6.)).rgba;
+    vec4 c7 = texture2D(backbuffer, nn+vec2(dist, -dist)  +rand2(7.)).rgba;
+    vec4 c8 = texture2D(backbuffer, nn+vec2(-dist, dist)  +rand2(8.)).rgba;
+    
+    return (c1+c2+c3+c4+c5+c6+c7+c8)/8.;
+}
+
 void main () {
     vec2 stN = uvN();
     vec2 rotN = rotate(stN, vec2(0.5), time/2.);
-    rotN = rowColWave(stN, 1000., time/4. * (1. + rotN.y/100.), 0.1);
+    rotN = rowColWave(stN, 10., time/4. * (1. + rotN.y/100.), 0.5);
     
-    float numCells = 10.;
+    float numCells = 2.+rotN.x*PI;
     float rad = 0.5/numCells;
     vec2 quantN = quant(rotN, numCells);
     vec2 circCenter = quantN;
@@ -285,7 +320,7 @@ void main () {
     vec3 cc;
     float decay = 0.97;
     float feedback;
-    vec4 bb = texture2D(backbuffer, stN);
+    vec4 bb = avgColorBB(stN, 0.005);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
