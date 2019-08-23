@@ -10,26 +10,46 @@ vec3 coordWarp(vec2 stN, float t2, float rad){
     return vec3(warp, distance(warp, stN));
 }
 
+float rand2(float f) {vec2 n = vec2(f); return (fract(1e4 * sin(17.0 * n.x + n.y * 0.1) * (0.1 + abs(sin(n.y * 13.0 + n.x))))-0.5)*0.002;}
+
+vec4 avgColorBB(vec2 nn, float dist){
+    vec4 c1 = texture2D(backbuffer, nn+vec2(0, dist)      +rand2(1.)).rgba;
+    vec4 c2 = texture2D(backbuffer, nn+vec2(0, -dist)     +rand2(2.)).rgba;
+    vec4 c3 = texture2D(backbuffer, nn+vec2(dist, 0)      +rand2(3.)).rgba;
+    vec4 c4 = texture2D(backbuffer, nn+vec2(-dist, 0)     +rand2(4.)).rgba;
+    vec4 c5 = texture2D(backbuffer, nn+vec2(dist, dist)   +rand2(5.)).rgba;
+    vec4 c6 = texture2D(backbuffer, nn+vec2(-dist, -dist) +rand2(6.)).rgba;
+    vec4 c7 = texture2D(backbuffer, nn+vec2(dist, -dist)  +rand2(7.)).rgba;
+    vec4 c8 = texture2D(backbuffer, nn+vec2(-dist, dist)  +rand2(8.)).rgba;
+    
+    return (c1+c2+c3+c4+c5+c6+c7+c8)/8.;
+}
+
 void ex1(){
     vec2 stN = uvN();
     float col = 1.;
     float dist = 0.01;
     float rad = 0.8;
+     //texture2D(backbuffer, stN);
     vec3 warpN = coordWarp(stN, time/2., 0.1);
     vec3 warpN2 = coordWarp(stN, time/2., 0.5);
+    vec4 bb = avgColorBB(mix(stN, warpN2.xy, 0.05), 0.01);
     warpN.xy = mix(stN, warpN.xy, 0.9);
     bool inDot = false;
     for(int i = 0; i < 20; i++){
-        float t = time*float(i+1)/170. + sinN(rand(float(i+1))*time/8.)*1.;
+        float i_f = float(i)*sin(time/10.)+1.;
+        float t = time*i_f/470. + sinN(i_f/20.+time/8.)*4.5;
         vec2 pt = vec2(sinN(t*2.), cosN(t))*rad + (1.-rad)/2.;
         vec2 warpPt = coordWarp(pt, time, 0.1).xy;
-        if(distance(warpN.xy, warpPt) < (dist+5.*dist*sinN(time*1.+float(i)*PI))*(1.+sinN(time+warpN2.x*PI))) {
+        if(distance(warpN.xy, warpPt) < (dist+5.*dist*sinN(time*1.+i_f*PI))*(1.+sinN(time+warpN2.x*PI))) {
             col = col * 0.;
             inDot = true;
         }
     }
     
-    gl_FragColor = vec4(vec3(col) + mix(0., pow(warpN.z*5., .7)*0., float(inDot)), 1.);
+    gl_FragColor = vec4(pow(mix(col, bb.r, 0.95)+0.01, 1. + sinN(warpN2.z*30.)*0.1));
+
+
 }
 
 float colourDistance(vec3 e1, vec3 e2) {
