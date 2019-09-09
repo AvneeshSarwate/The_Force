@@ -121,6 +121,25 @@ float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
 
+float logisticSigmoid (float x, float a){
+  // n.b.: this Logistic Sigmoid has been normalized.
+
+  float epsilon = 0.0001;
+  float min_param_a = 0.0 + epsilon;
+  float max_param_a = 1.0 - epsilon;
+  a = max(min_param_a, min(max_param_a, a));
+  a = (1./(1.-a) - 1.);
+
+  float A = 1.0 / (1.0 + exp(0. -((x-0.5)*a*2.0)));
+  float B = 1.0 / (1.0 + exp(a));
+  float C = 1.0 / (1.0 + exp(0.-a)); 
+  float y = (A-B)/(C-B);
+  return y;
+}
+
+float stepTime(float t, float a){
+    return floor(t) + logisticSigmoid(fract(t), a);
+}
 
 void main () {
     
@@ -134,20 +153,22 @@ void main () {
     vec3 params2 = vec3(4., 0.009, 0.98);
     params2 = params1;
     
-    vec3 params = mix(params1, params2, 1. - sigmoid(sin(time/10.)*50.));
+
+    float t2 = stepTime(time + sin(time+stN.x*PI), .5 + sinN(time)*0.4);
+    vec3 params = mix(params1, params2, 1. - sigmoid(sin(t2/10.)*50.));
     
-    float timeDiv = params.x;
+    float t2Div = params.x;
     float distLimit = params.y;
     float fdbk = params.z;
     
     
-    float tScale = time/timeDiv;
+    float tScale = t2/t2Div;
     // stN = mix(stN, coordWarp(stN, tScale).xy, 0.05);
-    stN = rowColWave(stN, 1000., time/4., 0.005);
+    stN = rowColWave(stN, 1000., t2/4., 0.005);
     vec2 dropCoord = drops(stN, tScale/10., 20.);
 
     
-    stN = rowColWave(dropCoord, 1000., time, 0.00);
+    stN = rowColWave(dropCoord, 1000., t2, 0.00);
     // stN = stN + (hash(vec3(stN, 5.)).xy-0.5)*0.00;
     float numLines = 50.;
     float gridThickness = 0.003;
@@ -159,9 +180,9 @@ void main () {
     float feedback;
     vec4 bb = texture2D(backbuffer, stN);
     float lastFeedback = bb.a;
-    // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
-    bool condition =  distance(uvN(), quant(stN, 10. + sinN(time/10.)*190.)) < distLimit; c == black;
-    vec3 trail = black; // swirl(time/5., trans2) * c.x;
+    
+    bool condition =  distance(uvN(), quant(stN, 10. + sinN(t2/10.)*190.)) < distLimit; c == black;
+    vec3 trail = black; // swirl(t2/5., trans2) * c.x;
     vec3 foreGround = white;
     
     
