@@ -164,19 +164,21 @@ void main () {
     float boxh = 0.2;
     float boxw = 0.005;
     vec2 boxdim = vec2(0.05, 0.4);
-    vec2 boxpos = vec2(0.5 + sin(time)*0.1, 0.5);
+    vec2 boxpos = vec2(0.5 + sin(time)*0.1, 0.7);
     vec2 disttobox = abs(boxpos-stN);
     vec2 warpN = coordWarp(vec2(0.5, stN.y), time/4.).xy;
     float boxprog = (warpN.y-(boxpos.y-boxh)*2.)/boxh*2.;
     
-    vec4 bb = texture2D(backbuffer, stN);
-    bb = mix(bb, avgColorBB(stN, 0.00, 0.005), 0.5);
+    vec4 bb = texture2D(backbuffer, stN).aaaa;
+    bb = mix(bb, avgColorBB(stN, 0.00, 0.005).aaaa, 0.5);
+    vec4 bbMove = avgColorBB(vec2(stN.x, stN.y+0.005), 0.00, 0.001).rgba; 
     
     bool inBox =  disttobox.x < boxw && disttobox.y < boxh;
+    bool inBigBox = 0.4 < stN.x && stN.x < 0.06 && disttobox.y < boxh;
     float speed = 4.;
     float tNoise = snoise(vec3(3., 4., time/speed))*speed;
     float brushCol = pow(snoise(vec3(5., 2., boxprog*1.+tNoise)), 1.);
-    vec3 col = inBox ? black + brushCol : bb.rgb;
+    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, mod(stepTime(time/4., .9), 1.)*0.3);
     
-    gl_FragColor = vec4(col, 1);
+    gl_FragColor = vec4(vec3(sinN(col.r*PI*4.)),col.r);
 }
