@@ -170,7 +170,7 @@ void main () {
     float boxprog = (warpN.y-(boxpos.y-boxh)*2.)/boxh*2.;
     
     vec2 moveN = vec2(stN.x, stN.y+0.005);
-    vec4 bb = texture2D(backbuffer, moveN).aaaa;
+    vec4 bb = texture2D(backbuffer, moveN).aaaa; //change moveN here to stN for orig
     bb = mix(bb, avgColorBB(stN, 0.00, 0.005).aaaa, 0.5);
     vec4 bbMove = avgColorBB(moveN, 0.00, 0.001).rgba; 
     
@@ -180,7 +180,7 @@ void main () {
     float tNoise = snoise(vec3(3., 4., time/speed))*speed;
     float brushCol = pow(snoise(vec3(5., 2., boxprog*1.+tNoise)), 1.);
     
-    float bbmix = .02; pow(abs(1.-mod(stepTime(-time/4., .7), 2.)), 4.)*0.3;
+    float bbmix = .02; pow(abs(1.-mod(stepTime(-time/4., .7), 2.)), 4.)*0.3; //change this back for orig
     vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, bbmix);
     float fdbk = col.r;
     col = vec3(sinN(col.r*PI*4.));
