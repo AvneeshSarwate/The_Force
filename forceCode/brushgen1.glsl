@@ -185,5 +185,6 @@ void main () {
     float fdbk = col.r;
     col = vec3(sinN(col.r*PI*4.));
     
-    gl_FragColor = vec4(col,fdbk);
+    //make this back to just "col" for orig    
+    gl_FragColor = vec4(vec3(pow(col.r-0.4*sinN(time/4.), .5)),fdbk);
 }
