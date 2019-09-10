@@ -169,16 +169,17 @@ void main () {
     vec3 warpN = coordWarp(vec2(0.5, stN.y), time/4.);
     float boxprog = (warpN.y-(boxpos.y-boxh)*2.)/boxh*2.;
     
-    vec4 bb = texture2D(backbuffer, stN).aaaa;
+    vec2 moveN = vec2(stN.x, stN.y+0.005);
+    vec4 bb = texture2D(backbuffer, moveN).aaaa;
     bb = mix(bb, avgColorBB(stN, 0.00, 0.005).aaaa, 0.5);
-    vec4 bbMove = avgColorBB(vec2(stN.x, stN.y+0.005), 0.00, 0.001).rgba; 
+    vec4 bbMove = avgColorBB(moveN, 0.00, 0.001).rgba; 
     
     bool inBox =  disttobox.x < boxw && disttobox.y < boxh;
     bool inBigBox = 0.4 < stN.x && stN.x < 0.06 && disttobox.y < boxh;
     float speed = 4.;
     float tNoise = snoise(vec3(3., 4., time/speed))*speed;
     float brushCol = pow(snoise(vec3(5., 2., boxprog*1.+tNoise)), 1.);
-    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, abs(1.-mod(stepTime(-time/14., .7), 2.))*0.3);
+    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, .02);
     float fdbk = col.r;
     col = vec3(sinN(col.r*PI*4.));
     
