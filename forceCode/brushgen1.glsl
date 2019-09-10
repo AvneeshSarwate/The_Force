@@ -179,7 +179,9 @@ void main () {
     float speed = 4.;
     float tNoise = snoise(vec3(3., 4., time/speed))*speed;
     float brushCol = pow(snoise(vec3(5., 2., boxprog*1.+tNoise)), 1.);
-    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, .02);
+    
+    float bbmix = .02; pow(abs(1.-mod(stepTime(-time/4., .7), 2.)), 4.)*0.3;
+    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, bbmix);
     float fdbk = col.r;
     col = vec3(sinN(col.r*PI*4.));
     
