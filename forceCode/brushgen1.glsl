@@ -166,7 +166,7 @@ void main () {
     vec2 boxdim = vec2(0.05, 0.4);
     vec2 boxpos = vec2(0.5 + sin(time)*0.1, 0.7);
     vec2 disttobox = abs(boxpos-stN);
-    vec2 warpN = coordWarp(vec2(0.5, stN.y), time/4.).xy;
+    vec3 warpN = coordWarp(vec2(0.5, stN.y), time/4.);
     float boxprog = (warpN.y-(boxpos.y-boxh)*2.)/boxh*2.;
     
     vec4 bb = texture2D(backbuffer, stN).aaaa;
@@ -178,7 +178,9 @@ void main () {
     float speed = 4.;
     float tNoise = snoise(vec3(3., 4., time/speed))*speed;
     float brushCol = pow(snoise(vec3(5., 2., boxprog*1.+tNoise)), 1.);
-    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, mod(stepTime(time/4., .9), 1.)*0.3);
+    vec3 col = inBox ? black + brushCol :  mix(bb.rgb,  bbMove.rgb, abs(1.-mod(stepTime(-time/14., .7), 2.))*0.3);
+    float fdbk = col.r;
+    col = vec3(sinN(col.r*PI*4.));
     
-    gl_FragColor = vec4(vec3(sinN(col.r*PI*4.)),col.r);
+    gl_FragColor = vec4(col,fdbk);
 }
