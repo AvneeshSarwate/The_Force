@@ -141,17 +141,17 @@ float stepTime(float t, float a){
     return floor(t) + logisticSigmoid(fract(t), a);
 }
 
-float rand2(float f) {vec2 n = vec2(f); return (fract(1e4 * sin(17.0 * n.x + n.y * 0.1) * (0.1 + abs(sin(n.y * 13.0 + n.x))))-0.5)*0.002;}
+float rand2(float f, float d) {vec2 n = vec2(f); return (fract(1e4 * sin(17.0 * n.x + n.y * 0.1) * (0.1 + abs(sin(n.y * 13.0 + n.x))))-0.5)*d;}
 
-vec4 avgColorBB(vec2 nn, float dist){
-    vec4 c1 = texture2D(backbuffer, nn+vec2(0, dist)      +rand2(1.)).rgba;
-    vec4 c2 = texture2D(backbuffer, nn+vec2(0, -dist)     +rand2(2.)).rgba;
-    vec4 c3 = texture2D(backbuffer, nn+vec2(dist, 0)      +rand2(3.)).rgba;
-    vec4 c4 = texture2D(backbuffer, nn+vec2(-dist, 0)     +rand2(4.)).rgba;
-    vec4 c5 = texture2D(backbuffer, nn+vec2(dist, dist)   +rand2(5.)).rgba;
-    vec4 c6 = texture2D(backbuffer, nn+vec2(-dist, -dist) +rand2(6.)).rgba;
-    vec4 c7 = texture2D(backbuffer, nn+vec2(dist, -dist)  +rand2(7.)).rgba;
-    vec4 c8 = texture2D(backbuffer, nn+vec2(-dist, dist)  +rand2(8.)).rgba;
+vec4 avgColorBB(vec2 nn, float dist, float d){
+    vec4 c1 = texture2D(backbuffer, nn+vec2(0, dist)      +rand2(1., d)).rgba;
+    vec4 c2 = texture2D(backbuffer, nn+vec2(0, -dist)     +rand2(2., d)).rgba;
+    vec4 c3 = texture2D(backbuffer, nn+vec2(dist, 0)      +rand2(3., d)).rgba;
+    vec4 c4 = texture2D(backbuffer, nn+vec2(-dist, 0)     +rand2(4., d)).rgba;
+    vec4 c5 = texture2D(backbuffer, nn+vec2(dist, dist)   +rand2(5., d)).rgba;
+    vec4 c6 = texture2D(backbuffer, nn+vec2(-dist, -dist) +rand2(6., d)).rgba;
+    vec4 c7 = texture2D(backbuffer, nn+vec2(dist, -dist)  +rand2(7., d)).rgba;
+    vec4 c8 = texture2D(backbuffer, nn+vec2(-dist, dist)  +rand2(8., d)).rgba;
     
     return (c1+c2+c3+c4+c5+c6+c7+c8)/8.;
 }
@@ -164,12 +164,19 @@ void main () {
     float boxh = 0.2;
     float boxw = 0.005;
     vec2 boxdim = vec2(0.05, 0.4);
-    vec2 boxpos = vec2(0.5);
+    vec2 boxpos = vec2(0.5 + sin(time)*0.1, 0.5);
     vec2 disttobox = abs(boxpos-stN);
-    float boxprog = (stN.y-(boxpos.y-boxh)*2.)/boxh*2.;
+    vec2 warpN = coordWarp(vec2(0.5, stN.y), time/4.).xy;
+    float boxprog = (warpN.y-(boxpos.y-boxh)*2.)/boxh*2.;
+    
+    vec4 bb = texture2D(backbuffer, stN);
+    bb = mix(bb, avgColorBB(stN, 0.00, 0.005), 0.5);
     
     bool inBox =  disttobox.x < boxw && disttobox.y < boxh;
-    vec3 col = inBox ? black + pow(snoise(vec3(5., 2., boxprog*3.+time*5.)), 0.8) : white;
+    float speed = 4.;
+    float tNoise = snoise(vec3(3., 4., time/speed))*speed;
+    float brushCol = pow(snoise(vec3(5., 2., boxprog*1.+tNoise)), 1.);
+    vec3 col = inBox ? black + brushCol : bb.rgb;
     
     gl_FragColor = vec4(col, 1);
 }
