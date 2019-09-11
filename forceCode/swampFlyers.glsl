@@ -259,7 +259,7 @@ void main () {
     }
     stN = stN - movement;
     stN = wrap(stN, 0., 1.);
-    vec2 warpN = coordWarp(uvN(), time/6.).xy;
+    vec2 warpN = coordWarp(uvN(), time/2.).xy;
     vec2 warpN2 = mix(uvN(), warpN, 0.1);
     warpN = mix(uvN(), warpN, 1.91);
     
@@ -268,8 +268,7 @@ void main () {
     vec3 cc;
     float decay = 0.99;
     float feedback;
-    float rval = hash(vec3(stN, time)).x;
-    vec4 bb = avgColorBB(mix(stN, warpN2, 0.14), 0.0*rand(rval*100.)); texture2D(backbuffer, vec2(stN.x, stN.y));
+    vec4 bb = avgColorBB(warpN2, 0.005*rand(stN.x*100.))*distance(warpN, vec2(0.05))/0.5; texture2D(backbuffer, vec2(stN.x, stN.y));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     // bool condition = circleSlice(stN, time/2., randWalk/2. + 1500.).z == 0.; 
@@ -288,7 +287,7 @@ void main () {
             feedback = 1.;
             cc = trail; 
         } else {
-            feedback = lastFeedback*pow(warpN.x, 4.);
+            feedback = lastFeedback + 0.09 * sinN(time);
             cc = bb.rgb;
         } 
         // else {
