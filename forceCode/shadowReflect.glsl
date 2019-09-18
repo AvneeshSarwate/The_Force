@@ -48,7 +48,8 @@ void ex1(){
     float feedback; 
     vec4 bbN = texture2D(backbuffer, stN);
     vec4 bbWarp = texture2D(backbuffer, rotate(stN, vec2(0.5), PI/8.));
-    vec2 warpMix = mix(mix(stN, warpN.xy, 0.01), vec2(0.5), 0.01 * sin(time/3.));
+    vec2 trailPoint = vec2(0.5); //mix(vec2(0.5), coordWarp(vec2(0.5), time).xy, 2.5);
+    vec2 warpMix = mix(mix(stN, warpN.xy, 0.01), trailPoint, 0.01 * sin(time/3.));
     vec4 bb = avgColorBB(warpMix, 0.005, 0.01);
     
     bool condition = col == white;
