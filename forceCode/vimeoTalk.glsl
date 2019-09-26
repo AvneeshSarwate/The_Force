@@ -82,7 +82,7 @@ void ex3() {
     
     vec2 circ = vec2(sinN(t), cosN(t))*0.5 + .25;
     vec2 mouseN = mouse.xy/2./resolution.xy;
-    circ = vec2(mouseN.x, 1.-mouseN.y);
+    // circ = vec2(mouseN.x, 1.-mouseN.y);
     float rad = 0.1;
     
     condition = distance(mix(stN, warpN, 0.), circ) > rad;
@@ -101,7 +101,7 @@ void ex3() {
     if(feedback < trailCut) col = mix(col, black, (trailCut-feedback)/trailCut);
     // col = vec3(feedback);
     
-    gl_FragColor = vec4(col, feedback);//vec4(c, feedback);
+    gl_FragColor = vec4(condition);//vec4(c, feedback);
 }
 
 
