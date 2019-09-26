@@ -75,12 +75,14 @@ void ex3() {
 
 
     vec4 bb = texture2D(backbuffer, stN);
-    vec4 bbAvg = avgColorBB(mix(stN, warpN, 0.01), 0.002, 0.002);
+    vec4 bbAvg = avgColorBB(mix(stN, warpN, 0.005), 0.002, 0.002);
     float lastFeedback = bbAvg.a;
 
     bool condition = colourDistance(cam, snap) < .5;
     
     vec2 circ = vec2(sinN(t), cosN(t))*0.5 + .25;
+    vec2 mouseN = mouse.xy/2./resolution.xy;
+    circ = vec2(mouseN.x, 1.-mouseN.y);
     float rad = 0.1;
     
     condition = distance(mix(stN, warpN, 0.), circ) > rad;
@@ -92,9 +94,12 @@ void ex3() {
     } 
     else{
         feedback = 1.;
-    } 
+    }
     
-    gl_FragColor = vec4(condition);//vec4(c, feedback);
+    vec3 col = feedback == 1. ? cam : bbAvg.rgb;
+    // col = vec3(feedback);
+    
+    gl_FragColor = vec4(col, feedback);//vec4(c, feedback);
 }
 
 
