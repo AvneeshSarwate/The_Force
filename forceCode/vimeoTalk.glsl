@@ -90,13 +90,15 @@ void ex3() {
     vec3 c;
     float feedback; 
     if(condition){
-        feedback = lastFeedback * 0.97;
+        feedback = lastFeedback * 0.99;
     } 
     else{
         feedback = 1.;
     }
     
     vec3 col = feedback == 1. ? cam : bbAvg.rgb;
+    float trailCut = 0.05;
+    if(feedback < trailCut) col = mix(col, black, (trailCut-feedback)/trailCut);
     // col = vec3(feedback);
     
     gl_FragColor = vec4(col, feedback);//vec4(c, feedback);
