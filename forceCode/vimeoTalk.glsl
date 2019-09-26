@@ -101,7 +101,7 @@ void ex3() {
     if(feedback < trailCut) col = mix(col, black, (trailCut-feedback)/trailCut);
     // col = vec3(feedback);
     
-    gl_FragColor = vec4(condition);//vec4(c, feedback);
+    gl_FragColor = vec4(condition);//vec4(col, feedback);
 }
 
 
