@@ -1,7 +1,7 @@
 // quantize and input number [0, 1] to quantLevels levels
 float quant(float num, float quantLevels){
     float roundPart = floor(fract(num*quantLevels)*2.);
-    return (floor(num*quantLevels)+roundPart)/quantLevels;
+    return (floor(num*quantLevels))/quantLevels;
 }
 
 // same as above but for vectors, applying the quantization to each element
@@ -116,6 +116,49 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
+vec4 circleSlice(vec2 stN, float t, float randw){
+    
+    //define several different timescales for the transformations
+    float t0, t1, t2, t3, t4, rw;
+    t0 = t/4.5;
+    t1 = t/2.1;
+    t2 = t/1.1;
+    t3 = t/0.93;
+    rw =  randw/290.; //a random walk value used to parameterize the rotation of the final frame
+    t4 = t;
+    
+    t1 = t1 / 2.;
+    t0 = t0 / 2.;
+    rw = rw / 2.;
+    float divx = sinN(t0) * 120.+10.;
+    float divy = cosN(t1) * 1400.+10.;
+    stN = stN * rotate(stN, vec2(0.5), rw);
+    vec2 trans2 = vec2(mod(floor(stN.y * divx), 2.) == 0. ? mod(stN.x + (t1 + rw)/4., 1.) : mod(stN.x - t1/4., 1.), 
+                       mod(floor(stN.x * divy), 2.) == 0. ? mod(stN.y + t1, 1.) : mod(stN.y - t1, 1.));
+    
+    
+    bool inStripe = false;
+    float dist = distance(trans2, vec2(0.5));
+
+
+    float numStripes = 20.;
+    float d = 0.05;
+    float stripeWidth =(0.5 - d) / numStripes;
+    for(int i = 0; i < 100; i++){
+        if(d < dist && dist < d + stripeWidth/2.) {
+            inStripe = inStripe || true;
+        } else {
+            inStripe = inStripe || false;
+        }
+        d = d + stripeWidth;
+        if(d > 0.5) break;
+    }
+    
+    vec4 c = !inStripe ? vec4(white, 1) : vec4(black, 0);
+    return c;
+    
+}
+
 
 
 vec3 coordWarp(vec2 stN, float t2){ 
@@ -131,6 +174,21 @@ vec3 coordWarp(vec2 stN, float t2){
     return vec3(warp, distance(warp, stN));
 }
 
+vec2 multiBallCondition(vec2 stN, float t2){
+    
+    float rad = .08;
+    bool cond = false;
+    float ballInd = -1.;
+    
+    for (int i = 0; i < 20; i++) {
+        float i_f = float(i);
+        vec2 p = vec2(sinN(t2 * rand(vec2(i_f+1., 10.)) * 1.3 + i_f), cosN(t2 * rand(vec2(i_f+1., 10.)) * 1.1 + i_f));
+        cond = cond || distance(stN, p) < rad;
+        if(distance(stN, p) < rad) ballInd = float(i); 
+    }
+    
+    return vec2(cond ? 1. :0., ballInd/20.);
+}
 
 // calculates the luminance value of a pixel
 // formula found here - https://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color 
@@ -154,22 +212,28 @@ void main () {
     vec2 cent = vec2(0.5);
 
     vec3 p5 = texture2D(channel1, stN).rgb;
-    
-    float t2 = time + 10000. + sigmoid(sin(time/5.)*5.)*400000.;
+    //slider to control some region split parameters, and maybe band-num per split
+    //slider to control which bands are on or off? can have some thing so that you cycle between a few
+    float t2 = 1000. + sigmoid(sin(time/5.)*5.)*2. + rand(quant(stN.x, 500.*pow(sliderVals[2] ,5.)+1.))*10.; 
     float t3 = 00000.;
+    
+    vec3 hashN = hash(vec3(stN, time));
 
-    float v = quant(sinN(time/5.), 127.) * 127.;
-    float x = sinN(v *10. + cos(v * 20.));
-    float y = cosN(v *14. + cos(v * 17. + 0.5));
-    vec2 pos = vec2(x, y);
-    stN.x = mix(stN, coordWarp(stN, time/7.).xy, 2.).y;
-    vec3 col = vec3(sinN(time + stN.x*PI*3.  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t2/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.));  
+    stN = stN+(hashN.xy - 0.5)*pow(sinN(time*PI*8.), 2.)*sliderVals[4]*0.2;//bands.y
+    //add some coordinate hazing/blurring noise? high frequencies mapped to hash() displacement of stN
+    stN.x = mix(stN, coordWarp(quant(stN, pow(sliderVals[5], 5.)*1000.+4.), time).xy, sliderVals[0]*2.).y;
+    float s1 = pow(sliderVals[1], 5.)*50.+0.05;
+    vec3 col = vec3(pow(sinN(time + stN.x*PI*3.), 50.)*4., //slider for warp line sharpness
+                    sliderVals[6]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*PI+pow(sinN(time*PI*4.), 2.)*0.0))), s1), //slider for horizontal line width +bounce down at bands.x
+                    sliderVals[6]*sinN(time/5.));  
+                    
+                    
     // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
     vec4 bb = texture2D(backbuffer, uvN());
     float fdbk = 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2;
     float fdbk2 = 0.3 + sigmoid(sin(time+stN.x*PI)*10.)*0.7;
-    col = mix(col, bb.rgb, pow(fdbk, 150.));
-    col = mix(black, col, sigmoid((pow(fdbk, 3.)-0.8)*100. ));
-    if(pow(fdbk, 150.) > 0.95) col = mix(col, black, 0.02);
+    // col = mix(col, bb.rgb, pow(fdbk, 150.));
+    // col = mix(black, col, sigmoid((pow(fdbk, 3.)-0.8)*100. ));
+    // if(pow(fdbk, 150.) > 0.95) col = mix(col, black, 0.02);
     gl_FragColor = vec4(col, 1.);
 }
