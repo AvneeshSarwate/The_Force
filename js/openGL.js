@@ -609,7 +609,7 @@ function changeWebcamSelection(camInd){
                   webcam.play();
                 };
               })
-        })
+        });
 }
 
 
