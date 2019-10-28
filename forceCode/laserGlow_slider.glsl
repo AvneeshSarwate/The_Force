@@ -211,21 +211,27 @@ void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
 
-    vec3 p5 = texture2D(channel1, stN).rgb;
     //slider to control some region split parameters, and maybe band-num per split
     //slider to control which bands are on or off? can have some thing so that you cycle between a few
-    float t2 = 1000. + sigmoid(sin(time/5.)*5.)*2. + rand(quant(stN.x, 500.*pow(sliderVals[2] ,5.)+1.))*10.; 
-    float t3 = 00000.;
+    float quantX = quant(stN.x, 500.*pow(sliderVals[2] ,5.)+1.);
+    float t2 = 1000. + sigmoid(sin(time/5.)*5.)*2. + rand(quantX)*10.; 
     
     vec3 hashN = hash(vec3(stN, time));
 
-    stN = stN+(hashN.xy - 0.5)*pow(sinN(time*PI*8.), 2.)*sliderVals[4]*0.2;//bands.y
+    vec2 hashBounce = (hashN.xy - 0.5)*pow(sinN(time*PI*4.), 2.)*sliderVals[4]*0.2;//bands.y
     //add some coordinate hazing/blurring noise? high frequencies mapped to hash() displacement of stN
     stN.x = mix(stN, coordWarp(quant(stN, pow(sliderVals[5], 5.)*1000.+4.), time).xy, sliderVals[0]*2.).y;
     float s1 = pow(sliderVals[1], 5.)*50.+0.05;
-    vec3 col = vec3(pow(sinN(time + stN.x*PI*3.), 50.)*4., //slider for warp line sharpness
-                    sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*PI+pow(sinN(time*PI*4.), 2.)*0.0))), s1), //slider for horizontal line width +bounce down at bands.x
-                    sliderVals[3]*sinN(time/5.));  
+    
+    float r = pow(sinN(time + (stN.x+hashBounce.x)*PI*3.), 50.)*4.;
+
+    //slider for horizontal line width +bounce down at bands.x
+    float g = r > 0.1 ? 0. : sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*(1.+rand(quantX))*PI+pow(sinN(time*PI*4.), 2.)*0.))), s1);
+    float b = sliderVals[3]*sinN(time/5.);
+    
+    vec3 col = vec3(r, //slider for warp line sharpness
+                    g, 
+                    b);  
                     
                     
     // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
