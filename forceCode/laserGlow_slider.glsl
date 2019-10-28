@@ -224,8 +224,8 @@ void main () {
     stN.x = mix(stN, coordWarp(quant(stN, pow(sliderVals[5], 5.)*1000.+4.), time).xy, sliderVals[0]*2.).y;
     float s1 = pow(sliderVals[1], 5.)*50.+0.05;
     vec3 col = vec3(pow(sinN(time + stN.x*PI*3.), 50.)*4., //slider for warp line sharpness
-                    sliderVals[6]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*PI+pow(sinN(time*PI*4.), 2.)*0.0))), s1), //slider for horizontal line width +bounce down at bands.x
-                    sliderVals[6]*sinN(time/5.));  
+                    sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*PI+pow(sinN(time*PI*4.), 2.)*0.0))), s1), //slider for horizontal line width +bounce down at bands.x
+                    sliderVals[3]*sinN(time/5.));  
                     
                     
     // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
