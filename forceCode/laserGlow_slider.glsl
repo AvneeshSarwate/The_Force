@@ -226,7 +226,8 @@ void main () {
     float r = pow(sinN(time + (stN.x+hashBounce.x)*PI*3.), 50.)*4.;
 
     //slider for horizontal line width +bounce down at bands.x
-    float g = r > 0.1 ? 0. : sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*(1.+rand(quantX))*PI+pow(sinN(time*PI*4.), 2.)*0.))), s1);
+    float g0 = sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*(1.+rand(quantX))*PI+pow(sinN(time*PI*4.), 2.)*0.))), s1);
+    float g = r > 0.1 ? mix(0., g0, 1.-(r-0.1)/0.9*sliderVals[6]) : g0; 
     float b = sliderVals[3]*sinN(time/5.);
     
     vec3 col = vec3(r, //slider for warp line sharpness
@@ -241,5 +242,5 @@ void main () {
     // col = mix(col, bb.rgb, pow(fdbk, 150.));
     // col = mix(black, col, sigmoid((pow(fdbk, 3.)-0.8)*100. ));
     // if(pow(fdbk, 150.) > 0.95) col = mix(col, black, 0.02);
-    gl_FragColor = vec4(col, 1.);
+    gl_FragColor = vec4(lum(col), 1.);
 }
