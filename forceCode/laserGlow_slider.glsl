@@ -209,6 +209,7 @@ float rampAD(float inputTime, float peakTime){
 
 void main () {
     vec2 stN = uvN();
+    vec2 nn = stN;
     vec2 cent = vec2(0.5);
 
     //slider to control some region split parameters, and maybe band-num per split
@@ -220,10 +221,11 @@ void main () {
 
     vec2 hashBounce = (hashN.xy - 0.5)*pow(sinN(time*PI*4.), 2.)*sliderVals[4]*0.2;//bands.y
     //add some coordinate hazing/blurring noise? high frequencies mapped to hash() displacement of stN
-    stN.x = mix(stN, coordWarp(quant(stN, pow(sliderVals[5], 5.)*1000.+4.), time).xy, sliderVals[0]*2.).y;
+    stN.x = stN.y;
+    float noiseN = snoise(vec3(nn.xx*4., time))*0.3*sliderVals[0];
     float s1 = pow(sliderVals[1], 5.)*50.+0.05;
     
-    float r = pow(sinN(time + (stN.x+hashBounce.x)*PI*3.), 50.)*4.;
+    float r = pow(sinN(time + (nn.y+noiseN)*PI*3.), 50.)*4.;
 
     //slider for horizontal line width +bounce down at bands.x
     float g0 = sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*(1.+rand(quantX))*PI+pow(sinN(time*PI*4.), 2.)*0.))), s1);
@@ -236,9 +238,9 @@ void main () {
                     
                     
     // col = col == vec3(10./255.) ? vec3(sinN(time + stN.x*PI  + rampAD(sliderVals[0], 0.3)/2.), cosN(50.*t3/ (10. + sinN(stN.y + time/16.*PI))), sinN(time/5.)) : col;
-    vec4 bb = texture2D(backbuffer, uvN());
-    float fdbk = 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2;
-    float fdbk2 = 0.3 + sigmoid(sin(time+stN.x*PI)*10.)*0.7;
+    // vec4 bb = texture2D(backbuffer, uvN());
+    // float fdbk = 0.8 + sigmoid(sin(time+stN.x*PI)*10.)*0.2;
+    // float fdbk2 = 0.3 + sigmoid(sin(time+stN.x*PI)*10.)*0.7;
     // col = mix(col, bb.rgb, pow(fdbk, 150.));
     // col = mix(black, col, sigmoid((pow(fdbk, 3.)-0.8)*100. ));
     // if(pow(fdbk, 150.) > 0.95) col = mix(col, black, 0.02);
