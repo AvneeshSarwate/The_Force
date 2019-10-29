@@ -221,7 +221,7 @@ void main () {
     float timeSwing = sinN(time)*sliderVals[7];
     float t2 = sliderVals[1] * 20. + timeSwing;
     
-    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
+    // vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
     // mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
     vec2 cent = vec2(0.5);
     float time1 = sliderVals[0] * 60. + timeSwing;
