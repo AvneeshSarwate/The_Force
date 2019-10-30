@@ -213,7 +213,7 @@ float cosN(float t){
     let shader = defaultShader;
     if(!useWebGL2){
         header = header += '\n    out vec4 fragColor;\n';
-        shader = shader.replace('gl_FragColor', 'fragColor').replace('texture2D', 'texture');
+        shader = shader.replace('gl_FragColor', 'fragColor').replace(/texture2D/g, 'texture');
     }
 
     let lines = shader.split("\n");
