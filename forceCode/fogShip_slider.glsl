@@ -116,49 +116,6 @@ float colourDistance(vec3 e1, vec3 e2) {
   return sqrt((((512.+rmean)*r*r)/256.) + 4.*g*g + (((767.-rmean)*b*b)/256.));
 }
 
-vec4 circleSlice(vec2 stN, float t, float randw){
-    
-    //define several different timescales for the transformations
-    float t0, t1, t2, t3, t4, rw;
-    t0 = t/4.5;
-    t1 = t/2.1;
-    t2 = t/1.1;
-    t3 = t/0.93;
-    rw =  randw/290.; //a random walk value used to parameterize the rotation of the final frame
-    t4 = t;
-    
-    t1 = t1 / 2.;
-    t0 = t0 / 2.;
-    rw = rw / 2.;
-    float divx = sinN(t0) * 120.+10.;
-    float divy = cosN(t1) * 1400.+10.;
-    stN = stN * rotate(stN, vec2(0.5), rw);
-    vec2 trans2 = vec2(mod(floor(stN.y * divx), 2.) == 0. ? mod(stN.x + (t1 + rw)/4., 1.) : mod(stN.x - t1/4., 1.), 
-                       mod(floor(stN.x * divy), 2.) == 0. ? mod(stN.y + t1, 1.) : mod(stN.y - t1, 1.));
-    
-    
-    bool inStripe = false;
-    float dist = distance(trans2, vec2(0.5));
-
-
-    float numStripes = 20.;
-    float d = 0.05;
-    float stripeWidth =(0.5 - d) / numStripes;
-    for(int i = 0; i < 100; i++){
-        if(d < dist && dist < d + stripeWidth/2.) {
-            inStripe = inStripe || true;
-        } else {
-            inStripe = inStripe || false;
-        }
-        d = d + stripeWidth;
-        if(d > 0.5) break;
-    }
-    
-    vec4 c = !inStripe ? vec4(white, 1) : vec4(black, 0);
-    return c;
-    
-}
-
 vec3 coordWarp(vec2 stN, float t2){ 
     vec2 warp = stN;
     
@@ -199,33 +156,7 @@ vec3 lum(vec3 color){
     return vec3(dot(color, weights));
 }
 
-vec2 drops(vec2 stN2, float t2, float numRipples){
-    
-    vec2 stN0 = stN2;
-    float thickness = 0.05;   
-    vec2 v = uvN();
-    
-    bool new = true; //whether the sanity check ripple or parameterized ripple calculation is used (see comments in block)
-    
-    //when the loop is commented out, everything works normally, but when the
-    //loop is uncommented and only iterates once, things look wrong
-    float maxRad = 0.5;
-    for (float j = 0.; j < 100.; j++) {
-        if(j == numRipples) break;
-        if(new) {
-            //parameterized wave calculation to render multiple waves at once
-            float tRad = mod(t2 + j/numRipples, 1.)*maxRad;
-            vec2 center = vec2(0.5) + (hash(vec3(0.5, 1.1, 34.1)*j).xy-0.5)/2.; 
-            float dist = distance(stN0, center);
-            float distToCircle = abs(dist-tRad);
-            float thetaFromCenter = stN0.y - center.y > 0. ? acos((stN0.x-center.x) / dist) : PI2*1. - acos((stN0.x-center.x) / dist);
-            vec2 nearestCirclePoint = vec2(cos(thetaFromCenter), sin(thetaFromCenter))*tRad + center;
-            stN2 = distToCircle < thickness ? mix(stN2, nearestCirclePoint, (1. - distToCircle/thickness) *(maxRad- tRad)/maxRad) : stN2;
-        }
-    }
-    
-    return new ? stN2 : v;
-}
+
 void main () {
     float t2 = time + 1000.;
     
@@ -233,7 +164,7 @@ void main () {
     mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
 
     vec2 stN = uvN();
-    float numCells = 0.1 + pow(sliderVals[0]*0.6 + 0.4, 5.)*100.;
+    float numCells = 0.1 + pow((1.-sliderVals[0])*0.6 + 0.4, 5.)*100.;
     vec2 rotN = rotate(stN, vec2(0.5), PI2*100. *sinN(time+stN.x*PI));
     vec2 rowColN = rowColWave(rotN, 1000., time/4., 0.3);
     vec2 rowColN2 = rowColWave(stN, 1000., time/4., 0.03);
@@ -267,7 +198,7 @@ void main () {
     vec3 c = vec3(sinN(feedback*10.), sinN(feedback*14.), cosN(feedback*5.));
     
     vec3 col = vec3(feedback);
-    col = mix(bb.rgb, col, 0.2 * sliderVals[3]+0.01);
+    col = mix(bb.rgb, col, 0.2 * (1.-sliderVals[3])+0.01);
     
     gl_FragColor = vec4(col, feedback);
 }

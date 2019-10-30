@@ -208,6 +208,7 @@ float rampAD(float inputTime, float peakTime){
 }
 
 //sliders 8 and 9 used to control intensity of low/high audio-influence, unless this is already in the other 8
+//low will always run - 7 still open - could be mapped to highs
 void main () {
     vec2 stN = uvN();
     vec2 nn = stN;

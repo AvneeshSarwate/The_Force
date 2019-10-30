@@ -45,6 +45,7 @@ vec4 avgColorBB(vec2 nn, float dist, float d){
     return (c1+c2+c3+c4+c5+c6+c7+c8)/8.;
 }
 
+//slider vals 8/9 control hi/lo intensities - 6/7 open to be mapped
 void ex1(){
     vec2 stN = uvN(); //function for getting the [0, 1] scaled corrdinate of each pixel
     stN = quant(stN, 2000.*pow(1.-sliderVals[5], 4.)+10.);
@@ -68,7 +69,7 @@ void ex1(){
     vec3 hashN = hash(vec3(stN, time))-0.5;
     
     float feedback; 
-    float highSwing = pow(sinN(time*PI*4.), 4.)*0.3*sliderVals[8]; //make this bass?
+    float highSwing = pow(sinN(time*PI*4.), 4.)*0.3*sliderVals[8]; //make this treble?
     vec4 bbN = texture2D(backbuffer, stN+hashN.xy*0.1);
     vec4 bbNoise = texture2D(backbuffer, stN);
     vec2 fdbkN = rotate(stN, vec2(0.5), PI/8.*(1.-sliderVals[4]))+hashN.xy*0.1*sliderVals[0];
