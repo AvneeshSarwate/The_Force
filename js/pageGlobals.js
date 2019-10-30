@@ -794,7 +794,7 @@ $( document ).ready(function() {
     //--------------------- Video/Samples upload panel ------------
     $("#videoUploadPanel")
         .dialog({
-            minWidth: 800,
+            minWidth: 400,
             autoOpen: false,
             show: {
                 effect: "clip",

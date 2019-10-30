@@ -52,12 +52,12 @@ void ex1(){
     
     vec3 warpN = coordWarp(stN, time);
     vec3 col;
-    float swing = +sinN(time*PI*4.)*0.3; //make this bass?
+    float swing = +sinN(time*PI*4.)*0.3*sliderVals[9]; //make this bass?
     for(float i = 0.; i < 6.; i++){
-        float iSwing = i*pow(sinN(time/4.), 0.3)*(1.+sliderVals[3]*2.);
+        float iSwing = i*pow(sinN(t2/4.), 0.3)*(1.+sliderVals[3]*2.);
         vec2 start = rotate(vec2(0.3)-sliderVals[3], vec2(0.5), iSwing);
-        vec2 center = mix(start, vec2(0.7), sinN(time+iSwing+swing));
-        vec2 warpCent = coordWarp(center, time/10.).xy;
+        vec2 center = mix(start, vec2(0.7), sinN(t2+iSwing+swing));
+        vec2 warpCent = coordWarp(center, t2/10.).xy;
         col =(distance(stN, warpCent) < 0.03 + sliderVals[3]*0.1 ? black : white) + col;
     }
     col /= 6.;
@@ -68,9 +68,11 @@ void ex1(){
     vec3 hashN = hash(vec3(stN, time))-0.5;
     
     float feedback; 
+    float highSwing = pow(sinN(time*PI*4.), 4.)*0.3*sliderVals[8]; //make this bass?
     vec4 bbN = texture2D(backbuffer, stN+hashN.xy*0.1);
     vec4 bbNoise = texture2D(backbuffer, stN);
-    vec4 bbWarp = texture2D(backbuffer, rotate(stN, vec2(0.5), PI/8.*(1.-sliderVals[4]))+hashN.xy*0.1*sliderVals[0]);
+    vec2 fdbkN = rotate(stN, vec2(0.5), PI/8.*(1.-sliderVals[4]))+hashN.xy*0.1*sliderVals[0];
+    vec4 bbWarp = texture2D(backbuffer, mix(fdbkN, vec2(0.5), -highSwing));
     vec2 trailPoint = vec2(0.5); //mix(vec2(0.5), coordWarp(vec2(0.5), time).xy, 2.5);
     vec2 warpMix = mix(mix(stN, warpN.xy, 0.01), trailPoint, 0.01 * sin(time/3.));
     vec4 bb = avgColorBB(warpMix, 0.005, 0.01);
