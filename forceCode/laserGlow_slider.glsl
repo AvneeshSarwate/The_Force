@@ -207,6 +207,7 @@ float rampAD(float inputTime, float peakTime){
     if(inputTime > peakTime) return 1.-(inputTime-peakTime)/(1.-peakTime);
 }
 
+//sliders 8 and 9 used to control intensity of low/high audio-influence, unless this is already in the other 8
 void main () {
     vec2 stN = uvN();
     vec2 nn = stN;
@@ -222,13 +223,13 @@ void main () {
     vec2 hashBounce = (hashN.xy - 0.5)*pow(sinN(time*PI*4.), 2.)*sliderVals[4]*0.2;//bands.y
     //add some coordinate hazing/blurring noise? high frequencies mapped to hash() displacement of stN
     stN.x = stN.y;
-    float noiseN = snoise(vec3(nn.xx*4., time))*0.3*sliderVals[0];
+    float noiseN = snoise(vec3(nn.xx*4., time))*0.3*sliderVals[0]+hashBounce.x;
     float s1 = pow(sliderVals[1], 5.)*50.+0.05;
     
     float r = pow(sinN(time + (nn.y+noiseN)*PI*3.), 50.)*4.;
 
     //slider for horizontal line width +bounce down at bands.x
-    float g0 = sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*(1.+rand(quantX))*PI+pow(sinN(time*PI*4.), 2.)*0.))), s1);
+    float g0 = sliderVals[3]*pow(cosN(5.*t2/ (10. + sinN(stN.y + time/16.*(1.+rand(quantX))*PI+pow(sinN(time*PI*4.), 2.)*sliderVals[9]))), s1);
     float g = r > 0.1 ? mix(0., g0, 1.-(r-0.1)/0.9*sliderVals[6]) : g0; 
     float b = sliderVals[3]*sinN(time/5.);
     
