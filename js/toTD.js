@@ -217,7 +217,7 @@ float cosN(float t){
     }
 
     let lines = shader.split("\n");
-    let outputLineInd = lines.map((l, i) => ({l, i})).filter(li => li.l.includes('fragColor'))[0].i;
+    let outputLineInd = lines.map((l, i) => ({l, i})).filter(li => li.l.includes('fragColor') && li.l.includes('='))[0].i;
     let outputVal = lines[outputLineInd].split('=')[1].split(';')[0];
     let newOutputVal = `    fragColor = TDOutputSwizzle(${outputVal});`
     lines[outputLineInd] = newOutputVal;
