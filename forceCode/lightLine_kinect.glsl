@@ -220,8 +220,7 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls){
 void main () {
     float t2 = time/5. + 1000.;
     
-    vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
-    mouseN = vec4(mouseN.x, 1.-mouseN.y, mouseN.z, 1.-mouseN.w);
+
     vec2 cent = vec2(0.5);
     vec2 sink = vec2(sinN(time), cosN(time));
     float t = time + 60.;
@@ -230,6 +229,10 @@ void main () {
     float numCells = 400.;
     vec3 warp = ballTwist(stN, t/2., 20.);
     vec3 warpSink = vec3(0.);
+    
+    vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
+    vec3 cam = texture2D(channel0, camPos).rgb; 
+    
     // warpSink = coordWarp(stN, time/20., 3.);
     warpSink = ballTwist(coordWarp(stN, t/6., 20.).xy, t/30., 30.);
     // vec3 warp2 = coordWarp(stN, time +4.);
@@ -243,24 +246,19 @@ void main () {
     float height = 0.5;
     float thickness = 0.03;
     
-    vec3 warp2 = coordWarp(warp.xy, t/2., 20.);
-    bool lineCond = abs(warp2.y - height) < thickness;
-    if(mouseN.z > 0.) cent = mouseN.xy;
-    bool ballCond = distance(warp2.xy, cent) < sinN(t2/2.)*0.3 && distance(warp2.xy, cent) > sinN(t2/2.)*0.2;
-    
     vec3 cc;
     float decay = 0.999;
-    float decay2 = 0.01;
+    float decay2 = 0.005;
     float feedback;
     vec4 bb = texture2D(backbuffer, mix(hashN, warpSink.xy, -0.02));
+    vec4 bbN = texture2D(backbuffer, uvN());
     float lastFeedback = bb.a;
 
     // vec2 multBall = multiBallCondition(stN, t2/2.);
     bool condition = mod(stN.x*numCells, 1.) < sinN(time + stN.x*PI) || mod(stN.y*numCells, 1.) < cosN(time + stN.y*PI); //multBall.x == 1.; 
-    condition = distance(quant(hashN, numCells) + vec2(sinN(t2), cosN(t2))/numCells/2. - 1./numCells/4., hashN) < 1./(numCells*10.);
-    condition = ballCond;
+
     
-    condition = distance(uvN(), vec2(0.5)) < 0.1;
+    condition = distance(uvN(), vec2(0.5)+vec2(cos(time), sin(time))*0.3) < 0.2;
     //   implement the trailing effectm using the alpha channel to track the state of decay 
     if(condition){
         if(lastFeedback < .9) {
@@ -287,6 +285,7 @@ void main () {
     // c.zx = rotate(c.zx, cent, warp.z*3.);
     // c = mix(bb.rgb, col, 0.01);
     
+    vec3 outCol = feedback == 1. ? cam : mix(black, bb.rgb, feedback);
     
-    gl_FragColor = vec4(c, feedback);
+    gl_FragColor = vec4(outCol, feedback);
 }
