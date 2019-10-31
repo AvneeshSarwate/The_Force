@@ -92,7 +92,6 @@ float colourDistance(vec3 e1, vec3 e2) {
 }
 
 
-// out vec4 fragColor;
 void main () {
 
     //the current pixel coordinate 

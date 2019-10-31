@@ -107,7 +107,6 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls, float size, float twist){
 }
 
 
-// out vec4 fragColor;
 void main () {
 
     //the current pixel coordinate 
