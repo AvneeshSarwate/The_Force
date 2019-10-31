@@ -40,13 +40,13 @@ vec3 coordWarp(vec2 stN, float t2){
 // quantize and input number [0, 1] to quantLevels levels
 float quant(float num, float quantLevels){
     float roundPart = floor(fract(num*quantLevels)*2.);
-    return (floor(num*quantLevels)+roundPart)/quantLevels;
+    return (floor(num*quantLevels))/quantLevels;
 }
 
 // same as above but for vectors, applying the quantization to each element
 vec3 quant(vec3 num, float quantLevels){
     vec3 roundPart = floor(fract(num*quantLevels)*2.);
-    return (floor(num*quantLevels)+roundPart)/quantLevels;
+    return (floor(num*quantLevels))/quantLevels;
 }
 
 // same as above but for vectors, applying the quantization to each element
@@ -107,6 +107,9 @@ void main () {
     vec2 stN = uvN();
     vec3 c;
     
+    vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
+    vec3 cam = texture2D(channel0, camPos).rgb; 
+    
     vec2 cent = vec2(0.5);
     
     
@@ -119,7 +122,7 @@ void main () {
     
     float timeDiv = params.x;
     float distLimit = params.y;
-    float fdbk = params.z;
+    float fdbk = .995;params.z;
     
     // stN = distance(cent, uvN()) < mix(sinN(stN.x*PI*sin(time*10.)), stN.y, sinN(time/14.)) ? rotate(stN, cent, time/2.) : stN;
     
@@ -147,10 +150,10 @@ void main () {
     vec3 trail = black; // swirl(time/5., trans2) * c.x;
     vec3 foreGround = white;
     
-    condition =  condition && distance(uvN(), vec2(0.5)+sin(time)*0.3) < 0.1;
+    condition =  condition && distance(uvN(), vec2(0.5)+vec2(cos(time), sin(time))*0.3) < 0.1;
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
-    float trailThresh = 0.3;
+    float trailThresh = 0.1;
     if(condition){
         if(lastFeedback < 1.1) {
             feedback = 1.;
@@ -179,7 +182,13 @@ void main () {
     float numStripes = distance(warpN2.xy, uvN())*.3 + 1.4; //lower is more stripes
     float amountDraw = 0.25; 
     vec2 cent2 = vec2(sinN(time), cosN(time))/2. + 0.25;
-    cc =  mix(cc, bb2, sigmoid(distance(warpN.xy, cent)*20.)*0.95);
+    
+    cam = quant(cam, 3.);
+    
+    cc =  mix((1.-cc)*cam, bb2, sigmoid(distance(warpN.xy, cent)*20.)*0.95);
+    
+    float p = 1.;
+    cc = vec3(pow(cc.r, p), pow(cc.g, p), pow(cc.b, p));
     
     gl_FragColor = vec4(cc, feedback);
 }
