@@ -210,7 +210,7 @@ float cosN(float t){
 `;
     
     let header = simplifiedHeader;
-    let shader = defaultShader;
+    let shader = editor.getValue();
     if(!useWebGL2){
         header = header += '\n    out vec4 fragColor;\n';
         shader = shader.replace('gl_FragColor', 'fragColor').replace(/texture2D/g, 'texture');
