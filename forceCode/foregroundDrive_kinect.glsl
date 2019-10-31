@@ -92,13 +92,15 @@ float colourDistance(vec3 e1, vec3 e2) {
 }
 
 
-out vec4 fragColor;
+// out vec4 fragColor;
 void main () {
 
     //the current pixel coordinate 
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
-
+    
+    vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
+    vec3 cam = texture2D(channel0, camPos).rgb; 
     
 
     float dev = 100.;
@@ -131,19 +133,24 @@ void main () {
     vec3 cc;
    
 
-    vec3 bb2 = texture(backbuffer, mix(stN, n2, 10.5)).rgb;
+    vec3 bb2 = texture2D(backbuffer, mix(stN, n2, 10.5)).rgb;
     vec2 rotN = rotate(stN, cent, snoise(vec3(0.5, 10., tScale/10.))*10.);
     // vec2 rotN2 = rotate(stN, cent, snoise(vec3(1.5, 10., time/10.))*10.);
     vec3 grid = mod(rotN.x*10., 1.) < 0.5 ? black : white;
     // vec3 grid2 = mod(rotN2.y*10., 1.) < 0.5 ? black : white;
     cc = dist < 0.1 + sinN(tScale)*0.4 ? grid :bb2;
-    cc = dist2 < .3 && dist >= 0.1 + sinN(tScale)*0.4 ? black : cc;
-    vec3 bb = texture(backbuffer, stN).rgb;
-    bool condition = distance(uvN(), vec2(0.5)+sin(time)*0.2) < 0.1;
+    // cc = dist2 < .3 && dist >= 0.1 + sinN(tScale)*0.4 ? black : cc;
+    vec3 bb = texture2D(backbuffer, stN).rgb;
+    bool condition = distance(uvN(), vec2(0.5)+vec2(cos(time), sin(time))*0.2) < 0.1;
     
-    cc = condition ? cc : bb;
-
+    vec3 outCol = cc == white ? cam : 1. - cam;
+    
+    cc = condition ? outCol : bb;
+    
+    if(!condition) cc = mix(cc, black, 0.005);
     
     
-    fragColor = vec4(vec3(cc), 1.);
+    
+    
+    gl_FragColor = vec4(vec3(cc), 1.);
 }

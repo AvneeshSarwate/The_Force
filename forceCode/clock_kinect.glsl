@@ -109,6 +109,7 @@ void ex3() {
     cc = pow(cc, 1. + 200. * pow(0.9, 10.)); //play with pulsed line resolution
     
     col = mix(bb0.rgb, cam, cc);
+    col = mix(black, col, pow(feedback, 0.1));
     
     gl_FragColor = vec4(vec3(col), feedback);//vec4(c, feedback);
 }
