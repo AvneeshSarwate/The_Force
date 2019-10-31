@@ -101,20 +101,23 @@ void main () {
     vec2 stN = uvN();
     vec2 cent = vec2(0.5);
     
+    vec2 mouseN = mouse.xy/2./resolution.xy;
+    vec2 circ = vec2(mouseN.x, 1.-mouseN.y);
     
     float dev = 100.;
-    // vec2 n1 = stN + snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.))/dev;
-    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10. + sliderVals[3]*10.))/dev, snoise(vec3(stN*100.*sliderVals[4], time*sliderVals[5]*10.+35. + sliderVals[3]*10.))/dev);
+    // vec2 n1 = stN + snoise(vec3(stN*100.*0.05, time*0.05*10.))/dev;
+    vec2 n2 = stN + vec2(snoise(vec3(stN*100.*0.05, time*0.05*10. + 0.05*10.))/dev, snoise(vec3(stN*100.*0.05, time*0.05*10.+35. + 0.05*10.))/dev);
     
     float dist  = distance(stN, n2)*dev;
     dist = clamp(dist, 0., 1.);
 
     
-    vec4 bb = texture(backbuffer, mix(stN, n2, sliderVals[6]));
+    vec4 bb = texture(backbuffer, mix(stN, n2, 0.05));
     
-
+    bool condition = distance(uvN(), circ) < 0.3;
+    
     vec3 cc;
-    float decay = 0.002 + (1.-sliderVals[8])*.05;
+    float decay = 0.002 + (1.-0.05)*.05;
     float feedback;
     float lastFeedback = bb.a;
     
@@ -124,11 +127,13 @@ void main () {
     vec2 camPos2 = vec2(1.-n2.x, n2.y);
     vec3 cam = texture(channel0, camPos).rgb;
     vec3 cam2 = texture(channel0, camPos2).rgb;
-    vec3 bb2 = texture(backbuffer, mix(stN, n2, sliderVals[1])).rgb;
-    cc = dist <= sliderVals[0] ? cam : bb2.rgb;
+    vec3 bb2 = texture(backbuffer, mix(stN, n2, 0.2)).rgb;
+    bool trailCond = dist <= 0.25;
+    cc = trailCond ? cam : bb2.rgb;
     vec3 bb2hsv = rgb2hsv(bb2);
-    cc = dist < sliderVals[0] ? cam2 : hsv2rgb(bb2hsv + vec3(0., -0.03 + sliderVals[2]*0.06, 0.));
+    cc = dist < 0.25 ? cam2 : hsv2rgb(bb2hsv + vec3(0., -0.03 + 0.5*0.06, 0.));
 
+    cc = condition || !trailCond ? cc : black;
     
     
     fragColor = vec4(vec3(cc), feedback);

@@ -7,7 +7,7 @@ var playAtHalfRate = false;
 
 var customLoaderMap = {};
 
-var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG", "preBurningMan", "cosmicHaus"]);
+var webgl2Shaders = new Set(['interactiveGridSlice1','noisePlay1', 'hyperphase', 'guitarPaintBrush', 'snoiseCamWarp_slider', 'foregroundDive', 'kevin', "eyebeamSVG", "preBurningMan", "cosmicHaus", 'snoiseCamWarp_kinect']);
 var audioOnShaders = new Set(["drake", "drake2", "drake3", "drake4", "gore", "eno", "hedberg", "vimeoTalk"]);
 
 //TODO - eventually invert this to needs-camera shaders, this is just faster for upcoming performance
