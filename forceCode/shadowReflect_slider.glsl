@@ -53,7 +53,8 @@ void ex1(){
     
     vec3 warpN = coordWarp(stN, time);
     vec3 col;
-    float swing = +sinN(time*PI*4.)*0.3*sliderVals[9]; //make this bass?
+    float lowAudio = sinN(time*PI*4.)*0.3*sliderVals[6]; //make this bass?
+    float swing = lowAudio;
     for(float i = 0.; i < 6.; i++){
         float iSwing = i*pow(sinN(t2/4.), 0.3)*(1.+sliderVals[3]*2.);
         vec2 start = rotate(vec2(0.3)-sliderVals[3], vec2(0.5), iSwing);
@@ -69,7 +70,8 @@ void ex1(){
     vec3 hashN = hash(vec3(stN, time))-0.5;
     
     float feedback; 
-    float highSwing = pow(sinN(time*PI*4.), 4.)*0.3*sliderVals[8]; //make this treble?
+    float highAudio = pow(sinN(time*PI*4.), 4.)*0.3*sliderVals[7]; //make this treble?
+    float highSwing = highAudio;
     vec4 bbN = texture2D(backbuffer, stN+hashN.xy*0.1);
     vec4 bbNoise = texture2D(backbuffer, stN);
     vec2 fdbkN = rotate(stN, vec2(0.5), PI/8.*(1.-sliderVals[4]))+hashN.xy*0.1*sliderVals[0];

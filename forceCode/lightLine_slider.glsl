@@ -219,7 +219,8 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls, float intensity, float size){
 
 //sliderv 7 controls kick - might not need a high
 void main () {
-    float timeSwing = sinN(time*PI*4.)*sliderVals[7];
+    float lowAudio = sinN(time*PI*4.)*sliderVals[7];
+    float timeSwing = lowAudio;
     float t2 = sliderVals[1] * 20. + timeSwing;
     
     // vec4 mouseN = mouse / vec4(resolution, resolution) / 2.;
