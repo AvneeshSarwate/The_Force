@@ -299,9 +299,11 @@ void main () {
     float yScan = 0.5+sinN(time)*0.2;
     float w = 0.02;
     
+    bool condition = true;
+    col = black;
     if(nn.y < yScan-w) col = bb.rgb;
     if(nn.y > yScan+w) col = black;
-    if(abs(nn.y-yScan) < w) col = cam;
+    if(abs(nn.y-yScan) < w && condition) col = cam;
    
    
    
