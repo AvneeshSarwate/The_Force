@@ -65,7 +65,6 @@ void ex3() {
     vec2 stN = uvN();
     vec2 camPos = vec2(1.-stN.x, stN.y); //flip the input x dimension because the macbook camera doesn't mirror the image
     vec3 cam = texture2D(channel0, camPos).rgb; 
-    vec3 snap = texture2D(channel3, camPos).rgb;
     vec2 nn = uvN();
     float centT = time/5.;
     vec2 cent0 = vec2(0.5);
@@ -94,10 +93,10 @@ void ex3() {
     vec4 bb0 = texture2D(backbuffer, nn);
     float fb2;
     float feedback; 
-    bool condition = distance(uvN(), cent0+sin(time)*0.3) > 0.1;
+    bool condition = distance(uvN(), cent0+vec2(cos(time), sin(time))*0.3) > 0.1;
     if(condition){
-        feedback = bb.a * 0.97;
-        fb2 = bb0.a * 0.97;
+        feedback = bb.a * 0.99;
+        fb2 = bb0.a * 0.99;
     } 
     else{
         feedback = 1.;
@@ -105,12 +104,13 @@ void ex3() {
     } 
     
     feedback  = mix(feedback, fb2, sinN(time/5.));
-    vec3 lowFdbkCol = vec3(feedback); vec3(cosN(feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent))));
     float cc = feedback < 0.4 ? 0.: sinN(-time*10. + feedback * distance(stN, vec2(0.5))*(10.+50.*distance(stN, cent)));
     
-    cc = pow(cc, 1. + 200. * pow(sinN(time/2.), 10.)); //play with pulsed line resolution
+    cc = pow(cc, 1. + 200. * pow(0.9, 10.)); //play with pulsed line resolution
     
-    gl_FragColor = vec4(vec3(cc), feedback);//vec4(c, feedback);
+    col = mix(bb0.rgb, cam, cc);
+    
+    gl_FragColor = vec4(vec3(col), feedback);//vec4(c, feedback);
 }
 
 
