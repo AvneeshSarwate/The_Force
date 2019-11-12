@@ -20,6 +20,11 @@ function everyFrameSnapshot(){}
 function frameStateUpdate(){}
 var frameState = {};
 
+function loadImageFromPanel(videoFile){
+    var blobURL = URL.createObjectURL(videoFile);   
+    loadImageToTexture(5, blobURL);
+}
+
 var ignoreAudioForShader = false;
 
 function enterFullscreen(){
