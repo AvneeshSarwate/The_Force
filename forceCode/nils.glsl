@@ -112,7 +112,7 @@ void main () {
     vec3 params1 = vec3(1., 0.005, 0.84);
     vec3 params2 = vec3(4., 0.002, 0.98);
     
-    vec3 params = mix(params1, params2, 0.);
+    vec3 params = mix(params1, params2, 1.);
     // params = mix(params1, params2, wrap3(time/4., 0., 1.)/2. + 0.25); //isolating the transitory "earthquake" looking motion
     
     float timeDiv = params.x;
@@ -135,12 +135,12 @@ void main () {
     vec3 cc;
     float decay = fdbk;
     float feedback;
-    vec4 bb = texture2D(backbuffer, stN);
+    vec4 bb = texture2D(backbuffer, mix(stN, uvN(), 0.8));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition =  distance(uvN(), stN) < distLimit; c == black;
-    vec3 trail = black; // swirl(time/5., trans2) * c.x;
-    vec3 foreGround = white;
+    vec3 trail = vec3(distance(uvN(), stN)*80.); // swirl(time/5., trans2) * c.x;
+    vec3 foreGround = 1.-vec3(distance(uvN(), stN)*80.);
     
     
     //   implement the trailing effectm using the alpha channel to track the state of decay 
@@ -165,5 +165,5 @@ void main () {
         }
     }
     
-    gl_FragColor = vec4(1.-vec3(distance(uvN(), stN)*80.), feedback);
+    gl_FragColor = vec4(cc, feedback);
 }
