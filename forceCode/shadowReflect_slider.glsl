@@ -52,7 +52,7 @@ void ex1(){
     float t2 = time/2.; //time is the uniform for global time
     
     vec3 warpN = coordWarp(stN, time);
-    vec3 col;
+    vec3 col = vec3(0.);
     float lowAudio = sinN(time*PI*4.)*0.3*sliderVals[6]; //make this bass?
     float swing = lowAudio;
     for(float i = 0.; i < 6.; i++){
