@@ -100,6 +100,21 @@ float sigmoid(float x){
     return 1. / (1. + exp(-x));
 }
 
+float rand2(float f, float d) {vec2 n = vec2(f); return (fract(1e4 * sin(17.0 * n.x + n.y * 0.1) * (0.1 + abs(sin(n.y * 13.0 + n.x))))-0.5)*d;}
+
+vec4 avgColorBB(vec2 nn, float dist, float d){
+    vec4 c1 = texture2D(backbuffer, nn+vec2(0, dist)      +rand2(1., d)).rgba;
+    vec4 c2 = texture2D(backbuffer, nn+vec2(0, -dist)     +rand2(2., d)).rgba;
+    vec4 c3 = texture2D(backbuffer, nn+vec2(dist, 0)      +rand2(3., d)).rgba;
+    vec4 c4 = texture2D(backbuffer, nn+vec2(-dist, 0)     +rand2(4., d)).rgba;
+    vec4 c5 = texture2D(backbuffer, nn+vec2(dist, dist)   +rand2(5., d)).rgba;
+    vec4 c6 = texture2D(backbuffer, nn+vec2(-dist, -dist) +rand2(6., d)).rgba;
+    vec4 c7 = texture2D(backbuffer, nn+vec2(dist, -dist)  +rand2(7., d)).rgba;
+    vec4 c8 = texture2D(backbuffer, nn+vec2(-dist, dist)  +rand2(8., d)).rgba;
+    
+    return (c1+c2+c3+c4+c5+c6+c7+c8)/8.;
+}
+
 
 void main () {
     
@@ -135,7 +150,7 @@ void main () {
     vec3 cc;
     float decay = fdbk;
     float feedback;
-    vec4 bb = texture2D(backbuffer, mix(stN, uvN(), 0.8));
+    vec4 bb = avgColorBB(mix(stN, uvN(), 0.8), 0.001, 0.001); texture2D(backbuffer, mix(stN, uvN(), 0.8));
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition =  distance(uvN(), stN) < distLimit; c == black;
