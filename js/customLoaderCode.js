@@ -550,6 +550,11 @@ function sliderTrails(ind){
             })
         });
         // blobVideoLoad(0, 5, "GLASS_VEIN.mov", false);
+        let midiCCFunction = (note, vel, chan) => {
+            setSliderVal(note-lowestSliderVal, vel/127);
+        }
+
+        midiEventHandlers['cc'] = midiCCFunction;
     }
 }
 

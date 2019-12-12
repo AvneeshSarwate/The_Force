@@ -6,6 +6,10 @@ var sliderContainer;
 var sliderCallbacks = {};
 var sliderConfig = arrayOf(numSliders).map((id, ind) => ({label: "slider "+ind, conf: {min: 0, max: 1, value: 0}}));
 
+var lowestSliderVal = 0;
+function setLowestSliderVal(){
+    lowestSliderVal = int($('#lowestSlider').val());
+}
 
 function setSliderVal(num, value){
     $("#sliderVal"+(num)).val(value);
