@@ -87,6 +87,14 @@ var trailsSliders2 = [
     {conf: {min: 0, max: 1, value: 0.1}, label: "trail color saturation (0.1 is normal color)"},
 ];
 
+var trailsSliders3 = [
+    {conf: {min: 0, max: 1, value: 0.5}, label: "trail decay time"},
+    {conf: {min: 0, max: 1, value: 0.1}, label: "frame smoothing/blur (higher values also increase trail decay time)"},
+    {conf: {min: 0, max: 1, value: 0.2}, label: "movement detection threshold"},
+    {conf: {min: 0, max: 1, value: 0.0}, label: "trail-smoothing mix"},
+    {conf: {min: 0, max: 1, value: 0.25}, label: "traill-smoothing blur-radius"},
+];
+
 var fogShipSliders = [
     {conf: {min: 0, max: 1, value: 0.5}, label: "feedback noise spread"},
     {conf: {min: 0, max: 1, value: 0.4}, label: "feedback rotation mix"},

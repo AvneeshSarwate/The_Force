@@ -537,6 +537,7 @@ function sliderTrails(ind){
     return function(){
         if(ind == 0) sliderConfig = trailsSliders;
         if(ind == 2) sliderConfig = trailsSliders2;
+        if(ind == 3) sliderConfig = trailsSliders3;
         navigator.mediaDevices.enumerateDevices().then(function(deviceList){
             var cameras = deviceList.filter(device => device.kind == "videoinput");
             var camSelector = $("#cameraSelector");
