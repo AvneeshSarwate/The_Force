@@ -818,6 +818,8 @@ function paint(timeVal) {
     if (gl === null) return;
     if (mProgram === null) return;
 
+    frameStateUpdate();
+
     matchPattern();
 
     gl.useProgram(mProgram);
