@@ -217,22 +217,86 @@ vec3 ballTwist(vec2 stN, float t2, float numBalls, float intensity, float size){
     return vec3(warp, distance(warp, stN));
 }
 
+vec2 rand2(float f, float d) {
+    vec2 n = vec2(f*100000.); 
+    float x =  (fract(1e4 * sin(17.0 * n.x) * (0.1 + abs(sin(n.y * 13.0 ))))-.5)*d;
+    float y =  (fract(1e4 * sin(13.0 * n.x) * (0.1 + abs(sin(n.y * 103.0))))-.5)*d;
+    return vec2(x, y);
+}
+
+vec4 avgSamp1(sampler2D tex, vec2 nn, float dist, float d){
+    vec4 c1 = texture2D(tex, nn+vec2(0, dist)      +rand2(1., d)).rgba;
+    vec4 c2 = texture2D(tex, nn+vec2(0, -dist)     +rand2(2., d)).rgba;
+    vec4 c3 = texture2D(tex, nn+vec2(dist, 0)      +rand2(3., d)).rgba;
+    vec4 c4 = texture2D(tex, nn+vec2(-dist, 0)     +rand2(4., d)).rgba;
+    vec4 c5 = texture2D(tex, nn+vec2(dist, dist)   +rand2(5., d)).rgba;
+    vec4 c6 = texture2D(tex, nn+vec2(-dist, -dist) +rand2(6., d)).rgba;
+    vec4 c7 = texture2D(tex, nn+vec2(dist, -dist)  +rand2(7., d)).rgba;
+    vec4 c8 = texture2D(tex, nn+vec2(-dist, dist)  +rand2(8., d)).rgba;
+    
+    return (c1+c2+c3+c4+c5+c6+c7+c8)/8.;
+}
+
 float normAngle(vec2 pt, vec2 cent){
     return pt.x >= cent.x ? (asin((pt.y-cent.y)/distance(pt, cent))+(PI/2.))/PI/2. : (1.-(asin((pt.y-cent.y)/distance(pt, cent))+(PI/2.))/PI)*0.5+0.5;
 }
 
 float radFunc(float angle, float t){
-    return sinN(sin(angle*20.+sin(t*4.+angle*5.))*4.+t);
+    return sinN(sin(angle*5.+sin(t*4.3+angle*5.1))*4.+t);
 }
+
+float logisticSigmoid (float x, float a){
+  // n.b.: this Logistic Sigmoid has been normalized.
+
+  float epsilon = 0.0001;
+  float min_param_a = 0.0 + epsilon;
+  float max_param_a = 1.0 - epsilon;
+  a = max(min_param_a, min(max_param_a, a));
+  a = (1./(1.-a) - 1.);
+
+  float A = 1.0 / (1.0 + exp(0. -((x-0.5)*a*2.0)));
+  float B = 1.0 / (1.0 + exp(a));
+  float C = 1.0 / (1.0 + exp(0.-a)); 
+  float y = (A-B)/(C-B);
+  return y;
+}
+
+float stepTime(float t, float a){
+    return floor(t) + logisticSigmoid(fract(t), a);
+}
+
 //sliderv 7 controls kick - might not need a high
 void main () {
 
     vec2 stN = uvN();
-    vec2 cent = vec2(0.5);
-    float angle = normAngle(rotate(stN, cent, -time*0.3), cent);
+    float t2 = time*0.2;
+    vec2 dev = vec2(snoise(vec2(t2, 0.5)), snoise(vec2(2, 50.)))*0.5;
+    float t3 = stepTime(time*0.3, .8);;
+    dev = vec2(snoise(vec2(t3, 0.5)), cos(time*1.3))*0.3;
+    vec2 cent = vec2(0.5) + dev;
+    float angle = normAngle(rotate(stN, cent, -time*1.3), cent);
     
-    vec3 col = distance(stN, cent) < 0.1 + mix(radFunc(angle+time/4., time), radFunc(time/4., time), pow(angle, 40.))*0.1 ? white : black;
+    float t = time*0.25;
+    float rad = mix(radFunc(angle+t, 5.), radFunc(t, 5.), pow(angle, 10.))*0.1;
+    vec3 col = rad +0.05 < distance(stN, cent) && distance(stN, cent) < 0.1 + rad  ? white : black;
     
     
-    gl_FragColor = vec4(col, 1.);
+    float feedback;
+    vec4 bb = texture2D(backbuffer, stN);
+    bb = avgSamp1(backbuffer, stN, 0.001, 0.002);
+    float lastFeedback = bb.a;
+    float decay = 0.01;
+    bool condition = col == white;
+    
+    if(condition){
+        feedback = 1.;
+    } else {
+        feedback = max(0., lastFeedback - decay);
+    }
+    
+    col = mix(white, black, 1.-pow(feedback, 1.));
+    // col =distance(stN, cent) < 0.1 + rad ? vec3(sinN(col.x*10.)) : bb.rgb;
+    col = vec3(1.-cosN(col.x*4.*PI));
+    
+    gl_FragColor = vec4(col, feedback);
 }
