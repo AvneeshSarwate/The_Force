@@ -243,12 +243,12 @@ vec4 avgColorBB(vec2 nn, float dist){
 
 //slice the matrix up into columns and translate the individual columns in a moving wave
 vec2 columnWaves3(vec2 stN, float numColumns, float time2, float power){
-    return vec2(wrap3(stN.x + sin(time2*7.3)*.33 * power, 0., 1.), wrap3(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*.54 * power, 0., 1.));
+    return vec2(wrap3(stN.x + sin(time2*7.3)*sliderVals[0] * power, 0., 1.), wrap3(stN.y + cos(quant(stN.x, numColumns)*5.+time2*2.)*sliderVals[1] * power, 0., 1.));
 }
 
 //slice the matrix up into rows and translate the individual rows in a moving wave
 vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
-    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.5)*.2 * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*.325] * power, 0., 1.));
+    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.5)*sliderVals[2] * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*sliderVals[3] * power, 0., 1.));
 }
 
 
@@ -266,9 +266,9 @@ void main () {
     vec2 stN = uvN();
     vec2 rotN = rotate(stN, vec2(0.5), controllableTime/2.);
     
-    rotN = rowColWave(stN, ceil(pow(/*sliderVals[4]*/.5, 10.)*1000.+1.), controllableTime*.1, pow(/*sliderVals[6]*/.9, 3.));
+    rotN = rowColWave(stN, ceil(pow(sliderVals[4], 10.)*1000.+1.), controllableTime*.1, pow(sliderVals[6], 3.));
     
-    float numCells = (2.+rotN.x*PI) *(pow(/*sliderVals[5]*/.66, 4.)+0.001)*10.;
+    float numCells = (2.+rotN.x*PI) *(pow(sliderVals[5], 4.)+0.001)*10.;
     float rad = 0.5/numCells;
     vec2 quantN = quant(rotN, numCells);
     vec2 circCenter = quantN;
@@ -281,7 +281,7 @@ void main () {
     vec3 cc;
     float decay = 0.97;
     float feedback;
-    vec4 bb = avgColorBB(mix(stN, rotN, 0.1*/*sliderVals[7]*/.6), 0.005);
+    vec4 bb = avgColorBB(mix(stN, rotN, 0.1*liderVals[7]), 0.005);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
