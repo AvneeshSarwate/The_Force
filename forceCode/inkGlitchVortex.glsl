@@ -248,7 +248,7 @@ vec2 columnWaves3(vec2 stN, float numColumns, float time2, float power){
 
 //slice the matrix up into rows and translate the individual rows in a moving wave
 vec2 rowWaves3(vec2 stN, float numColumns, float time2, float power){
-    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.5)*.2 * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*.325] * power, 0., 1.));
+    return vec2(wrap3(stN.x + sin(quant(stN.y, numColumns)*5.+time2*2.5)*.2 * power, 0., 1.), wrap3(stN.y + cos(time2*8.)*.325 * power, 0., 1.));
 }
 
 
