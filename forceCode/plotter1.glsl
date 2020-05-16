@@ -82,9 +82,12 @@ void ex1(){
     float rad = 0.04 * pow(sinN(time), 3.)+0.01;
     float brushEdge = 0.0035;
     float brd = snoiseN(atan(stN.y-0.5, stN.x-0.5)*PI*rad+time, 4.5);
-    vec3 penColor = 1.-bb.rgb; black;
+    vec3 penColor = mix(bb.rgb, 1.-bb.rgb, 1.); black;
     vec3 col = distance(stN+brd*brushEdge, cent) < rad ? penColor : bb.rgb;
     col = outOfBounds(stN+dev) ? vec3(mod(stepTime(time, 0.9), 1.)) : col;
+    vec3 cam = texture2D(channel0, stN).rgb;
+    col.r = bb.b;
+    
     // col = vec3(brd);
     //the fragment color variable name (slightly different from shader toy)
     gl_FragColor = vec4(time < 2. ? vec3(time/2.) : col, 1.);
