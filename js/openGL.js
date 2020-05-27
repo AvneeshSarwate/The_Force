@@ -26,6 +26,7 @@ var oscM = [null, null, null, null, null, null, null, null, null, null];
 var gammaValues = [1.0, 1.0, 1.0, 1.0];
 var chordChromaColorU = null, noteColorsU = null, numNotesOnU = null, noteVelU = null;
 var lastNoteOnTimeU, lastNoteOffTimeU, lastNoteValueU; 
+var frameCount = 0, frameCountU = null;
 
 var svgCanvas;
 
@@ -367,7 +368,9 @@ function newShader(vs, shaderCode) {
 
     lastNoteOnTimeU = gl.getUniformLocation(mProgram, "lastNoteOnTime");
     lastNoteOffTimeU = gl.getUniformLocation(mProgram, "lastNoteOffTime");
-    lastNoteValueU = gl.getUniformLocation(mProgram, "midiFeaturesU");
+    lastNoteValueU = gl.getUniformLocation(mProgram, "lastNoteValue");
+
+    frameCountU = gl.getUniformLocation(mProgram, "frameCount");
 
     //OSC uniforms
     for (var i = 0; i < oscM.length; i++) {
@@ -887,6 +890,8 @@ function paint(timeVal) {
     if(updateHoldTime) manualHoldTime = (Date.now() - mTime) * 0.001;
     if(manualStepTimeU !== null) gl.uniform1f(manualStepTimeU, manualStepTime);
     if(manualHoldTimeU !== null) gl.uniform1f(manualHoldTimeU, manualHoldTime);
+
+    if(frameCountU !== null) gl.uniform1i(frameCountU, frameCount++);
 
 
     for(var i = 0; i < 5; i++){
