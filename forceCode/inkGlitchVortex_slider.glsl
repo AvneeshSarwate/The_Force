@@ -281,7 +281,7 @@ void main () {
     vec3 cc;
     float decay = 0.97;
     float feedback;
-    vec4 bb = avgColorBB(mix(stN, rotN, 0.1*liderVals[7]), 0.005);
+    vec4 bb = avgColorBB(mix(stN, rotN, 0.1*sliderVals[7]), 0.005);
     float lastFeedback = bb.a;
     // bool crazyCond = (circleSlice(stN, time/6., time + sinN(time*sinN(time)) *1.8).x - circleSlice(stN, (time-sinN(time))/6., time + sinN(time*sinN(time)) *1.8).x) == 0.;
     bool condition = c == black; 
